@@ -11,12 +11,16 @@ void FPMForEachPixelF(FloatPixMapRef pm, FPMForEachPixelFunc callback, void *inf
 }
 
 
+#if __BLOCKS__
+
 void FPMForEachPixel(FloatPixMapRef pm, void(^block)(FPMColor *pixel, FPMPoint coords))
 {
 	FPM_FOR_EACH_PIXEL(pm, true)
 		block(pixel, FPMMakePoint(x, y));
 	FPM_END_FOR_EACH_PIXEL
 }
+
+#endif
 
 
 void FPMSaturate(FloatPixMapRef pm, bool saturateAlpha)

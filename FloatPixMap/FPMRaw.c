@@ -18,8 +18,7 @@ bool FPMWriteRaw(FloatPixMapRef pm, const char *path, float max)
 	FILE *file = fopen(path, "wb");
 	if (file == NULL)  return false;
 	
-	FPMForEachPixel(pm, ^(FPMColor *pixel, FPMPoint coords)
-	{
+	FPM_FOR_EACH_PIXEL(pm, true)
 		FPMColor px = FPMClampColorRange(*pixel, 0, max);
 		uint8_t bytes[4] = {
 			px.a * 255.0f / max,
@@ -27,9 +26,8 @@ bool FPMWriteRaw(FloatPixMapRef pm, const char *path, float max)
 			px.g * 255.0f / max,
 			px.b * 255.0f / max
 		};
-		
 		fwrite(&bytes, 1, 4, file);
-	});
+	FPM_END_FOR_EACH_PIXEL
 	
 	fclose(file);
 	return true;

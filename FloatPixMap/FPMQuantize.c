@@ -11,12 +11,26 @@
 #include "FPMImageOperations.h"
 
 
-static inline void ForEachComponent(FPMColor *pixel, float(^block)(float value))
+static float QuantizeComponentClip(float v, float srcToStepsFactor, float srcToStepsOffset, float stepsToTargetFactor, float stepMax, float targetMin)
 {
-	pixel->r = block(pixel->r);
-	pixel->g = block(pixel->g);
-	pixel->b = block(pixel->b);
-	pixel->a = block(pixel->a);
+	v = v * srcToStepsFactor - srcToStepsOffset;
+	v = fmaxf(0.0f, fminf(v, stepMax));
+	v = roundf(v);
+	
+	v = v * stepsToTargetFactor + targetMin;
+	
+	return v;
+}
+
+
+static float QuantizeComponent(float v, float srcToStepsFactor, float srcToStepsOffset, float stepsToTargetFactor, float targetMin)
+{
+	v = v * srcToStepsFactor - srcToStepsOffset;
+	v = roundf(v);
+	
+	v = v * stepsToTargetFactor + targetMin;
+	
+	return v;
 }
 
 
@@ -32,20 +46,23 @@ void FPMQuantize(FloatPixMapRef pm, float srcMin, float srcMax, float targetMin,
 	bool clip = options & kFMPQuantizeClip;
 	float stepsToTargetFactor = targetScale / stepMax;
 	
-	// FIXME: implement dithering and jitter. De-blockify for lesser platforms.
-	FPM_FOR_EACH_PIXEL(pm, true)
-		ForEachComponent(pixel, ^float(float v)
-		{
-			v = v * srcToStepsFactor - srcToStepsOffset;
-			if (clip)
-			{
-				v = fmaxf(0.0f, fminf(v, stepMax));
-			}
-			v = roundf(v);
-			
-			v = v * stepsToTargetFactor + targetMin;
-			
-			return v;
-		});
-	FPM_END_FOR_EACH_PIXEL
+	// FIXME: implement dithering and jitter.
+	if (clip)
+	{
+		FPM_FOR_EACH_PIXEL(pm, true)
+			pixel->r = QuantizeComponentClip(pixel->r, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, stepMax, targetMin);
+			pixel->g = QuantizeComponentClip(pixel->g, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, stepMax, targetMin);
+			pixel->b = QuantizeComponentClip(pixel->b, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, stepMax, targetMin);
+			pixel->a = QuantizeComponentClip(pixel->a, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, stepMax, targetMin);
+		FPM_END_FOR_EACH_PIXEL
+	}
+	else
+	{
+		FPM_FOR_EACH_PIXEL(pm, true)
+			pixel->r = QuantizeComponent(pixel->r, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, targetMin);
+			pixel->g = QuantizeComponent(pixel->g, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, targetMin);
+			pixel->b = QuantizeComponent(pixel->b, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, targetMin);
+			pixel->a = QuantizeComponent(pixel->a, srcToStepsFactor, srcToStepsOffset, stepsToTargetFactor, targetMin);
+		FPM_END_FOR_EACH_PIXEL
+	}
 }

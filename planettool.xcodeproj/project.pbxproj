@@ -31,10 +31,6 @@
 		1A115BC010754CC000A75165 /* pngwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115BAD10754CC000A75165 /* pngwrite.c */; };
 		1A115BC110754CC000A75165 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115BAE10754CC000A75165 /* pngwtran.c */; };
 		1A115BC210754CC000A75165 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115BAF10754CC000A75165 /* pngwutil.c */; };
-		1A115E721076411000A75165 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E6A1076411000A75165 /* OOFastArithmetic.m */; };
-		1A115E731076411000A75165 /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E6D1076411000A75165 /* OOMatrix.m */; };
-		1A115E741076411000A75165 /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E6F1076411000A75165 /* OOQuaternion.m */; };
-		1A115E751076411000A75165 /* OOVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E711076411000A75165 /* OOVector.m */; };
 		1A115E761076411700A75165 /* FPMQuantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115C011075519400A75165 /* FPMQuantize.c */; };
 		1A115E771076411800A75165 /* FPMRaw.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115D3B10760EE200A75165 /* FPMRaw.c */; };
 		1A115E781076412400A75165 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
@@ -42,10 +38,6 @@
 		1A1161191077502900A75165 /* FloatPixMap.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159891073AADD00A75165 /* FloatPixMap.c */; settings = {COMPILER_FLAGS = "-falign-loops=32 -falign-loops-max-skip=31 -fstrict-aliasing"; }; };
 		1A11611A1077502900A75165 /* FPMPNG.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159D81073FAB200A75165 /* FPMPNG.c */; };
 		1A11611B1077502900A75165 /* FPMGamma.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115AD71074866300A75165 /* FPMGamma.c */; };
-		1A11611C1077502900A75165 /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E6A1076411000A75165 /* OOFastArithmetic.m */; };
-		1A11611D1077502900A75165 /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E6D1076411000A75165 /* OOMatrix.m */; };
-		1A11611E1077502900A75165 /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E6F1076411000A75165 /* OOQuaternion.m */; };
-		1A11611F1077502900A75165 /* OOVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E711076411000A75165 /* OOVector.m */; };
 		1A1161201077502900A75165 /* FPMQuantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115C011075519400A75165 /* FPMQuantize.c */; };
 		1A1161211077502900A75165 /* FPMRaw.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115D3B10760EE200A75165 /* FPMRaw.c */; };
 		1A1161221077502900A75165 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
@@ -53,6 +45,10 @@
 		1A1161251077502900A75165 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115A5810740C6200A75165 /* libz.dylib */; };
 		1A1161261077502900A75165 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng.a */; };
 		1A11612D1077503800A75165 /* FPMTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1161111077501C00A75165 /* FPMTest.c */; };
+		1A675D7B10AEF97700786F5F /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B410AEF8EC0065D0F3 /* OOFastArithmetic.m */; };
+		1A675D7C10AEF97800786F5F /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B610AEF8F60065D0F3 /* OOMatrix.m */; };
+		1A675D7D10AEF97800786F5F /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B810AEF8FE0065D0F3 /* OOQuaternion.m */; };
+		1A675D7E10AEF97900786F5F /* OOVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96BA10AEF9050065D0F3 /* OOVector.m */; };
 		1A8DA59110777E0A00114A36 /* LatLongGridGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DA59010777E0A00114A36 /* LatLongGridGenerator.c */; };
 		1A8DA59410777E6700114A36 /* RenderToLatLong.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DA59310777E6600114A36 /* RenderToLatLong.c */; };
 		1A98F9541078ABA300E0F928 /* MatrixTransformer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A98F9531078ABA300E0F928 /* MatrixTransformer.c */; };
@@ -136,20 +132,20 @@
 		1A115DE610762ACC00A75165 /* FPMVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPMVector.h; sourceTree = "<group>"; };
 		1A115E601076400B00A75165 /* SphericalPixelSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SphericalPixelSource.h; sourceTree = "<group>"; };
 		1A115E611076400B00A75165 /* SphericalPixelSource.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SphericalPixelSource.c; sourceTree = "<group>"; };
-		1A115E691076411000A75165 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
-		1A115E6A1076411000A75165 /* OOFastArithmetic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OOFastArithmetic.m; sourceTree = "<group>"; };
-		1A115E6B1076411000A75165 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
-		1A115E6C1076411000A75165 /* OOMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMatrix.h; sourceTree = "<group>"; };
-		1A115E6D1076411000A75165 /* OOMatrix.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOMatrix.m; sourceTree = "<group>"; };
-		1A115E6E1076411000A75165 /* OOQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOQuaternion.h; sourceTree = "<group>"; };
-		1A115E6F1076411000A75165 /* OOQuaternion.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOQuaternion.m; sourceTree = "<group>"; };
-		1A115E701076411000A75165 /* OOVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOVector.h; sourceTree = "<group>"; };
-		1A115E711076411000A75165 /* OOVector.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOVector.m; sourceTree = "<group>"; };
-		1A115E7C1076414200A75165 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
 		1A115F1D107657E400A75165 /* FPMImageOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPMImageOperations.h; sourceTree = "<group>"; };
 		1A115F1E107657E400A75165 /* FPMImageOperations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMImageOperations.c; sourceTree = "<group>"; };
 		1A1161111077501C00A75165 /* FPMTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMTest.c; sourceTree = "<group>"; };
 		1A11612B1077502900A75165 /* fpmtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fpmtest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A6A96B110AEF8CE0065D0F3 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
+		1A6A96B210AEF8E50065D0F3 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
+		1A6A96B310AEF8EC0065D0F3 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
+		1A6A96B410AEF8EC0065D0F3 /* OOFastArithmetic.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOFastArithmetic.m; sourceTree = "<group>"; };
+		1A6A96B510AEF8F60065D0F3 /* OOMatrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMatrix.h; sourceTree = "<group>"; };
+		1A6A96B610AEF8F60065D0F3 /* OOMatrix.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOMatrix.m; sourceTree = "<group>"; };
+		1A6A96B710AEF8FE0065D0F3 /* OOQuaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOQuaternion.h; sourceTree = "<group>"; };
+		1A6A96B810AEF8FE0065D0F3 /* OOQuaternion.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOQuaternion.m; sourceTree = "<group>"; };
+		1A6A96B910AEF9050065D0F3 /* OOVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOVector.h; sourceTree = "<group>"; };
+		1A6A96BA10AEF9050065D0F3 /* OOVector.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; path = OOVector.m; sourceTree = "<group>"; };
 		1A8DA58F10777E0A00114A36 /* LatLongGridGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LatLongGridGenerator.h; sourceTree = "<group>"; };
 		1A8DA59010777E0A00114A36 /* LatLongGridGenerator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = LatLongGridGenerator.c; sourceTree = "<group>"; };
 		1A8DA59210777E6600114A36 /* RenderToLatLong.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderToLatLong.h; sourceTree = "<group>"; };
@@ -223,8 +219,8 @@
 				1ADC097C10777F500057E287 /* RenderToCube.c */,
 				1A98F9521078ABA300E0F928 /* MatrixTransformer.h */,
 				1A98F9531078ABA300E0F928 /* MatrixTransformer.c */,
+				1A6A96B010AEF8B30065D0F3 /* OOMaths */,
 				1A115C831075620A00A75165 /* FloatPixMap */,
-				1A115E681076411000A75165 /* OOMaths */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -277,21 +273,22 @@
 			path = FloatPixMap;
 			sourceTree = "<group>";
 		};
-		1A115E681076411000A75165 /* OOMaths */ = {
+		1A6A96B010AEF8B30065D0F3 /* OOMaths */ = {
 			isa = PBXGroup;
 			children = (
-				1A115E6B1076411000A75165 /* OOMaths.h */,
-				1A115E7C1076414200A75165 /* OOFunctionAttributes.h */,
-				1A115E691076411000A75165 /* OOFastArithmetic.h */,
-				1A115E6A1076411000A75165 /* OOFastArithmetic.m */,
-				1A115E6C1076411000A75165 /* OOMatrix.h */,
-				1A115E6D1076411000A75165 /* OOMatrix.m */,
-				1A115E6E1076411000A75165 /* OOQuaternion.h */,
-				1A115E6F1076411000A75165 /* OOQuaternion.m */,
-				1A115E701076411000A75165 /* OOVector.h */,
-				1A115E711076411000A75165 /* OOVector.m */,
+				1A6A96B110AEF8CE0065D0F3 /* OOMaths.h */,
+				1A6A96B210AEF8E50065D0F3 /* OOFunctionAttributes.h */,
+				1A6A96B310AEF8EC0065D0F3 /* OOFastArithmetic.h */,
+				1A6A96B410AEF8EC0065D0F3 /* OOFastArithmetic.m */,
+				1A6A96B510AEF8F60065D0F3 /* OOMatrix.h */,
+				1A6A96B610AEF8F60065D0F3 /* OOMatrix.m */,
+				1A6A96B710AEF8FE0065D0F3 /* OOQuaternion.h */,
+				1A6A96B810AEF8FE0065D0F3 /* OOQuaternion.m */,
+				1A6A96B910AEF9050065D0F3 /* OOVector.h */,
+				1A6A96BA10AEF9050065D0F3 /* OOVector.m */,
 			);
-			path = OOMaths;
+			name = OOMaths;
+			path = ../../src/Core;
 			sourceTree = "<group>";
 		};
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
@@ -425,10 +422,6 @@
 				1A1161191077502900A75165 /* FloatPixMap.c in Sources */,
 				1A11611A1077502900A75165 /* FPMPNG.c in Sources */,
 				1A11611B1077502900A75165 /* FPMGamma.c in Sources */,
-				1A11611C1077502900A75165 /* OOFastArithmetic.m in Sources */,
-				1A11611D1077502900A75165 /* OOMatrix.m in Sources */,
-				1A11611E1077502900A75165 /* OOQuaternion.m in Sources */,
-				1A11611F1077502900A75165 /* OOVector.m in Sources */,
 				1A1161201077502900A75165 /* FPMQuantize.c in Sources */,
 				1A1161211077502900A75165 /* FPMRaw.c in Sources */,
 				1A1161221077502900A75165 /* SphericalPixelSource.c in Sources */,
@@ -444,10 +437,6 @@
 				1A11598A1073AADD00A75165 /* FloatPixMap.c in Sources */,
 				1A1159D91073FAB200A75165 /* FPMPNG.c in Sources */,
 				1A115AD81074866300A75165 /* FPMGamma.c in Sources */,
-				1A115E721076411000A75165 /* OOFastArithmetic.m in Sources */,
-				1A115E731076411000A75165 /* OOMatrix.m in Sources */,
-				1A115E741076411000A75165 /* OOQuaternion.m in Sources */,
-				1A115E751076411000A75165 /* OOVector.m in Sources */,
 				1A115E761076411700A75165 /* FPMQuantize.c in Sources */,
 				1A115E771076411800A75165 /* FPMRaw.c in Sources */,
 				1A115E781076412400A75165 /* SphericalPixelSource.c in Sources */,
@@ -458,6 +447,10 @@
 				1AFEA8C41077DC9A00F1A71C /* ReadLatLong.c in Sources */,
 				1A98F9541078ABA300E0F928 /* MatrixTransformer.c in Sources */,
 				1A98FB8E10793F1400E0F928 /* main.c in Sources */,
+				1A675D7B10AEF97700786F5F /* OOFastArithmetic.m in Sources */,
+				1A675D7C10AEF97800786F5F /* OOMatrix.m in Sources */,
+				1A675D7D10AEF97800786F5F /* OOQuaternion.m in Sources */,
+				1A675D7E10AEF97900786F5F /* OOVector.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
