@@ -69,7 +69,7 @@ static void SuppressProgress(size_t numerator, size_t denominator, void *context
 int main (int argc, const char * argv[])
 {
 	FPMInit();
-	srandomdev();
+	srandom(time(NULL));
 	
 	// Work out what the user wants.
 	Settings settings;
@@ -146,7 +146,7 @@ int main (int argc, const char * argv[])
 	if (destructor != NULL)  destructor(sourceContext);
 	
 	// Write output.
-	if (!settings.quiet)  printf("Writing...");
+	if (!settings.quiet)  printf("Writing...\n");
 	if (!FPMWritePNG(resultPM, "/tmp/planettool-test.png", kFPMWritePNGDither, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler))
 	{
 		return EXIT_FAILURE;
@@ -264,7 +264,7 @@ static const SourceEntry sGenerators[] =
 	{ "grid1",				'g',	LatLongGridGenerator, NULL, NULL }
 };
 
-static const unsigned sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0];
+enum { sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0] };
 
 
 static const SourceEntry sReaders[] =
@@ -272,7 +272,7 @@ static const SourceEntry sReaders[] =
 	{ "latlong",			'l',	ReadLatLong, ReadLatLongConstructor, ReadLatLongDestructor },
 };
 
-static const unsigned sReaderCount = sizeof sReaders / sizeof sReaders[0];
+enum { sReaderCount = sizeof sReaders / sizeof sReaders[0] };
 
 
 static const SinkEntry sSinks[] =
@@ -282,7 +282,7 @@ static const SinkEntry sSinks[] =
 	{ "cubex",				'x',	RenderToCubeCross, 1024 }
 };
 
-static const unsigned sSinkCount = sizeof sSinks / sizeof sSinks[0];
+enum { sSinkCount = sizeof sSinks / sizeof sSinks[0] };
 
 
 typedef struct

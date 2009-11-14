@@ -136,6 +136,7 @@
 		1A115F1E107657E400A75165 /* FPMImageOperations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMImageOperations.c; sourceTree = "<group>"; };
 		1A1161111077501C00A75165 /* FPMTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMTest.c; sourceTree = "<group>"; };
 		1A11612B1077502900A75165 /* fpmtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fpmtest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A675E0210AF18D000786F5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		1A6A96B110AEF8CE0065D0F3 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
 		1A6A96B210AEF8E50065D0F3 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
 		1A6A96B310AEF8EC0065D0F3 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
@@ -193,6 +194,7 @@
 		08FB7794FE84155DC02AAC07 /* planettool */ = {
 			isa = PBXGroup;
 			children = (
+				1A675E0210AF18D000786F5F /* Makefile */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1A115B9C10754CB300A75165 /* libpng */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
