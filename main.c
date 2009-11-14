@@ -22,7 +22,13 @@ static void ErrorHandler(const char *message, bool isError);
 typedef struct
 {
 	const char						*name;
-	char							shortcut;
+	const char						shortcut;
+} FilterEntryBase;
+
+
+typedef struct
+{
+	FilterEntryBase					keys;
 	SphericalPixelSourceFunction	source;
 	SphericalPixelSourceConstructorFunction	constructor;
 	SphericalPixelSourceDestructorFunction	destructor;
@@ -31,8 +37,7 @@ typedef struct
 
 typedef struct
 {
-	const char						*name;
-	char							shortcut;
+	FilterEntryBase					keys;
 	SphericalPixelSinkFunction		sink;
 	size_t							defaultSize;
 } SinkEntry;
@@ -254,32 +259,6 @@ static bool ParseVersion(int argc, const char *argv[], int *consumedArgs, Settin
 static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 
 
-typedef struct
-{
-	char					*keyword;
-	char					shortcut;
-	unsigned				minArgs;
-	ArgumentParserFunction	handler;
-} ArgumentHandler;
-
-
-static const ArgumentHandler sHandlers[] =
-{
-	{ "input",				'i',	2,	ParseInput },
-	{ "generate",			'g',	1,	ParseGenerate },
-	{ "output",				'o',	2,	ParseOutput },
-	{ "size",				'S',	1,	ParseSize },
-	{ "fast",				'F',	0,	ParseFast },
-	{ "jitter",				'J',	0,	ParseJitter },
-	{ "rotate",				'R',	3,	ParseRotate },
-	{ "help",				'H',	0,	ParseHelp },
-	{ "version",			'V',	0,	ParseVersion },
-	{ "quiet",				'Q',	0,	ParseQuiet },
-};
-
-static const unsigned sHandlerCount = sizeof sHandlers / sizeof sHandlers[0];
-
-
 static const SourceEntry sGenerators[] =
 {
 	{ "grid1",				'g',	LatLongGridGenerator, NULL, NULL }
@@ -304,6 +283,70 @@ static const SinkEntry sSinks[] =
 };
 
 static const unsigned sSinkCount = sizeof sSinks / sizeof sSinks[0];
+
+
+typedef struct
+{
+	char					*keyword;
+	char					shortcut;
+	unsigned				minArgs;
+	ArgumentParserFunction	handler;
+	
+	// Stuff used to generate documentation, such as it is.
+	char					*paramNames;
+	bool					required;
+	char					*description;
+	FilterEntryBase			*descTypes;
+	off_t					descStride;
+	unsigned				descTypeCount;
+} ArgumentHandler;
+
+
+static const ArgumentHandler sHandlers[] =
+{
+	{
+		"output",		'o', 2, ParseOutput,
+		"<outType> <outFile>", true, "Type and name of output file. Type must be one of: ", (FilterEntryBase *)sSinks, sizeof(*sSinks), sSinkCount
+	},
+	{
+		"input",		'i', 2, ParseInput,
+		"<inType> <inFile>",  false, "Type and name of input file. Type must be one of: ", (FilterEntryBase *)sReaders, sizeof(*sReaders), sReaderCount
+	},
+	{
+		"generate",		'g', 1, ParseGenerate,
+		"<generator>", false, "Type and name of generator. Type must be one of: ", (FilterEntryBase *)sGenerators, sizeof(*sGenerators), sGeneratorCount
+	},
+	{
+		"size",			'S', 1, ParseSize,
+		"<size>", false, "Size of output, in pixels. Interpretation depends on output type.", NULL, 0, 0
+	},
+	{
+		"fast",			'F', 0, ParseFast,
+		NULL, false, "Use faster, low-quality rendering.", NULL, 0, 0
+	},
+	{
+		"jitter",		'J', 0, ParseJitter,
+		NULL, false, "Use jittering for slower, slightly noisy rendering which may look better in some cases.", NULL, 0, 0
+	},
+	{
+		"rotate",		'R', 3, ParseRotate,
+		"<ry> <rx> <rz>", false, "Unimplemented.", NULL, 0, 0
+	},
+	{
+		"help",			'H', 0, ParseHelp,
+		NULL, false, "Show this helpful help.", NULL, 0, 0
+	},
+	{
+		"version",		'V', 0, ParseVersion,
+		NULL, false, "Show version number.", NULL, 0, 0
+	},
+	{
+		"quiet",		'Q', 0, ParseQuiet,
+		NULL, false, "Don't print progress information.", NULL, 0, 0
+	},
+};
+
+static const unsigned sHandlerCount = sizeof sHandlers / sizeof sHandlers[0];
 
 
 static void ShowHelp(void);
@@ -416,8 +459,8 @@ static bool ParseInput(int argc, const char *argv[], int *consumedArgs, Settings
 	for (i = 0; i != sReaderCount; i++)
 	{
 		const SourceEntry *source = &sReaders[i];
-		if (shortcut != '\0')  match = (shortcut == source->shortcut);
-		else  match = (strcmp(inputType, source->name) == 0);
+		if (shortcut != '\0')  match = (shortcut == source->keys.shortcut);
+		else  match = (strcmp(inputType, source->keys.name) == 0);
 		
 		if (match)
 		{
@@ -452,8 +495,8 @@ static bool ParseGenerate(int argc, const char *argv[], int *consumedArgs, Setti
 	for (i = 0; i != sReaderCount; i++)
 	{
 		const SourceEntry *source = &sReaders[i];
-		if (shortcut != '\0')  match = (shortcut == source->shortcut);
-		else  match = (strcmp(name, source->name) == 0);
+		if (shortcut != '\0')  match = (shortcut == source->keys.shortcut);
+		else  match = (strcmp(name, source->keys.name) == 0);
 		
 		if (match)
 		{
@@ -489,8 +532,8 @@ static bool ParseOutput(int argc, const char *argv[], int *consumedArgs, Setting
 	for (i = 0; i != sSinkCount; i++)
 	{
 		const SinkEntry *sink = &sSinks[i];
-		if (shortcut != '\0')  match = (shortcut == sink->shortcut);
-		else  match = (strcmp(outputType, sink->name) == 0);
+		if (shortcut != '\0')  match = (shortcut == sink->keys.shortcut);
+		else  match = (strcmp(outputType, sink->keys.name) == 0);
 		
 		if (match)
 		{
@@ -579,7 +622,84 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 
 static void ShowHelp(void)
 {
-	printf("Pretend this is helpful.\n");
+//	printf("Pretend this is helpful.\n");
+	printf("Planettool version <undefined>\nplanettool");
+	
+	// ACT I: the Synopsis. Dramatis personae: a gaggle of Shortcuts.
+	unsigned i;
+	const ArgumentHandler *handler = NULL;
+	for (i = 0; i < sHandlerCount; i++)
+	{
+		handler = &sHandlers[i];
+		
+		printf(" ");
+		if (!handler->required)  printf("[");
+		printf("-%c", handler->shortcut);
+		if (handler->paramNames != NULL)
+		{
+			printf(" %s", handler->paramNames);
+		}
+		if (!handler->required)  printf("]");
+	}
+	printf("\n\n");
+	
+	// ACT II: the Descriptions. Dramatis personae: several Description Strings, divers DescTypes; also Peasblossom, a Faerie.
+	for (i = 0; i < sHandlerCount; i++)
+	{
+		handler = &sHandlers[i];
+		
+		#define LABEL_SIZE 16
+		char label[LABEL_SIZE];
+		snprintf(label, LABEL_SIZE, "--%s, -%c", handler->keyword, handler->shortcut);
+		
+		printf("%*s:  %s", LABEL_SIZE, label, handler->description);
+		
+		if (handler->descTypes != NULL)
+		{
+			unsigned j;
+			for (j = 0; j < handler->descTypeCount; j++)
+			{
+				FilterEntryBase *entry = (FilterEntryBase *)((char *)handler->descTypes + handler->descStride * j);
+				if (j != 0)  printf(", ");
+				printf("\"%s\" (%c)", entry->name, entry->shortcut);
+			}
+		}
+		printf("\n");
+	}
+	
+	// ACT III: the Expository Text.
+	printf("\n"
+		// "=========|=========|=========|=========|=========|=========|=========|=========|\n"
+		   "Planettool reads a global map from an input file (in PNG format) or a generator\n"
+		   "function, and writes it to an output file (in PNG format). In so doing, it may\n"
+		   "change the projection and scale of the map, and may rotate it around the planet.\n"
+		   "\n"
+		   "Planettool's design is geared for flexibility and quality. As a side effect, it\n"
+		   "is extremely slow. Don't be alarmed if it takes several minutes to do anything.\n"
+		   "\n"
+		   "EXAMPLES:\n"
+		   "planettool --outout cube \"cubemap.png\" --input latlong \"original.png\" --size 512\n"
+		   "    Reads original.png, treated as a latitude-longitude map, and remaps it to a\n"
+		   "    cube map with a side length of 512 pixels.\n"
+		   "\n"
+		   "planettool -o c cubemap.png -i l original.png -S 512\n"
+		   "    Same as above, only less legible for extra geek cred.\n"
+		   "\n"
+		   "planettool -o cube grid.png --generator grid1 --fast --rotate 0 30 0\n"
+		   "    Generate a grid, tilted 30 degrees and projected onto a cube map at low\n"
+		   "    quality.\n"
+		   "\n"
+		   "THE PROJECTION TYPES:\n"
+		   "latlong: in this format, the intervals between pixels are constant steps of\n"
+		   "         latitude and longitude. This is conceptually simple, but inefficent;\n"
+		   "         lots of pixels are crammed together tightly near the poles.\n"
+		   "   cube: The surface is divided into six equal areas, which are projected onto\n"
+		   "         squares. These are then stacked vertically, in the following order:\n"
+		   "         +x, -x, +y, -y, +z, -z.\n"
+		   "  cubex: The same projection as cube, but the squares are rearranged into a more\n"
+		   "         human-friendly layout (which can be printed and folded into a cube if\n"
+		   "         you're bored).\n");
+		// "=========|=========|=========|=========|=========|=========|=========|=========|\n"
 }
 
 
