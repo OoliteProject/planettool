@@ -15,6 +15,11 @@
 #include "RenderToLatLong.h"
 #include "RenderToCube.h"
 
+// Version number
+const char * kVersionString =
+#include "planettool-version.h"
+;
+
 
 static void ErrorHandler(const char *message, bool isError);
 
@@ -492,9 +497,9 @@ static bool ParseGenerate(int argc, const char *argv[], int *consumedArgs, Setti
 	
 	unsigned i;
 	bool match = false;
-	for (i = 0; i != sReaderCount; i++)
+	for (i = 0; i != sGeneratorCount; i++)
 	{
-		const SourceEntry *source = &sReaders[i];
+		const SourceEntry *source = &sGenerators[i];
 		if (shortcut != '\0')  match = (shortcut == source->keys.shortcut);
 		else  match = (strcmp(name, source->keys.name) == 0);
 		
@@ -571,6 +576,7 @@ static bool ParseSize(int argc, const char *argv[], int *consumedArgs, Settings 
 		return false;
 	}
 	
+	settings->size = size;
 	return true;
 }
 
@@ -623,7 +629,7 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 static void ShowHelp(void)
 {
 //	printf("Pretend this is helpful.\n");
-	printf("Planettool version <undefined>\nplanettool");
+	printf("Planettool version %s\nplanettool", kVersionString);
 	
 	// ACT I: the Synopsis. Dramatis personae: a gaggle of Shortcuts.
 	unsigned i;
@@ -698,14 +704,19 @@ static void ShowHelp(void)
 		   "         +x, -x, +y, -y, +z, -z.\n"
 		   "  cubex: The same projection as cube, but the squares are rearranged into a more\n"
 		   "         human-friendly layout (which can be printed and folded into a cube if\n"
-		   "         you're bored).\n");
+		   "         you're bored).\n"
+		   "\n"
+		   "THE GENERATORS:\n"
+		   "  grid1: A grid with lines spaced ten degrees apart. Longitude lines are green\n"
+		   "         in the northern hemisphere, blue in the south. Latitude lines are red\n"
+		   "         in the western hemisphere, teal in the east.\n");
 		// "=========|=========|=========|=========|=========|=========|=========|=========|\n"
 }
 
 
 static void ShowVersion(void)
 {
-	printf("Pretend we have a version number.\n");
+	printf("%s\n", kVersionString);
 }
 
 

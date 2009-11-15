@@ -45,7 +45,7 @@ planettool: $(OBJECTS)
 SphericalPixelSource.h: FloatPixMap.h
 LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h: SphericalPixelSource.h
 
-main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h
+main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h planettool-version.h
 
 SphericalPixelSource.o: SphericalPixelSource.h
 ReadLatLong.o: ReadLatLong.h FPMImageOperations.h
