@@ -25,7 +25,7 @@ vpath %.m $(OOMATHS_PATH)
 .SUFFIXES: .m
 
 
-CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o MatrixTransformer.o
+CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o MatrixTransformer.o
 FPM_OBJECTS = FloatPixMap.o FPMGamma.o FPMImageOperations.o FPMPNG.o FPMQuantize.o FPMRaw.o
 OOMATHS_OBJECTS = OOFastArithmetic.o OOMatrix.o OOQuaternion.o OOVector.o
 
@@ -43,12 +43,13 @@ planettool: $(OBJECTS)
 
 # Core dependencies.
 SphericalPixelSource.h: FloatPixMap.h
-LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h: SphericalPixelSource.h
+LatLongGridGenerator.h ReadLatLong.h ReadCube.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h: SphericalPixelSource.h
 
 main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h planettool-version.h
 
 SphericalPixelSource.o: SphericalPixelSource.h
 ReadLatLong.o: ReadLatLong.h FPMImageOperations.h
+ReadCube.o: ReadCube.h FPMImageOperations.h
 RenderToLatLong.o: RenderToLatLong.h FPMImageOperations.h
 LatLongGridGenerator.o: LatLongGridGenerator.h
 RenderToCube.o: RenderToCube.h FPMImageOperations.h

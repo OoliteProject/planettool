@@ -9,6 +9,7 @@
 // Sources
 #include "LatLongGridGenerator.h"
 #include "ReadLatLong.h"
+#include "ReadCube.h"
 #include "MatrixTransformer.h"
 
 // Sinks
@@ -152,91 +153,12 @@ int main (int argc, const char * argv[])
 	
 	// Write output.
 	if (!settings.quiet)  printf("Writing...\n");
-	if (!FPMWritePNG(resultPM, "/tmp/planettool-test.png", kFPMWritePNGDither, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler))
+	if (!FPMWritePNG(resultPM, settings.sinkPath, kFPMWritePNGDither, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler))
 	{
 		return EXIT_FAILURE;
 	}
 	
 	return 0;
-	
-	
-#if 0
-	bool fast = false;
-	bool jitter = true;
-	unsigned size = 1024;
-	
-	RenderFlags flags = 0;
-	if (fast) flags |= kRenderFast;
-	if (jitter) flags |= kRenderJitter;
-	
-	FloatPixMapRef pm = NULL;
-	if (argc < 2)
-	{
-		printf("Rendering...\n");
-		pm = RenderToCube(size, flags, LatLongGridGenerator, NULL, NULL, NULL);
-	}
-	else
-	{
-		void *context = NULL;
-#if 0
-		printf("Reading...\n");
-		FloatPixMapRef source = FPMCreateWithPNG(argv[1], kFPMGammaLinear, NULL);
-		if (source == NULL)
-		{
-			fprintf(stderr, "Could not load %s\n", argv[1]);
-			return EXIT_FAILURE;
-		}
-		
-		if (!ReadLatLongConstructor(source, flags, &context))
-		{
-			fprintf(stderr, "Could not set up rendering context.\n");
-			return EXIT_FAILURE;
-		}
-#define SOURCE ReadLatLong
-#define DESTRUCTOR ReadLatLongDestructor
-#else
-#define SOURCE LatLongGridGenerator
-#define DESTRUCTOR NullDestructor
-#endif
-		
-#if 0
-		printf("Rendering...\n");
-		pm = RenderToCubeCross(size, flags, SOURCE, context, NULL, NULL);
-		
-		DESTRUCTOR(context);
-#else
-		OOMatrix matrix = kIdentityMatrix;
-		/*
-		matrix = OOMatrixRotateZ(matrix, 180 * kDegToRad);
-		matrix = OOMatrixRotateX(matrix, 20.0 * kDegToRad);
-		 matrix = OOMatrixRotateZ(matrix, 40 * kDegToRad);*/
-		matrix = OOMatrixRotateY(matrix, 45.1 * kDegToRad);
-		matrix = OOMatrixRotateX(matrix, 54.8 * kDegToRad);
-		if (!MatrixTransformerSetUp(SOURCE, DESTRUCTOR, context, matrix, &context))
-		{
-			fprintf(stderr, "Could not set up transformer context.\n");
-			return EXIT_FAILURE;
-		}
-		
-		printf("Rendering...\n");
-		pm = RenderToCubeCross(size, flags, MatrixTransformer, context, NULL, NULL);
-		
-		MatrixTransformerDestructor(context);
-#endif
-	}
-	
-	if (pm != NULL)
-	{
-		printf("Writing...\n");
-		FPMWritePNG(pm, "/tmp/planettool-test.png", kFPMWritePNGDither, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler);
-		return 0;
-	}
-	else
-	{
-		fprintf(stderr, "Rendering failed.\n");
-		return EXIT_FAILURE;
-	}
-#endif
 }
 
 
@@ -275,6 +197,8 @@ enum { sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0] };
 static const SourceEntry sReaders[] =
 {
 	{ "latlong",			'l',	ReadLatLong, ReadLatLongConstructor, ReadLatLongDestructor },
+	{ "cube",				'c',	ReadCube, ReadCubeConstructor, ReadCubeDestructor },
+	{ "cubex",				'x',	ReadCube, ReadCubeCrossConstructor, ReadCubeDestructor },
 };
 
 enum { sReaderCount = sizeof sReaders / sizeof sReaders[0] };

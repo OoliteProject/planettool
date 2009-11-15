@@ -146,6 +146,7 @@ static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsign
 				Vector coordv = vector_multiply_scalar(rightVector, fx);
 				coordv = vector_add(coordv, vector_multiply_scalar(downVector, fy));
 				coordv = vector_add(coordv, outVector);
+				coordv = vector_normal(coordv);
 				
 				Coordinates coord = MakeCoordsVector(coordv);
 				
