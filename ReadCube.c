@@ -17,6 +17,8 @@ typedef struct
 	FPMSize				faceSize;
 	float				halfWidth;
 	float				halfHeight;
+	float				maxX;
+	float				maxY;
 	// Top left corners of each face.
 	FPMPoint			pxPos;
 	FPMPoint			nxPos;
@@ -25,6 +27,9 @@ typedef struct
 	FPMPoint			pzPos;
 	FPMPoint			nzPos;
 } ReadCubeContext;
+
+
+static FPMColor ReadCubeEdge(ReadCubeContext *context, float x, float y, Vector coordinates);
 
 
 bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context)
@@ -45,8 +50,10 @@ bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **c
 	
 	cx->faceSize.width = totalSize.width;
 	cx->faceSize.height = totalSize.height / 6;
-	cx->halfWidth = (float)cx->faceSize.width / 2.0;
-	cx->halfHeight = (float)cx->faceSize.height / 2.0;
+	cx->halfWidth = (float)cx->faceSize.width / 2.0f;
+	cx->halfHeight = (float)cx->faceSize.height / 2.0f;
+	cx->maxX = (float)cx->faceSize.width - 1.0f;
+	cx->maxY = (float)cx->faceSize.height - 1.0f;
 	
 	cx->pxPos = (FPMPoint){ 0, 0 * cx->faceSize.height };
 	cx->nxPos = (FPMPoint){ 0, 1 * cx->faceSize.height };
@@ -80,6 +87,8 @@ bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, voi
 	cx->faceSize.height = totalSize.height / 3;
 	cx->halfWidth = (float)cx->faceSize.width / 2.0;
 	cx->halfHeight = (float)cx->faceSize.height / 2.0;
+	cx->maxX = (float)cx->faceSize.width - 1.0f;
+	cx->maxY = (float)cx->faceSize.height - 1.0f;
 	
 	cx->pxPos = (FPMPoint){ 2 * cx->faceSize.width, 1 * cx->faceSize.height };
 	cx->nxPos = (FPMPoint){ 0 * cx->faceSize.width, 1 * cx->faceSize.height };
@@ -164,6 +173,32 @@ FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context)
 	x = x * cx->halfWidth + cx->halfWidth;
 	y = y * cx->halfHeight + cx->halfHeight;
 	
-	// FIXME: for seamless cube mapping, we need some nasty special cases for the edges.
-	return FPMSampleLinearClamp(cx->pm, x + faceOffset.x, y + faceOffset.y);
+#if 0
+	if (x < 0.0 || x > (cx->halfWidth * 2.0 - 1.0))  printf("x: %g (width: %g)\n", x, cx->halfWidth * 2.0);
+	if (y < 0.0 || y > (cx->halfHeight * 2.0 - 1.0))  printf("y: %g (height: %g)\n", y, cx->halfHeight * 2.0);
+#endif
+	if (1)//(1 <= x && x <= cx->maxX && 1 <= y && y <= cx->maxY)
+	{
+		FPMColor result = FPMSampleLinearClamp(cx->pm, x + faceOffset.x, y + faceOffset.y);
+		if (result.a < 0.95)
+		{
+			result = (FPMColor){ 10, 0, 0, 1 };
+			printf("%g, %g\n", x, y);
+		}
+		return result;
+	}
+	else
+	{
+		// Deal with nasty edge cases.
+		return ReadCubeEdge(cx, x, y, coords);
+	}
+}
+
+
+static FPMColor ReadCubeEdge(ReadCubeContext *context, float x, float y, Vector coordinates)
+{
+	if (x < 2)  return (FPMColor){ 0, 0, 10, 1 };
+	if (y < 2)  return (FPMColor){ 0, 10, 0, 1 };
+	
+	return (FPMColor){ 10, 0, 0, 1 };
 }
