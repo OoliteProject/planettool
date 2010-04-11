@@ -208,6 +208,7 @@ static const SinkEntry sSinks[] =
 {
 	{ "latlong",			'l',	RenderToLatLong, 2048 },
 	{ "cube",				'c',	RenderToCube, 1024 },
+	{ "cube-flipped",		'f',	RenderToCubeFlipped, 1024 },
 	{ "cubex",				'x',	RenderToCubeCross, 1024 }
 };
 

@@ -12,4 +12,6 @@
 
 
 FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext);
+FloatPixMapRef RenderToCubeFlipped(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext);
+
 FloatPixMapRef RenderToCubeCross(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext);
