@@ -21,7 +21,7 @@ FPM_INLINE void GetLatLong(float x, float y, float size, float *lat, float *lon)
 #define SAMPLE_GRID_SIZE_FAST	3	// Should be odd.
 #define SAMPLE_GRID_SIZE_HIGHQ	11	// Should be odd.
 
-#define HALF_WIDTH			1.0f
+#define HALF_WIDTH			0.5f
 
 
 FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)

@@ -65,7 +65,7 @@ void FPMApplyGamma(FloatPixMapRef pm, FPMGammaFactor currentGamma, FPMGammaFacto
 {
 	if (pm != NULL && currentGamma != desiredGamma && steps > 1)
 	{
-		FPMGammaFactor resultingGamma = desiredGamma / currentGamma;
+		FPMGammaFactor resultingGamma = currentGamma / desiredGamma;
 		
 #if FPM_GAMMA_USE_LUT
 		if (steps >= FPMGetArea(pm) * 5)	// 5 is a fudge factor; 3 would strictly minimize number of powf() calls.

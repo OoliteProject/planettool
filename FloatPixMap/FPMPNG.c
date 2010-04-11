@@ -140,13 +140,13 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 	
 	free(rows);
 	
-	result = ConvertPNGData(data, width, height, rowBytes, pngInfo->bit_depth, pngInfo->color_type);
+	result = ConvertPNGData(data, width, height, rowBytes, png_get_bit_depth(png, pngInfo), png_get_color_type(png, pngInfo));
 	
 	if (result != NULL)
 	{
 		double invGamma = 1.0/kFPMGammaSRGB;
 		png_get_gAMA(png, pngInfo, &invGamma);
-		FPMApplyGamma(result, 1.0/invGamma, desiredGamma, pngInfo->bit_depth == 16 ? 65536 : 256);
+		FPMApplyGamma(result, 1.0/invGamma, desiredGamma, png_get_bit_depth(png, pngInfo) == 16 ? 65536 : 256);
 	}
 	
 	png_destroy_read_struct(&png, &pngInfo, &pngEndInfo);
@@ -208,8 +208,8 @@ bool FPMWritePNGCustom(FloatPixMapRef srcPM, png_voidp ioPtr, png_rw_ptr writeDa
 		pm = FPMCopy(srcPM);
 		if (pm == NULL)  return false;
 		
-		FPMApplyGamma(pm, sourceGamma, fileGamma, 65536);
 		unsigned steps = (options & kFPMWritePNG16BPC) ? 0x10000 : 0x100;
+		FPMApplyGamma(pm, sourceGamma, fileGamma, steps);
 		FPMQuantize(pm, 0.0f, 1.0f, 0.0f, steps - 1, steps, (options & kFPMQuantizeDither & kFPMQuantizeJitter) | kFMPQuantizeClip | kFMPQuantizeAlpha);
 		
 		png = png_create_write_struct(PNG_LIBPNG_VER_STRING, errorHandler, PNGError, PNGWarning);
@@ -300,14 +300,14 @@ static void PNGWriteFile(png_structp png, png_bytep bytes, png_size_t size)
 
 static void PNGError(png_structp png, png_const_charp message)
 {
-	FPMPNGErrorHandler *errCB = png->error_ptr;
+	FPMPNGErrorHandler *errCB = png_get_error_ptr(png);
 	if (errCB != NULL)  errCB(message, true);
 }
 
 
 static void PNGWarning(png_structp png, png_const_charp message)
 {
-	FPMPNGErrorHandler *errCB = png->error_ptr;
+	FPMPNGErrorHandler *errCB = png_get_error_ptr(png);
 	if (errCB != NULL)  errCB(message, false);
 }
 
