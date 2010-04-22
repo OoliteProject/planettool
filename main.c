@@ -148,6 +148,8 @@ int main (int argc, const char * argv[])
 		return EXIT_FAILURE;
 	}
 	
+	if (!settings.quiet)  printf("\n");
+	
 	// Destructimacate.
 	if (destructor != NULL)  destructor(sourceContext);
 	
@@ -647,12 +649,13 @@ static void ShowVersion(void)
 
 static void PrintProgress(size_t numerator, size_t denominator, void *context)
 {
-	unsigned percentage = numerator * 100 / denominator;
+	size_t percentage = (numerator * 100) / denominator;
 	unsigned *last = context;
 	
 	if (percentage > *last)
 	{
-		printf("%u %%\n", percentage);
+		printf("\r%u %%", percentage);
+		fflush(stdout);
 		*last = percentage;
 	}
 }

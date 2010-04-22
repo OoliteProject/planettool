@@ -122,3 +122,9 @@ float GaussTableLookup2D(float x, float xmid, float y, float ymid, float halfWid
 {
 	return GaussTableLookup(x, xmid, halfWidth, tblSize, table) * GaussTableLookup(y, ymid, halfWidth, tblSize, table);
 }
+
+
+void DummyProgressCallback(size_t numerator, size_t denominator, void *context)
+{
+	// Do nothing.
+}

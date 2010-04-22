@@ -162,6 +162,9 @@ float GaussTableLookup(float value, float mid, float halfWidth, unsigned tblSize
 float GaussTableLookup2D(float x, float xmid, float y, float ymid, float halfWidth, unsigned tblSize, float *table);
 
 
+void DummyProgressCallback(size_t numerator, size_t denominator, void *context);
+
+
 // [0..1]
 FPM_INLINE float RandF(void)
 {

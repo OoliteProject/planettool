@@ -125,7 +125,7 @@ FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context)
 	FPMPoint faceOffset;
 	float x, y;
 	
-	assert(ax * ay * az != 0);
+	assert(ax != 0.0f || ay != 0.0f || az != 0.0f);
 	
 	if (ax > ay && ax > az)
 	{

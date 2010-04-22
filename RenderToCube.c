@@ -9,17 +9,17 @@
 
 #include "RenderToCube.h"
 #include "FPMImageOperations.h"
+#include "PlanetToolScheduler.h"
 
 
 #define SAMPLE_GRID_SIZE_FAST	3	// Should be odd.
 #define SAMPLE_GRID_SIZE_HIGHQ	11	// Should be odd.
-//#define SAMPLE_MIDDLE			((SAMPLE_GRID_SIZE - 1) / 2)
-//#define SAMPLE_MIDDLE_F			((float)SAMPLE_MIDDLE)
 
 #define SAMPLE_WIDTH				1.2f
 
 
-static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, bool mirror, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *context);
+static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, bool mirror, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progressCB, void *progressContext, uint8_t faceIndex);
+static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontext);
 
 
 FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
@@ -41,20 +41,23 @@ FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSource
 	float weights[sampleGridSize];
 	BuildGaussTable(sampleGridSize, weights);
 	
+	uint8_t faceIndex = 0;
+	
 	// Render faces:
 	// +x
-	RenderCubeFace(pm, size, 0, 0, kBasisXVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 0, kBasisXVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -x
-	RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +y
-	RenderCubeFace(pm, size, 0, 2, kBasisYVector, kBasisZVector, false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 2, kBasisYVector, kBasisZVector, false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -y
-	RenderCubeFace(pm, size, 0, 3, vector_flip(kBasisYVector), vector_flip(kBasisZVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 3, vector_flip(kBasisYVector), vector_flip(kBasisZVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +z
-	RenderCubeFace(pm, size, 0, 4, kBasisZVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 4, kBasisZVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -z
-	RenderCubeFace(pm, size, 0, 5, vector_flip(kBasisZVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 5, vector_flip(kBasisZVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	
+	(void)faceIndex;
 	return pm;
 }
 
@@ -73,25 +76,28 @@ FloatPixMapRef RenderToCubeFlipped(size_t size, RenderFlags flags, SphericalPixe
 		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size, (unsigned long long)size * 6);
 		return NULL;
 	}
-	
+	 
 	unsigned sampleGridSize = (flags & kRenderFast) ? SAMPLE_GRID_SIZE_FAST : SAMPLE_GRID_SIZE_HIGHQ;
 	float weights[sampleGridSize];
 	BuildGaussTable(sampleGridSize, weights);
 	
+	uint8_t faceIndex = 0;
+	
 	// Render faces:
 	// -x
-	RenderCubeFace(pm, size, 0, 0, vector_flip(kBasisXVector), vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 0, vector_flip(kBasisXVector), vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +x
-	RenderCubeFace(pm, size, 0, 1, kBasisXVector, vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 1, kBasisXVector, vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +y
-	RenderCubeFace(pm, size, 0, 2, kBasisYVector, kBasisZVector, true, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 2, kBasisYVector, kBasisZVector, true, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -y
-	RenderCubeFace(pm, size, 0, 3, vector_flip(kBasisYVector), vector_flip(kBasisZVector), true, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 3, vector_flip(kBasisYVector), vector_flip(kBasisZVector), true, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +z
-	RenderCubeFace(pm, size, 0, 4, kBasisZVector, vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 4, kBasisZVector, vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -z
-	RenderCubeFace(pm, size, 0, 5, vector_flip(kBasisZVector), vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 5, vector_flip(kBasisZVector), vector_flip(kBasisYVector), true, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	
+	(void)faceIndex;
 	return pm;
 }
 
@@ -115,38 +121,99 @@ FloatPixMapRef RenderToCubeCross(size_t size, RenderFlags flags, SphericalPixelS
 	float weights[sampleGridSize];
 	BuildGaussTable(sampleGridSize, weights);
 	
+	uint8_t faceIndex = 0;
+	
 	// Render faces:
 	// +x
-	RenderCubeFace(pm, size, 2, 1, kBasisXVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 2, 1, kBasisXVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -x
-	RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +y
-	RenderCubeFace(pm, size, 1, 0, kBasisYVector, kBasisZVector, false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 1, 0, kBasisYVector, kBasisZVector, false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -y
-	RenderCubeFace(pm, size, 1, 2, vector_flip(kBasisYVector), vector_flip(kBasisZVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 1, 2, vector_flip(kBasisYVector), vector_flip(kBasisZVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// +z
-	RenderCubeFace(pm, size, 1, 1, kBasisZVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 1, 1, kBasisZVector, vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	// -z
-	RenderCubeFace(pm, size, 3, 1, vector_flip(kBasisZVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext);
+	RenderCubeFace(pm, size, 3, 1, vector_flip(kBasisZVector), vector_flip(kBasisYVector), false, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
 	
+	(void)faceIndex;
 	return pm;
 }
 
 
-static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, bool mirror, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *context)
+typedef struct RenderCubeFaceContext
+{
+	FloatPixMapRef					pm;
+	FPMDimension					width;
+	
+	SphericalPixelSourceFunction	source;
+	void							*sourceContext;
+	
+	unsigned						sampleGridSize;
+	float							*weights;
+	
+	float							fdiff;
+	float							scale;
+	Vector							rightVector;
+	Vector							downVector;
+	Vector							outVector;
+	
+	RenderFlags						flags;
+} RenderCubeFaceContext;
+
+
+static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, bool mirror, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progressCB, void *progressContext, uint8_t faceIndex)
 {
 	FloatPixMapRef subPM = FPMCreateSubC(pm, size * xoff, size * yoff, size, size);
-	assert(subPM != NULL);
-	
 	Vector rightVector = cross_product(outVector, downVector);
 	if (mirror)	 rightVector = vector_flip(rightVector);
-	
 	float scale = 2.0f / (float)size;
 	float fdiff = (2.0f * SAMPLE_WIDTH / (float)sampleGridSize) * scale;
 	
-	bool jitter = (flags & kRenderJitter);
+	RenderCubeFaceContext context =
+	{
+		.pm = subPM,
+		.width = FPMGetWidth(subPM),
+		.source = source,
+		.sourceContext = sourceContext,
+		.sampleGridSize = sampleGridSize,
+		.weights = weights,
+		.fdiff = fdiff,
+		.scale = scale,
+		.rightVector = rightVector,
+		.downVector = downVector,
+		.outVector = outVector,
+		.flags = flags
+	};
 	
-	FPM_FOR_EACH_PIXEL(subPM, true)
+	ScheduleRender(RenderCubeFaceLine, &context, size, faceIndex, 6, progressCB, progressContext);
+}
+
+
+static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontext)
+{
+	RenderCubeFaceContext *context = vcontext;
+	
+	SphericalPixelSourceFunction source = context->source;
+	void *sourceContext = context->sourceContext;
+	
+	unsigned sampleGridSize = context->sampleGridSize;
+	float *weights = context->weights;
+	
+	float fdiff = context->fdiff;
+	float scale = context->scale;
+	Vector rightVector = context->rightVector;
+	Vector downVector = context->downVector;
+	Vector outVector = context->outVector;
+	
+	RenderFlags flags = context->flags;
+	bool jitter = flags * kRenderJitter;
+	
+	FPMColor *pixel = FPMGetPixelPointerC(context->pm, 0, lineIndex);
+	FPMDimension x, y = lineIndex;
+	
+	for (x = 0; x < context->width; x++)
 	{
 		float fx = x;
 		float fy = y;
@@ -161,7 +228,7 @@ static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsign
 			fminx = fx * scale - 1.0f;
 			fminy = fy * scale - 1.0f;
 		}
-
+		
 		
 		FPMColor accum = kFPMColorClear;
 		float totalWeight = 0.0f;
@@ -188,7 +255,7 @@ static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsign
 				
 				Coordinates coord = MakeCoordsVector(coordv);
 				
-				FPMColor sample = source(coord, flags, context);
+				FPMColor sample = source(coord, flags, sourceContext);
 				
 				if (!jitter)
 				{
@@ -199,14 +266,15 @@ static void RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsign
 				{
 					weight = GaussTableLookup2D(fx, fminx, fy, fminy, SAMPLE_WIDTH * 0.5, sampleGridSize, weights);
 				}
-
+				
 				
 				accum = FPMColorAdd(FPMColorMultiply(sample, weight), accum);
 				totalWeight += weight;
 			}
 			fy += fdiff;
 		}
-		*pixel = FPMColorMultiply(accum, 1.0f / totalWeight);
-	}
-	FPM_END_FOR_EACH_PIXEL
+		*pixel++ = FPMColorMultiply(accum, 1.0f / totalWeight);
+	}	
+	
+	return true;
 }
