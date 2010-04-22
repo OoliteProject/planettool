@@ -5,7 +5,13 @@ LDFLAGS = -lpng -lz
 
 EXECUTABLE = planettool
 
-SCHEDULER = SerialScheduler
+ifndef scheduler
+	scheduler = PThreadScheduler
+endif
+
+ifeq ($(scheduler),PThreadScheduler)
+	LDFLAGS += -lpthread
+endif
 
 
 ifneq ($(debug),yes)
@@ -27,7 +33,7 @@ vpath %.m $(OOMATHS_PATH)
 .SUFFIXES: .m
 
 
-CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o MatrixTransformer.o $(SCHEDULER).o
+CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o MatrixTransformer.o $(scheduler).o
 FPM_OBJECTS = FloatPixMap.o FPMGamma.o FPMImageOperations.o FPMPNG.o FPMQuantize.o FPMRaw.o
 OOMATHS_OBJECTS = OOFastArithmetic.o OOMatrix.o OOQuaternion.o OOVector.o
 
@@ -56,7 +62,7 @@ RenderToLatLong.o: RenderToLatLong.h FPMImageOperations.h
 LatLongGridGenerator.o: LatLongGridGenerator.h
 RenderToCube.o: RenderToCube.h FPMImageOperations.h
 MatrixTransformer.o: MatrixTransformer.h
-SimpleScheduler.o: PlanetToolScheduler.h
+SerialScheduler.o PListScheduler.o: PlanetToolScheduler.h
 
 
 # FloatPixMap dependencies.

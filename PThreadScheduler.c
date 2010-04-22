@@ -117,6 +117,8 @@ static bool RunRenderTask(PlanetToolSchedulerContext *context)
 	pthread_t threads[threadCount];
 	int err = 0;
 	
+	printf("Rendering with %u threads.\n", threadCount);
+	
 	for (i = 0; i < threadCount; i++)
 	{
 		err = pthread_create(&threads[i], NULL, RenderThreadTask, context);
@@ -228,7 +230,7 @@ static unsigned ThreadCount(void)
 
 #else
 
-#warning Don't know how to determine number of processors on this system, rendering will be single-threaded.
+#warning Cannot determine number of processors on this system, rendering will be single-threaded.
 
 static unsigned ThreadCount(void)
 {
