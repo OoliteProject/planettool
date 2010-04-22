@@ -680,7 +680,7 @@ static void PrintProgress(size_t numerator, size_t denominator, void *context)
 	
 	if (percentage > *last)
 	{
-		printf("\r%u %%", percentage);
+		printf("\r%zu %%", percentage);
 		fflush(stdout);
 		*last = percentage;
 	}
