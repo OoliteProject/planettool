@@ -95,7 +95,6 @@ static bool InterpretArguments(int argc, const char * argv[], Settings *settings
 
 
 static void PrintProgress(size_t numerator, size_t denominator, void *context);
-static void SuppressProgress(size_t numerator, size_t denominator, void *context);
 
 
 int main (int argc, const char * argv[])
@@ -155,26 +154,23 @@ int main (int argc, const char * argv[])
 	}
 	
 	// Render.
-	ProgressCallbackFunction progressCB;
+	ProgressCallbackFunction progressCB = NULL;
 	unsigned progressCtxt = 0;
 	if (!settings.quiet)
 	{
 		printf("Rendering...\n");
 		progressCB = PrintProgress;
 	}
-	else
-	{
-		progressCB = SuppressProgress;
-	}
 	
 	FloatPixMapRef resultPM = settings.sink->sink(settings.size, settings.flags, source, sourceContext, progressCB, &progressCtxt);
 	FPMRelease(&sourcePM);
+	if (!settings.quiet)  printf("\n");
+	
 	if (resultPM == NULL)
 	{
+		fprintf(stderr, "Rendering failed.\n");
 		return EXIT_FAILURE;
 	}
-	
-	if (!settings.quiet)  printf("\n");
 	
 	// Destructimacate.
 	if (destructor != NULL)  destructor(sourceContext);
@@ -684,10 +680,4 @@ static void PrintProgress(size_t numerator, size_t denominator, void *context)
 		fflush(stdout);
 		*last = percentage;
 	}
-}
-
-
-static void SuppressProgress(size_t numerator, size_t denominator, void *context)
-{
-	
 }

@@ -80,43 +80,6 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 	float weights[sampleGridSize];
 	BuildGaussTable(sampleGridSize, weights);
 	
-#if 0
-	FPM_FOR_EACH_PIXEL(pm, true)
-		float latMin, lonMin, latMax, lonMax, latDiff, lonDiff;
-		GetLatLong((float)x - HALF_WIDTH + 0.5f, (float)y - HALF_WIDTH + 0.5f, size, &latMin, &lonMin);
-		GetLatLong((float)x + HALF_WIDTH + 0.5f, (float)y + HALF_WIDTH + 0.5f, size, &latMax, &lonMax);
-		
-		latDiff = latMax - latMin;
-		lonDiff = lonMax - lonMin;
-		float latStep = latDiff * 1.0f / (float)(sampleGridSize - 1);
-		float lonStep = lonDiff * 1.0f / (float)(sampleGridSize - 1);
-		
-		FPMColor accum = kFPMColorClear;
-		float totalWeight = 0.0f;
-		float lat = latMin, lon;
-		float weight, yw;
-		unsigned sx, sy;
-		
-		for (sy = 0; sy < sampleGridSize; sy++)
-		{
-			lon = lonMin;
-			yw = weights[sy];
-			for (sx = 0; sx < sampleGridSize; sx++)
-			{
-				FPMColor sample = source(MakeCoordsLatLongRad(lat, lon), flags, sourceContext);
-				weight = yw * weights[sx];
-				
-				accum = FPMColorAdd(FPMColorMultiply(sample, weight), accum);
-				totalWeight += weight;
-				
-				lon += lonStep;
-			}
-			lat += latStep;
-		}
-		
-		*pixel = FPMColorMultiply(accum, 1.0f / totalWeight);
-	FPM_END_FOR_EACH_PIXEL
-#else
 	RenderLatLongContext context =
 	{
 		.pm = pm,
@@ -128,8 +91,10 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 		.flags = flags
 	};
 	
-	ScheduleRender(RenderLatLongLine, &context, size, 0, 1, progress, progressContext);
-#endif
+	if (!ScheduleRender(RenderLatLongLine, &context, size, 0, 1, progress, progressContext))
+	{
+		FPMRelease(&pm);
+	}
 	
 	return pm;
 }

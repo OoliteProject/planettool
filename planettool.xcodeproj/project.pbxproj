@@ -43,7 +43,7 @@
 		1A1161251077502900A75165 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115A5810740C6200A75165 /* libz.dylib */; };
 		1A1161261077502900A75165 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng.a */; };
 		1A11612D1077503800A75165 /* FPMTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1161111077501C00A75165 /* FPMTest.c */; };
-		1A126E241180EB7300D2A744 /* SerialScheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A126E231180EB7300D2A744 /* SerialScheduler.c */; };
+		1A126EF71180FA1F00D2A744 /* PThreadScheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */; };
 		1A3D6DD710B020A9003F7810 /* ReadCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A3D6DD610B020A9003F7810 /* ReadCube.c */; };
 		1A675D7B10AEF97700786F5F /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B410AEF8EC0065D0F3 /* OOFastArithmetic.m */; };
 		1A675D7C10AEF97800786F5F /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B610AEF8F60065D0F3 /* OOMatrix.m */; };
@@ -136,6 +136,7 @@
 		1A11612B1077502900A75165 /* fpmtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fpmtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A126E151180E87800D2A744 /* PlanetToolScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanetToolScheduler.h; sourceTree = "<group>"; };
 		1A126E231180EB7300D2A744 /* SerialScheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SerialScheduler.c; sourceTree = "<group>"; };
+		1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PThreadScheduler.c; sourceTree = "<group>"; };
 		1A3D6DD510B020A9003F7810 /* ReadCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadCube.h; sourceTree = "<group>"; };
 		1A3D6DD610B020A9003F7810 /* ReadCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ReadCube.c; sourceTree = "<group>"; };
 		1A675E0210AF18D000786F5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -273,6 +274,7 @@
 			children = (
 				1A126E151180E87800D2A744 /* PlanetToolScheduler.h */,
 				1A126E231180EB7300D2A744 /* SerialScheduler.c */,
+				1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */,
 			);
 			name = Schedulers;
 			sourceTree = "<group>";
@@ -480,7 +482,7 @@
 				1A675D7D10AEF97800786F5F /* OOQuaternion.m in Sources */,
 				1A675D7E10AEF97900786F5F /* OOVector.m in Sources */,
 				1A3D6DD710B020A9003F7810 /* ReadCube.c in Sources */,
-				1A126E241180EB7300D2A744 /* SerialScheduler.c in Sources */,
+				1A126EF71180FA1F00D2A744 /* PThreadScheduler.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
