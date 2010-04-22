@@ -1,12 +1,3 @@
-/*
- *  interpolate.c
- *  planettool
- *
- *  Created by Jens Ayton on 2009-10-04.
- *  Copyright 2009 Jens Ayton. All rights reserved.
- *
- */
-
 #include "FPMImageOperations.h"
 #include "FPMPNG.h"
 #include <assert.h>
