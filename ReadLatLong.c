@@ -53,8 +53,8 @@ bool ReadLatLongConstructor(FloatPixMapRef sourceImage, RenderFlags flags, Spher
 	cx->width = (float)cx->pwidth / (2.0f * kPiF);
 	cx->height = (float)FPMGetHeight(sourceImage) / kPiF;
 	
-	if (flags & kRenderFast)  *source = ReadLatLong;
-	else  *source = ReadLatLongFast;
+	if (flags & kRenderFast)  *source = ReadLatLongFast;
+	else  *source = ReadLatLong;
 	
 	*context = cx;
 	return true;
