@@ -41,7 +41,7 @@ static const FPMColor kLonGridSouthColor = { 0, 1, 0, 1 };
 #define kBackgroundColor kFPMColorWhite
 
 
-FPMColor LatLongGridGenerator(Coordinates where, RenderFlags flags, void *context)
+static FPMColor LatLongGridGenerator(Coordinates where, RenderFlags flags, void *context)
 {
 	float latitude, longitude;
 	const float interval = 360.0f/36.0f;	// interval, degrees
@@ -70,4 +70,11 @@ FPMColor LatLongGridGenerator(Coordinates where, RenderFlags flags, void *contex
 	}
 	
 	return kBackgroundColor;
+}
+
+
+bool LatLongGridGeneratorConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context)
+{
+	*source = LatLongGridGenerator;
+	return true;
 }

@@ -61,7 +61,6 @@ typedef struct
 typedef struct
 {
 	FilterEntryBase					keys;
-	SphericalPixelSourceFunction	source;
 	SphericalPixelSourceConstructorFunction	constructor;
 	SphericalPixelSourceDestructorFunction	destructor;
 } SourceEntry;
@@ -129,14 +128,14 @@ int main (int argc, const char * argv[])
 	
 	// Run source constructor.
 	void *sourceContext = NULL;
+	SphericalPixelSourceFunction source = NULL;
 	if (settings.source->constructor != NULL)
 	{
-		if (!settings.source->constructor(sourcePM, settings.flags, &sourceContext))
+		if (!settings.source->constructor(sourcePM, settings.flags, &source, &sourceContext))
 		{
 			return EXIT_FAILURE;
 		}
 	}
-	SphericalPixelSourceFunction source = settings.source->source;
 	SphericalPixelSourceDestructorFunction destructor = settings.source->destructor;
 	
 	// Set up matrix filter if necessary.
@@ -212,7 +211,7 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 
 static const SourceEntry sGenerators[] =
 {
-	{ "grid1",				'g',	LatLongGridGenerator, NULL, NULL }
+	{ "grid1",				'g',	LatLongGridGeneratorConstructor, NULL }
 };
 
 enum { sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0] };
@@ -220,9 +219,9 @@ enum { sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0] };
 
 static const SourceEntry sReaders[] =
 {
-	{ "latlong",			'l',	ReadLatLong, ReadLatLongConstructor, ReadLatLongDestructor },
-	{ "cube",				'c',	ReadCube, ReadCubeConstructor, ReadCubeDestructor },
-	{ "cubex",				'x',	ReadCube, ReadCubeCrossConstructor, ReadCubeDestructor },
+	{ "latlong",			'l',	ReadLatLongConstructor, ReadLatLongDestructor },
+	{ "cube",				'c',	ReadCubeConstructor, ReadCubeDestructor },
+	{ "cubex",				'x',	ReadCubeCrossConstructor, ReadCubeDestructor },
 };
 
 enum { sReaderCount = sizeof sReaders / sizeof sReaders[0] };

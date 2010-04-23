@@ -46,10 +46,11 @@ typedef struct
 } ReadCubeContext;
 
 
+static FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context);
 static FPMColor ReadCubeEdge(ReadCubeContext *context, float x, float y, Vector coordinates);
 
 
-bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context)
+bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context)
 {
 	if (sourceImage == NULL || context == NULL)  return false;
 	
@@ -80,11 +81,12 @@ bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **c
 	cx->nzPos = (FPMPoint){ 0, 5 * cx->faceSize.height };
 	
 	*context = cx;
+	*source = ReadCube;
 	return true;
 }
 
 
-bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context)
+bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context)
 {
 	if (sourceImage == NULL || context == NULL)  return false;
 	
@@ -115,6 +117,7 @@ bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, voi
 	cx->nzPos = (FPMPoint){ 3 * cx->faceSize.width, 1 * cx->faceSize.height };
 	
 	*context = cx;
+	*source = ReadCube;
 	return true;
 }
 
@@ -129,7 +132,7 @@ void ReadCubeDestructor(void *context)
 }
 
 
-FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context)
+static FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context)
 {
 	assert(context != NULL);
 	ReadCubeContext *cx = context;

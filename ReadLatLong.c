@@ -37,7 +37,11 @@ typedef struct
 } ReadLatLongContext;
 
 
-bool ReadLatLongConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context)
+static FPMColor ReadLatLong(Coordinates where, RenderFlags flags, void *context);
+static FPMColor ReadLatLongFast(Coordinates where, RenderFlags flags, void *context);
+
+
+bool ReadLatLongConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context)
 {
 	if (sourceImage == NULL || context == NULL)  return false;
 	
@@ -48,6 +52,9 @@ bool ReadLatLongConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void 
 	cx->pwidth = FPMGetWidth(sourceImage);
 	cx->width = (float)cx->pwidth / (2.0f * kPiF);
 	cx->height = (float)FPMGetHeight(sourceImage) / kPiF;
+	
+	if (flags & kRenderFast)  *source = ReadLatLong;
+	else  *source = ReadLatLongFast;
 	
 	*context = cx;
 	return true;
@@ -64,7 +71,7 @@ void ReadLatLongDestructor(void *context)
 }
 
 
-FPMColor ReadLatLong(Coordinates where, RenderFlags flags, void *context)
+static FPMColor ReadLatLong(Coordinates where, RenderFlags flags, void *context)
 {
 	ReadLatLongContext *cx = context;
 	
@@ -73,14 +80,18 @@ FPMColor ReadLatLong(Coordinates where, RenderFlags flags, void *context)
 	lon = (rlon + kPiF) * cx->width;
 	lat = (kPiF / 2.0f - rlat) * cx->height;
 	
-	FPMColor sample;
-	if (!(flags & kRenderFast))
-	{
-		sample = FPMSampleLinear(cx->pm, lon, lat, kFPMWrapClamp, kFPMWrapRepeat);
-	}
-	else
-	{
-		sample = FPMGetPixelC(cx->pm, (size_t)lon % cx->pwidth, lat);
-	}
-	return sample;
+	return FPMSampleLinear(cx->pm, lon, lat, kFPMWrapClamp, kFPMWrapRepeat);
+}
+
+
+static FPMColor ReadLatLongFast(Coordinates where, RenderFlags flags, void *context)
+{
+	ReadLatLongContext *cx = context;
+	
+	float rlon, rlat, lon, lat;
+	CoordsGetLatLongRad(where, &rlat, &rlon);
+	lon = (rlon + kPiF) * cx->width;
+	lat = (kPiF / 2.0f - rlat) * cx->height;
+	
+	return FPMGetPixelC(cx->pm, (size_t)lon % cx->pwidth, lat);
 }

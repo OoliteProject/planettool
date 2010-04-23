@@ -237,10 +237,14 @@ static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontex
 	Vector outVector = context->outVector;
 	
 	RenderFlags flags = context->flags;
-	bool jitter = flags * kRenderJitter;
+	bool jitter = flags & kRenderJitter;
 	
 	FPMColor *pixel = FPMGetPixelPointerC(context->pm, 0, lineIndex);
 	FPMDimension x, y = lineIndex;
+	
+	/*	FIXME: combining fast (i.e., small sampleGridSize) and jitter cuts off
+		part of each face.
+	*/
 	
 	for (x = 0; x < context->width; x++)
 	{

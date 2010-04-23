@@ -27,8 +27,6 @@
 #include "SphericalPixelSource.h"
 
 
-bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context);
-bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context);
+bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
+bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
 void ReadCubeDestructor(void *context);
-
-FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context);

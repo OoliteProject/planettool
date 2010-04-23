@@ -163,7 +163,7 @@ typedef uint32_t RenderFlags;
 */
 typedef FPMColor (*SphericalPixelSourceFunction)(Coordinates where, RenderFlags flags, void *context);
 
-typedef bool (*SphericalPixelSourceConstructorFunction)(FloatPixMapRef sourceImage, RenderFlags flags, void **context);
+typedef bool (*SphericalPixelSourceConstructorFunction)(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
 typedef void (*SphericalPixelSourceDestructorFunction)(void *context);
 
 typedef void (*ProgressCallbackFunction)(size_t numerator, size_t denominator, void *context);

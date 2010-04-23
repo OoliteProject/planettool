@@ -27,7 +27,5 @@
 #include "SphericalPixelSource.h"
 
 
-bool ReadLatLongConstructor(FloatPixMapRef sourceImage, RenderFlags flags, void **context);
+bool ReadLatLongConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
 void ReadLatLongDestructor(void *context);
-
-FPMColor ReadLatLong(Coordinates where, RenderFlags flags, void *context);

@@ -28,4 +28,4 @@
 #include "SphericalPixelSource.h"
 
 
-FPMColor LatLongGridGenerator(Coordinates where, RenderFlags flags, void *context);
+bool LatLongGridGeneratorConstructor(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
