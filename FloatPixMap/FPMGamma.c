@@ -17,7 +17,7 @@ const FPMGammaFactor kFPMGammaTraditionalMac	= 1.8f;
 
 
 #ifndef FPM_GAMMA_USE_LUT
-#define FPM_GAMMA_USE_LUT 1
+#define FPM_GAMMA_USE_LUT 0
 #endif
 
 

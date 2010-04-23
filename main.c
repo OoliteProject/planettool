@@ -297,7 +297,7 @@ static const ArgumentHandler sHandlers[] =
 	},
 	{
 		"rotate",		'R', 3, ParseRotate,
-		"<ry> <rx> <rz>", false, "Rotate the texture around the planet while rendering. The ry axis corresponds to the axis of rotation.", NULL, 0, 0
+		"<ry> <rx> <rz>", false, "Rotate the texture around the planet while rendering. The ry axis corresponds to the planet's axis of rotation.", NULL, 0, 0
 	},
 	{
 		"help",			'H', 0, ParseHelp,
