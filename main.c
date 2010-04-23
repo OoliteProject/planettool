@@ -684,7 +684,7 @@ static void ShowHelp(void)
 		   "planettool -o c cubemap.png -i l original.png -S 512\n"
 		   "    Same as above, only less legible for extra geek cred.\n"
 		   "\n"
-		   "planettool -o cube grid.png --generator grid1 --fast --rotate 30 0 0  --flip\n"
+		   "planettool -o cube grid.png --generator grid1 --fast --rotate 30 0 0 --flip\n"
 		   "    Generate a grid, tilted 30 degrees and projected onto an inside-out cube map\n"
 		   "    at low quality.\n"
 		   "\n"
