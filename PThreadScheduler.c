@@ -30,6 +30,10 @@
 #include "PlanetToolScheduler.h"
 #include <pthread.h>
 
+#ifdef __WIN32__
+#include <windows.h>
+#endif
+
 
 typedef struct PlanetToolSchedulerContext
 {
@@ -226,6 +230,16 @@ static unsigned ThreadCount(void)
 static unsigned ThreadCount(void)
 {
 	return sysconf(_SC_NPROCESSORS_ONLN);
+}
+
+#elif defined __WIN32__
+
+static unsigned ThreadCount(void)
+{
+	SYSTEM_INFO	sysInfo;
+	
+	GetSystemInfo(&sysInfo);
+	return sysInfo.dwNumberOfProcessors;
 }
 
 #else

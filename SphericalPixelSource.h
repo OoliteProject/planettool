@@ -39,6 +39,11 @@ FPM_BEGIN_EXTERN_C
 #define kRadToDeg		(180.0f / kPiF)
 
 
+#ifdef __WIN32__
+#define random	rand
+#endif
+
+
 // In Mac OS X on Intel systems, fmodf() calls fmodl() (externally), but fmodl() is inlined and thus faster.
 #if FMODF_JUST_WRAPS_FMODL
 #undef fmodf

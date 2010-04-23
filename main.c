@@ -48,6 +48,11 @@ const char * kVersionString =
 ;
 
 
+#ifdef __WIN32__
+#define srandom	srand
+#endif
+
+
 static void ErrorHandler(const char *message, bool isError);
 
 
