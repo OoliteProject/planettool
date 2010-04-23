@@ -204,6 +204,7 @@ static bool ParseSize(int argc, const char *argv[], int *consumedArgs, Settings 
 static bool ParseFast(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseJitter(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseRotate(int argc, const char *argv[], int *consumedArgs, Settings *settings);
+static bool ParseFlip(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseHelp(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseVersion(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings *settings);
@@ -231,7 +232,6 @@ static const SinkEntry sSinks[] =
 {
 	{ "latlong",			'l',	RenderToLatLong, 2048 },
 	{ "cube",				'c',	RenderToCube, 1024 },
-	{ "cube-flipped",		'f',	RenderToCubeFlipped, 1024 },
 	{ "cubex",				'x',	RenderToCubeCross, 1024 }
 };
 
@@ -282,8 +282,12 @@ static const ArgumentHandler sHandlers[] =
 		NULL, false, "Use jittering for slower, slightly noisy rendering which may look better in some cases.", NULL, 0, 0
 	},
 	{
+		"flip",			'L', 0, ParseFlip,
+		NULL, false, "Mirror the texture in 3D space (through the YZ plane) while rendering. This produces an \"inside-out\" texture.", NULL, 0, 0
+	},
+	{
 		"rotate",		'R', 3, ParseRotate,
-		"<ry> <rx> <rz>", false, "Unimplemented.", NULL, 0, 0
+		"<ry> <rx> <rz>", false, "Rotate the texture around the planet while rendering. The ry axis corresponds to the axis of rotation.", NULL, 0, 0
 	},
 	{
 		"help",			'H', 0, ParseHelp,
@@ -543,12 +547,47 @@ static bool ParseJitter(int argc, const char *argv[], int *consumedArgs, Setting
 }
 
 
+static bool ParseOneFloat(const char *string, double *value)
+{
+	assert(string != NULL && value != NULL);
+	
+	char *end = NULL;
+	*value = strtof(string, &end);
+	if (end != string)  return true;
+	else
+	{
+		fprintf(stderr, "Could not interpret argument \"%s\" as a number.\n", string);
+		return false;
+	}
+}
+
+
 static bool ParseRotate(int argc, const char *argv[], int *consumedArgs, Settings *settings)
 {
 	*consumedArgs += 3;
 	
 	// FIXME: set up matrix.
+	double rx, ry, rz;
+	if (!ParseOneFloat(argv[0], &rx))  return false;
+	if (!ParseOneFloat(argv[1], &ry))  return false;
+	if (!ParseOneFloat(argv[2], &rz))  return false;
 	
+	OOMatrix rotation = kIdentityMatrix;
+	rotation = OOMatrixRotateX(rotation, rx * kDegToRad);
+	rotation = OOMatrixRotateZ(rotation, rz * kDegToRad);
+	
+	// Y axis (planetary axis) rotation is deliberately applied last. This makes it rotate around the *original* axis of rotation.
+	rotation = OOMatrixRotateY(rotation, ry * kDegToRad);
+	
+	settings->transform = OOMatrixMultiply(settings->transform, rotation);
+	
+	return true;
+}
+
+
+static bool ParseFlip(int argc, const char *argv[], int *consumedArgs, Settings *settings)
+{
+	settings->transform = OOMatrixScale(settings->transform, -1, 1, 1);
 	return true;
 }
 
@@ -632,34 +671,33 @@ static void ShowHelp(void)
 		   "is extremely slow. Don't be alarmed if it takes several minutes to do anything.\n"
 		   "\n"
 		   "EXAMPLES:\n"
-		   "planettool --output cube-flipped \"cubemap.png\" --input latlong \"original.png\" --size 512\n"
+		   "planettool --output cube \"cubemap.png\" --input latlong \"original.png\" --size 512\n"
 		   "    Reads original.png, treated as a latitude-longitude map, and remaps it to a\n"
 		   "    cube map with a side length of 512 pixels.\n"
 		   "\n"
-		   "planettool -o f cubemap.png -i l original.png -S 512\n"
+		   "planettool -o c cubemap.png -i l original.png -S 512\n"
 		   "    Same as above, only less legible for extra geek cred.\n"
 		   "\n"
-		   "planettool -o cube-flipped grid.png --generator grid1 --fast --rotate 0 30 0\n"
-		   "    Generate a grid, tilted 30 degrees and projected onto a cube map at low\n"
-		   "    quality.\n"
+		   "planettool -o cube grid.png --generator grid1 --fast --rotate 30 0 0  --flip\n"
+		   "    Generate a grid, tilted 30 degrees and projected onto an inside-out cube map\n"
+		   "    at low quality.\n"
 		   "\n"
 		   "THE PROJECTION TYPES:\n"
-		   "     latlong: in this format, the intervals between pixels are constant steps\n"
-		   "              of latitude and longitude. This is conceptually simple, but\n"
-		   "              inefficent; lots of pixels are crammed together tightly near the\n"
-		   "              poles.\n"
-		   "        cube: The surface is divided into six equal areas, which are projected\n"
-		   "              onto squares. These are then stacked vertically, in the following\n"
-		   "              order: +x, -x, +y, -y, +z, -z.\n"
-		   "cube-flipped: The same projection as cube, but inside-out.\n"
-		   "       cubex: The same projection as cube, but the squares are rearranged into\n"
-		   "              a more human-friendly layout (which can be printed and folded into\n"
-		   "              a cube if you're bored).\n"
+		   // "=========|=========|=========|=========|=========|=========|=========|=========|\n"
+		   "latlong: in this format, the intervals between pixels are constant steps of\n"
+		   "         latitude and longitude. This is conceptually simple, but inefficent; lots\n"
+		   "         of pixels are crammed together tightly near the poles.\n"
+		   "   cube: The surface is divided into six equal areas, which are projected onto\n"
+		   "         squares. These are then stacked vertically, in the following order:\n"
+		   "         +x, -x, +y, -y, +z, -z.\n"
+		   "  cubex: The same projection as cube, but the squares are rearranged into a more\n"
+		   "         human-friendly layout (which can be printed and folded into a cube if\n"
+		   "         you're bored).\n"
 		   "\n"
 		   "THE GENERATORS:\n"
-		   "       grid1: A grid with lines spaced ten degrees apart. Longitude lines are\n"
-		   "              green in the northern hemisphere, blue in the south. Latitude\n"
-		   "              lines are red in the western hemisphere, teal in the east.\n");
+		   "  grid1: A grid with lines spaced ten degrees apart. Longitude lines are green\n"
+		   "         in the northern hemisphere, blue in the south. Latitude lines are red\n"
+		   "         in the western hemisphere, teal in the east.\n");
 		// "=========|=========|=========|=========|=========|=========|=========|=========|\n"
 }
 
