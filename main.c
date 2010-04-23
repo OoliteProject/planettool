@@ -181,6 +181,7 @@ int main (int argc, const char * argv[])
 		return EXIT_FAILURE;
 	}
 	
+	printf("Done.\n");
 	return 0;
 }
 
@@ -663,7 +664,7 @@ static void ShowHelp(void)
 	// ACT III: the Expository Text.
 	printf("\n"
 		// "=========|=========|=========|=========|=========|=========|=========|=========|\n"
-		   "Planettool reads a global map from an input file (in PNG format) or a generator\n"
+		   "Planettool reads a texture map from an input file (in PNG format) or a generator\n"
 		   "function, and writes it to an output file (in PNG format). In so doing, it may\n"
 		   "change the projection and scale of the map, and may rotate it around the planet.\n"
 		   "\n"
