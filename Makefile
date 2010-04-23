@@ -23,7 +23,15 @@ ifndef srcdir
 endif
 
 FPM_PATH = $(srcdir)/FloatPixMap/
-OOMATHS_PATH = $(srcdir)/../../src/Core/
+
+ifndef OOMATHS_PATH
+	ifneq ($(inrepo),yes)
+		OOMATHS_PATH = $(srcdir)/Oolite/
+	else
+		OOMATHS_PATH = $(srcdir)/../../src/Core/
+	endif
+endif
+		
 
 
 vpath %.h $(FPM_PATH):$(OOMATHS_PATH)

@@ -1,0 +1,24 @@
+#! /bin/sh
+
+VERSION=`cat planettool-version.h | sed s/\"//g`
+OOLITE_DIR="../../src/Core"
+
+# Export source.
+cd ..
+svn export planettool planettool-$VERSION
+cd planettool-$VERSION
+
+# Remove unneeded stuff.
+rm builddistro
+rm -rf *.xcodeproj
+rm benchmark.c
+rm interpolate.c
+
+# Copy Oolite maths library.
+mkdir Oolite
+cp $OOLITE_DIR/OOMaths.h Oolite/
+cp $OOLITE_DIR/OOFunctionAttributes.h Oolite/
+cp $OOLITE_DIR/OOFastArithmetic.? Oolite/
+cp $OOLITE_DIR/OOMatrix.? Oolite/
+cp $OOLITE_DIR/OOVector.? Oolite/
+cp $OOLITE_DIR/OOQuaternion.? Oolite/
