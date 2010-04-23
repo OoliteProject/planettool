@@ -117,8 +117,6 @@ static bool RunRenderTask(PlanetToolSchedulerContext *context)
 	pthread_t threads[threadCount];
 	int err = 0;
 	
-	printf("Rendering with %u threads.\n", threadCount);
-	
 	for (i = 0; i < threadCount; i++)
 	{
 		err = pthread_create(&threads[i], NULL, RenderThreadTask, context);
@@ -151,6 +149,8 @@ static bool RunRenderTask(PlanetToolSchedulerContext *context)
 				context->progressCB(context->progressNumerator + context->index, context->progressDenominator, context->progressContext);
 			}
 		}
+		
+		if (!context->stop)  context->progressCB(context->progressNumerator + context->lineCount, context->progressDenominator, context->progressContext);
 	}
 	
 	// Wait for completion.

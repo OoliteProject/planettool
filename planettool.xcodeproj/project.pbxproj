@@ -11,7 +11,7 @@
 		1A1159D91073FAB200A75165 /* FPMPNG.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159D81073FAB200A75165 /* FPMPNG.c */; };
 		1A115A5910740C6200A75165 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115A5810740C6200A75165 /* libz.dylib */; };
 		1A115AD81074866300A75165 /* FPMGamma.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115AD71074866300A75165 /* FPMGamma.c */; };
-		1A115B9B10754C9A00A75165 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng.a */; };
+		1A115B9B10754C9A00A75165 /* libpng_for_planettool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */; };
 		1A115BB010754CC000A75165 /* png.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115B9D10754CC000A75165 /* png.c */; };
 		1A115BB110754CC000A75165 /* png.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A115B9E10754CC000A75165 /* png.h */; };
 		1A115BB210754CC000A75165 /* pngconf.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A115B9F10754CC000A75165 /* pngconf.h */; };
@@ -41,7 +41,7 @@
 		1A1161221077502900A75165 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
 		1A1161231077502900A75165 /* FPMImageOperations.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115F1E107657E400A75165 /* FPMImageOperations.c */; };
 		1A1161251077502900A75165 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115A5810740C6200A75165 /* libz.dylib */; };
-		1A1161261077502900A75165 /* libpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng.a */; };
+		1A1161261077502900A75165 /* libpng_for_planettool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */; };
 		1A11612D1077503800A75165 /* FPMTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1161111077501C00A75165 /* FPMTest.c */; };
 		1A126EF71180FA1F00D2A744 /* PThreadScheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */; };
 		1A3D6DD710B020A9003F7810 /* ReadCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A3D6DD610B020A9003F7810 /* ReadCube.c */; };
@@ -105,7 +105,7 @@
 		1A115AD61074866300A75165 /* FPMGamma.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPMGamma.h; sourceTree = "<group>"; };
 		1A115AD71074866300A75165 /* FPMGamma.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMGamma.c; sourceTree = "<group>"; };
 		1A115AE3107526AB00A75165 /* FPMBasics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPMBasics.h; sourceTree = "<group>"; };
-		1A115B8F10754BFC00A75165 /* libpng.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpng.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpng_for_planettool.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A115B9D10754CC000A75165 /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = png.c; path = "../../deps/Cross-platform-deps/libpng/png.c"; sourceTree = SOURCE_ROOT; };
 		1A115B9E10754CC000A75165 /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = png.h; path = "../../deps/Cross-platform-deps/libpng/png.h"; sourceTree = SOURCE_ROOT; };
 		1A115B9F10754CC000A75165 /* pngconf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pngconf.h; path = "../../deps/Cross-platform-deps/libpng/pngconf.h"; sourceTree = SOURCE_ROOT; };
@@ -178,7 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A1161251077502900A75165 /* libz.dylib in Frameworks */,
-				1A1161261077502900A75165 /* libpng.a in Frameworks */,
+				1A1161261077502900A75165 /* libpng_for_planettool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A115A5910740C6200A75165 /* libz.dylib in Frameworks */,
-				1A115B9B10754C9A00A75165 /* libpng.a in Frameworks */,
+				1A115B9B10754C9A00A75165 /* libpng_for_planettool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				8DD76FB20486AB0100D96B5E /* planettool */,
-				1A115B8F10754BFC00A75165 /* libpng.a */,
+				1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */,
 				1A11612B1077502900A75165 /* fpmtest */,
 			);
 			name = Products;
@@ -362,7 +362,7 @@
 			);
 			name = libpng;
 			productName = libpng;
-			productReference = 1A115B8F10754BFC00A75165 /* libpng.a */;
+			productReference = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		1A1161141077502900A75165 /* FPMTest */ = {
@@ -521,7 +521,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = png;
+				PRODUCT_NAME = png_for_planettool;
 			};
 			name = Debug;
 		};
@@ -543,7 +543,7 @@
 					AppKit,
 				);
 				PREBINDING = NO;
-				PRODUCT_NAME = png;
+				PRODUCT_NAME = png_for_planettool;
 				ZERO_LINK = NO;
 			};
 			name = Release;
