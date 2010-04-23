@@ -41,7 +41,7 @@ vpath %.m $(OOMATHS_PATH)
 .SUFFIXES: .m
 
 
-CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o MatrixTransformer.o $(scheduler).o
+CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o RenderToMercator.o RenderToGallPeters.o MatrixTransformer.o $(scheduler).o
 FPM_OBJECTS = FloatPixMap.o FPMGamma.o FPMImageOperations.o FPMPNG.o FPMQuantize.o FPMRaw.o
 OOMATHS_OBJECTS = OOFastArithmetic.o OOMatrix.o OOQuaternion.o OOVector.o
 
@@ -67,6 +67,8 @@ SphericalPixelSource.o: SphericalPixelSource.h
 ReadLatLong.o: ReadLatLong.h FPMImageOperations.h PlanetToolScheduler.h
 ReadCube.o: ReadCube.h FPMImageOperations.h PlanetToolScheduler.h
 RenderToLatLong.o: RenderToLatLong.h FPMImageOperations.h
+RenderToMercator.o: RenderToMercator.o FPMImageOperations.h
+RenderToGallPeters.o: RenderToGallPeters.o FPMImageOperations.h
 LatLongGridGenerator.o: LatLongGridGenerator.h
 RenderToCube.o: RenderToCube.h FPMImageOperations.h
 MatrixTransformer.o: MatrixTransformer.h

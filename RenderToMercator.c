@@ -1,5 +1,5 @@
 /*
-	RenderToLatLong.c
+	RenderToMercator.c
 	planettool
 	
 	
@@ -31,7 +31,8 @@
 
 FPM_INLINE void GetLatLong(float x, float y, float size, float *lat, float *lon)
 {
-	*lat = ((size - y) / size - 0.5f) * kPiF;
+	float adjY = ((size * 3 / 2 - y) / size - 0.5f) * kPiF;
+	*lat = 2 * atanf(expf(adjY)) - (kPiF / 2.0f);
 	*lon = (x / size - 1.0f) * kPiF;
 }
 
@@ -42,10 +43,10 @@ FPM_INLINE void GetLatLong(float x, float y, float size, float *lat, float *lon)
 #define HALF_WIDTH			0.5f
 
 
-static bool RenderLatLongLine(size_t lineIndex, size_t lineCount, void *vcontext);
+static bool RenderMercatorLine(size_t lineIndex, size_t lineCount, void *vcontext);
 
 
-typedef struct RenderLatLongContext
+typedef struct RenderMercatorContext
 {
 	FloatPixMapRef					pm;
 	size_t							size;
@@ -58,10 +59,10 @@ typedef struct RenderLatLongContext
 	
 	RenderFlags						flags;
 	
-} RenderLatLongContext;
+} RenderMercatorContext;
 
 
-FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
+FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
 {
 	if (size < 1)
 	{
@@ -69,7 +70,7 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 		return NULL;
 	}
 	
-	FloatPixMapRef pm = FPMCreateC(size * 2, size);
+	FloatPixMapRef pm = FPMCreateC(size, size);
 	if (pm == NULL)
 	{
 		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
@@ -80,7 +81,7 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 	float weights[sampleGridSize];
 	BuildGaussTable(sampleGridSize, weights);
 	
-	RenderLatLongContext context =
+	RenderMercatorContext context =
 	{
 		.pm = pm,
 		.size = size,
@@ -91,7 +92,7 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 		.flags = flags
 	};
 	
-	if (!ScheduleRender(RenderLatLongLine, &context, size, 0, 1, progress, progressContext))
+	if (!ScheduleRender(RenderMercatorLine, &context, size, 0, 1, progress, progressContext))
 	{
 		FPMRelease(&pm);
 	}
@@ -100,9 +101,9 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 }
 
 
-static bool RenderLatLongLine(size_t lineIndex, size_t lineCount, void *vcontext)
+static bool RenderMercatorLine(size_t lineIndex, size_t lineCount, void *vcontext)
 {
-	RenderLatLongContext *context = vcontext;
+	RenderMercatorContext *context = vcontext;
 	
 	size_t size = context->size;
 	
@@ -117,11 +118,11 @@ static bool RenderLatLongLine(size_t lineIndex, size_t lineCount, void *vcontext
 	FPMColor *pixel = FPMGetPixelPointerC(context->pm, 0, lineIndex);
 	FPMDimension x, y = lineIndex;
 	
-	for (x = 0; x < size * 2; x++)
+	for (x = 0; x < size; x++)
 	{
 		float latMin, lonMin, latMax, lonMax, latDiff, lonDiff;
-		GetLatLong((float)x - HALF_WIDTH + 0.5f, (float)y - HALF_WIDTH + 0.5f, size, &latMin, &lonMin);
-		GetLatLong((float)x + HALF_WIDTH + 0.5f, (float)y + HALF_WIDTH + 0.5f, size, &latMax, &lonMax);
+		GetLatLong((float)x - HALF_WIDTH + 0.5f, (float)y - HALF_WIDTH + 0.5f, size / 2, &latMin, &lonMin);
+		GetLatLong((float)x + HALF_WIDTH + 0.5f, (float)y + HALF_WIDTH + 0.5f, size / 2, &latMax, &lonMax);
 		
 		latDiff = latMax - latMin;
 		lonDiff = lonMax - lonMin;

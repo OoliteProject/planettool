@@ -1,5 +1,5 @@
 /*
-	RenderToLatLong.c
+	RenderToGallPeters.c
 	planettool
 	
 	
@@ -29,10 +29,10 @@
 #include "PlanetToolScheduler.h"
 
 
-FPM_INLINE void GetLatLong(float x, float y, float size, float *lat, float *lon)
+FPM_INLINE void GetLatLong(float x, float y, float width, float heightF, float *lat, float *lon)
 {
-	*lat = ((size - y) / size - 0.5f) * kPiF;
-	*lon = (x / size - 1.0f) * kPiF;
+	*lat = asinf(y * heightF + 1.0f);
+	*lon = (x / width - 1.0f) * kPiF;
 }
 
 
@@ -42,13 +42,15 @@ FPM_INLINE void GetLatLong(float x, float y, float size, float *lat, float *lon)
 #define HALF_WIDTH			0.5f
 
 
-static bool RenderLatLongLine(size_t lineIndex, size_t lineCount, void *vcontext);
+static bool RenderGallPetersLine(size_t lineIndex, size_t lineCount, void *vcontext);
 
 
-typedef struct RenderLatLongContext
+typedef struct RenderGallPetersContext
 {
 	FloatPixMapRef					pm;
-	size_t							size;
+	size_t							width;
+	float							widthF;
+	float							heightF;
 	
 	unsigned						sampleGridSize;
 	float							*weights;
@@ -58,10 +60,10 @@ typedef struct RenderLatLongContext
 	
 	RenderFlags						flags;
 	
-} RenderLatLongContext;
+} RenderGallPetersContext;
 
 
-FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
+FloatPixMapRef RenderToGallPeters(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
 {
 	if (size < 1)
 	{
@@ -69,7 +71,8 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 		return NULL;
 	}
 	
-	FloatPixMapRef pm = FPMCreateC(size * 2, size);
+	size_t height = 1.0f / kPiF * 2 * size;
+	FloatPixMapRef pm = FPMCreateC(size, height);
 	if (pm == NULL)
 	{
 		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
@@ -80,10 +83,12 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 	float weights[sampleGridSize];
 	BuildGaussTable(sampleGridSize, weights);
 	
-	RenderLatLongContext context =
+	RenderGallPetersContext context =
 	{
 		.pm = pm,
-		.size = size,
+		.width = size,
+		.widthF = size / 2.0f,
+		.heightF = -2.0f / height,
 		.sampleGridSize = sampleGridSize,
 		.weights = weights,
 		.source = source,
@@ -91,7 +96,7 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 		.flags = flags
 	};
 	
-	if (!ScheduleRender(RenderLatLongLine, &context, size, 0, 1, progress, progressContext))
+	if (!ScheduleRender(RenderGallPetersLine, &context, height, 0, 1, progress, progressContext))
 	{
 		FPMRelease(&pm);
 	}
@@ -100,11 +105,12 @@ FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSou
 }
 
 
-static bool RenderLatLongLine(size_t lineIndex, size_t lineCount, void *vcontext)
+static bool RenderGallPetersLine(size_t lineIndex, size_t lineCount, void *vcontext)
 {
-	RenderLatLongContext *context = vcontext;
+	RenderGallPetersContext *context = vcontext;
 	
-	size_t size = context->size;
+	float widthF = context->widthF;
+	float heightF = context->heightF;
 	
 	SphericalPixelSourceFunction source = context->source;
 	void *sourceContext = context->sourceContext;
@@ -117,11 +123,12 @@ static bool RenderLatLongLine(size_t lineIndex, size_t lineCount, void *vcontext
 	FPMColor *pixel = FPMGetPixelPointerC(context->pm, 0, lineIndex);
 	FPMDimension x, y = lineIndex;
 	
-	for (x = 0; x < size * 2; x++)
+	size_t width = context->width;
+	for (x = 0; x < width; x++)
 	{
 		float latMin, lonMin, latMax, lonMax, latDiff, lonDiff;
-		GetLatLong((float)x - HALF_WIDTH + 0.5f, (float)y - HALF_WIDTH + 0.5f, size, &latMin, &lonMin);
-		GetLatLong((float)x + HALF_WIDTH + 0.5f, (float)y + HALF_WIDTH + 0.5f, size, &latMax, &lonMax);
+		GetLatLong((float)x - HALF_WIDTH + 0.5f, (float)y - HALF_WIDTH + 0.5f, widthF, heightF, &latMin, &lonMin);
+		GetLatLong((float)x + HALF_WIDTH + 0.5f, (float)y + HALF_WIDTH + 0.5f, widthF, heightF, &latMax, &lonMax);
 		
 		latDiff = latMax - latMin;
 		lonDiff = lonMax - lonMin;

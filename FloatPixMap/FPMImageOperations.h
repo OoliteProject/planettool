@@ -79,12 +79,12 @@ typedef enum
 FPMColor FPMSampleLinear(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy);
 FPM_INLINE FPMColor FPMSampleLinearClamp(FloatPixMapRef pm, float x, float y)  { return FPMSampleLinear(pm, x, y, kFPMWrapClamp, kFPMWrapClamp); }
 
-/*	FPMSampleCubic()
-	Sample pixels at specified point, with bicubic interpolation. The wrap
-	arguments specify what to do with out-of-range values.
+/*	FPMSampleCubicHermite()
+	Sample pixels at specified point, with bicubic hermite interpolation. The
+	wrap arguments specify what to do with out-of-range values.
 */
-FPMColor FPMSampleCubic(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy);
-FPM_INLINE FPMColor FPMSampleCubicClamp(FloatPixMapRef pm, float x, float y)  { return FPMSampleCubic(pm, x, y, kFPMWrapClamp, kFPMWrapClamp); }
+FPMColor FPMSampleCubicHermite(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy);
+FPM_INLINE FPMColor FPMSampleCubicHermiteClamp(FloatPixMapRef pm, float x, float y)  { return FPMSampleCubicHermite(pm, x, y, kFPMWrapClamp, kFPMWrapClamp); }
 
 
 /*	FPM_FOR_EACH_PIXEL()

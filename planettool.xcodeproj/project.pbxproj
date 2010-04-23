@@ -49,6 +49,8 @@
 		1A675D7C10AEF97800786F5F /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B610AEF8F60065D0F3 /* OOMatrix.m */; };
 		1A675D7D10AEF97800786F5F /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B810AEF8FE0065D0F3 /* OOQuaternion.m */; };
 		1A675D7E10AEF97900786F5F /* OOVector.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96BA10AEF9050065D0F3 /* OOVector.m */; };
+		1A698FA6118233CA0078BFB6 /* RenderToMercator.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A698FA4118233CA0078BFB6 /* RenderToMercator.c */; };
+		1A699028118248A40078BFB6 /* RenderToGallPeters.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A699026118248A40078BFB6 /* RenderToGallPeters.c */; };
 		1A8DA59110777E0A00114A36 /* LatLongGridGenerator.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DA59010777E0A00114A36 /* LatLongGridGenerator.c */; };
 		1A8DA59410777E6700114A36 /* RenderToLatLong.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DA59310777E6600114A36 /* RenderToLatLong.c */; };
 		1A98F9541078ABA300E0F928 /* MatrixTransformer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A98F9531078ABA300E0F928 /* MatrixTransformer.c */; };
@@ -140,6 +142,10 @@
 		1A3D6DD510B020A9003F7810 /* ReadCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadCube.h; sourceTree = "<group>"; };
 		1A3D6DD610B020A9003F7810 /* ReadCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ReadCube.c; sourceTree = "<group>"; };
 		1A675E0210AF18D000786F5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		1A698FA4118233CA0078BFB6 /* RenderToMercator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RenderToMercator.c; sourceTree = "<group>"; };
+		1A698FA5118233CA0078BFB6 /* RenderToMercator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderToMercator.h; sourceTree = "<group>"; };
+		1A699026118248A40078BFB6 /* RenderToGallPeters.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RenderToGallPeters.c; sourceTree = "<group>"; };
+		1A699027118248A40078BFB6 /* RenderToGallPeters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderToGallPeters.h; sourceTree = "<group>"; };
 		1A6A96B110AEF8CE0065D0F3 /* OOMaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOMaths.h; sourceTree = "<group>"; };
 		1A6A96B210AEF8E50065D0F3 /* OOFunctionAttributes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFunctionAttributes.h; sourceTree = "<group>"; };
 		1A6A96B310AEF8EC0065D0F3 /* OOFastArithmetic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OOFastArithmetic.h; sourceTree = "<group>"; };
@@ -301,6 +307,10 @@
 				1A8DA59310777E6600114A36 /* RenderToLatLong.c */,
 				1ADC097B10777F500057E287 /* RenderToCube.h */,
 				1ADC097C10777F500057E287 /* RenderToCube.c */,
+				1A698FA5118233CA0078BFB6 /* RenderToMercator.h */,
+				1A698FA4118233CA0078BFB6 /* RenderToMercator.c */,
+				1A699027118248A40078BFB6 /* RenderToGallPeters.h */,
+				1A699026118248A40078BFB6 /* RenderToGallPeters.c */,
 			);
 			name = Sinks;
 			sourceTree = "<group>";
@@ -483,6 +493,8 @@
 				1A675D7E10AEF97900786F5F /* OOVector.m in Sources */,
 				1A3D6DD710B020A9003F7810 /* ReadCube.c in Sources */,
 				1A126EF71180FA1F00D2A744 /* PThreadScheduler.c in Sources */,
+				1A698FA6118233CA0078BFB6 /* RenderToMercator.c in Sources */,
+				1A699028118248A40078BFB6 /* RenderToGallPeters.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

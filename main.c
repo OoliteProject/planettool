@@ -41,6 +41,8 @@
 // Sinks
 #include "RenderToLatLong.h"
 #include "RenderToCube.h"
+#include "RenderToMercator.h"
+#include "RenderToGallPeters.h"
 
 // Version number
 const char * kVersionString =
@@ -218,7 +220,7 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 
 static const SourceEntry sGenerators[] =
 {
-	{ "grid1",				'g',	LatLongGridGeneratorConstructor, NULL }
+	{{ "grid1",				'g', },	LatLongGridGeneratorConstructor, NULL }
 };
 
 enum { sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0] };
@@ -226,9 +228,9 @@ enum { sGeneratorCount = sizeof sGenerators / sizeof sGenerators[0] };
 
 static const SourceEntry sReaders[] =
 {
-	{ "latlong",			'l',	ReadLatLongConstructor, ReadLatLongDestructor },
-	{ "cube",				'c',	ReadCubeConstructor, ReadCubeDestructor },
-	{ "cubex",				'x',	ReadCubeCrossConstructor, ReadCubeDestructor },
+	{{ "latlong",			'l', },	ReadLatLongConstructor, ReadLatLongDestructor },
+	{{ "cube",				'c', },	ReadCubeConstructor, ReadCubeDestructor },
+	{{ "cubex",				'x', },	ReadCubeCrossConstructor, ReadCubeDestructor },
 };
 
 enum { sReaderCount = sizeof sReaders / sizeof sReaders[0] };
@@ -236,9 +238,11 @@ enum { sReaderCount = sizeof sReaders / sizeof sReaders[0] };
 
 static const SinkEntry sSinks[] =
 {
-	{ "latlong",			'l',	RenderToLatLong, 2048 },
-	{ "cube",				'c',	RenderToCube, 1024 },
-	{ "cubex",				'x',	RenderToCubeCross, 1024 }
+	{{ "latlong",			'l', },	RenderToLatLong, 2048 },
+	{{ "cube",				'c', },	RenderToCube, 1024 },
+	{{ "cubex",				'x', },	RenderToCubeCross, 1024 },
+	{{ "mercator",			'm', },	RenderToMercator, 2048 },
+	{{ "gall-peters",		'g', },	RenderToGallPeters, 2048 }
 };
 
 enum { sSinkCount = sizeof sSinks / sizeof sSinks[0] };
@@ -341,7 +345,7 @@ static bool InterpretArguments(int argc, const char * argv[], Settings *settings
 			}
 			
 			// Search for an appropriate handler.
-			int handlerIdx;
+			unsigned handlerIdx;
 			bool match = false;
 			for (handlerIdx = 0; handlerIdx < sHandlerCount && !match; handlerIdx++)
 			{
@@ -352,7 +356,7 @@ static bool InterpretArguments(int argc, const char * argv[], Settings *settings
 				
 				if (match)
 				{
-					int handlerArgc = argc - index - 1;
+					unsigned handlerArgc = argc - index - 1;
 					if (handlerArgc < handler->minArgs)
 					{
 						fprintf(stderr, "Option %s requires %u arguments.\n", argv[index], handler->minArgs);
@@ -690,21 +694,29 @@ static void ShowHelp(void)
 		   "\n"
 		   "THE PROJECTION TYPES:\n"
 		   // "=========|=========|=========|=========|=========|=========|=========|=========|\n"
-		   "latlong: in this format, the intervals between pixels are constant steps of\n"
-		   "         latitude and longitude. This is conceptually simple, but inefficent; lots\n"
-		   "         of pixels are crammed together tightly near the poles.\n"
-		   "   cube: The surface is divided into six equal areas, which are projected onto\n"
-		   "         squares. These are then stacked vertically, in the following order:\n"
-		   "         +x, -x, +y, -y, +z, -z.\n"
-		   "  cubex: The same projection as cube, but the squares are rearranged into a more\n"
-		   "         human-friendly layout (which can be printed and folded into a cube if\n"
-		   "         you're bored).\n"
+		   "    latlong: Equirectangular projection. In this format, the intervals between\n"
+		   "             pixels are constant steps of latitude and longitude. This is\n"
+		   "             conceptually simple, but inefficent; lots of pixels are crammed\n"
+		   "             together tightly near the poles.\n"
+		   "       cube: The surface is divided into six equal areas, which are projected onto\n"
+		   "             squares. These are then stacked vertically, in the following order:\n"
+		   "             +x, -x, +y, -y, +z, -z.\n"
+		   "      cubex: The same projection as cube, but the squares are rearranged into a\n"
+		   "             more human-friendly layout (which can be printed and folded into a\n"
+		   "             cube if you're bored).\n"
+		   "   mercator: An angle-preserving map projection. The traditional projection for\n"
+		   "             sailors and people who can't be bothered to choose a more appropriate\n"
+		   "             projection for whatever they're doing. Entirely unsuitable for\n"
+		   "             texturing, but possibly useful if you want a wall map.\n"
+		   "gall-peters: A variant of the cylindric equal-area projection, in which the\n"
+		   "             proportions between different areas are preserved.\n"
 		   "\n"
 		   "THE GENERATORS:\n"
 		   "  grid1: A grid with lines spaced ten degrees apart. Longitude lines are green\n"
 		   "         in the northern hemisphere, blue in the south. Latitude lines are red\n"
-		   "         in the western hemisphere, teal in the east.\n");
+		   "         in the western hemisphere, teal in the east.\n"
 		// "=========|=========|=========|=========|=========|=========|=========|=========|\n"
+		   );
 }
 
 

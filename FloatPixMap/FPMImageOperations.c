@@ -286,7 +286,7 @@ FPM_INLINE float Cubic(float f)
 }
 
 
-FPMColor FPMSampleCubic(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy)
+FPMColor FPMSampleCubicHermite(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy)
 {
 	x -= 0.5;
 	y -= 0.5;
