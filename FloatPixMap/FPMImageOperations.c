@@ -209,15 +209,25 @@ FPM_INLINE FPMCoordinate Wrap(FPMCoordinate coord, FPMCoordinate max, FPMWrapMod
 {
 	/*	NOTE: max is FPMCoordinate rather than FMPDimension because it needs
 		to be signed in various places.
+		
+		Optimization note: some conditionals could be removed/avoided, but
+		profiling shows that avoding the %s is a win.
 	*/
 	FPMDimension umax = max;
-	if (0 <= coord)
+	if (FPM_EXPECT(0 <= coord))
 	{
 		FPMDimension ucoord = coord;
+		if (FPM_EXPECT(ucoord < umax))  return coord;
+		
+		// If we get here, we have an overflow.
 		switch (mode)
 		{
-			case kFPMWrapClamp:  return (ucoord < umax) ? coord : max - 1;
-			case kFPMWrapRepeat:  return ucoord % umax;
+			case kFPMWrapClamp:
+				return max - 1;
+				
+			case kFPMWrapRepeat:
+				return ucoord % umax;
+				
 			case kFPMWrapMirror:
 				umax -= 1;
 				coord = coord % (umax << 1);
@@ -229,7 +239,10 @@ FPM_INLINE FPMCoordinate Wrap(FPMCoordinate coord, FPMCoordinate max, FPMWrapMod
 	switch (mode)
 	{
 		case kFPMWrapClamp:  return 0;
-		case kFPMWrapRepeat:  return ((FPMDimension)(coord % max + max)) % umax;
+		case kFPMWrapRepeat:
+			if (FPM_EXPECT(coord > -max))  return max + coord;
+			return ((FPMDimension)(coord % max + max)) % umax;
+			
 		case kFPMWrapMirror:
 			max -= 1;
 			coord = coord % (max << 1);
@@ -251,8 +264,8 @@ FPM_INLINE FPMColor Sample(FPMColor *buffer, size_t rowCount, size_t x, size_t y
 
 FPMColor FPMSampleLinear(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy)
 {
-	x -= 0.5;
-	y -= 0.5;
+	x -= 0.5f;
+	y -= 0.5f;
 	FPMColor *buffer;
 	FPMDimension width, height;
 	size_t rowCount;
@@ -268,7 +281,7 @@ FPMColor FPMSampleLinear(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx,
 	FPMCoordinate highy = lowy + 1;
 	
 	lowx = Wrap(lowx, width, wrapx);
-	highx = Wrap(highx, width, wrapy);
+	highx = Wrap(highx, width, wrapx);
 	lowy = Wrap(lowy, height, wrapy);
 	highy = Wrap(highy, height, wrapy);
 	

@@ -36,12 +36,16 @@
 #endif
 #define FPM_NON_NULL_ALL __attribute__((nonnull))
 #define FPM_GCC_PREFETCH __builtin_prefetch
+#define FPM_EXPECT(x)  __builtin_expect((x), 1)
+#define FPM_EXPECT_NOT(x)  __builtin_expect((x), 0)
 #else
 #define FPM_PURE
 #define FPM_CONST
 #define FPM_FORCE_INLINE
 #define FPM_NON_NULL_ALL
 #define FPM_GCC_PREFETCH(...) do {} while (0)
+#define FPM_EXPECT(x)  (x)
+#define FPM_EXPECT_NOT(x)  (x)
 #endif
 
 
@@ -63,6 +67,7 @@ extern const FPMColor kFPMColorInvalid;	// { -INFINITY, -INFINITY, -INFINITY, -I
 extern const FPMColor kFPMColorClear;	// { 0, 0, 0, 0 }
 extern const FPMColor kFPMColorBlack;	// { 0, 0, 0, 1 }
 extern const FPMColor kFPMColorWhite;	// { 1, 1, 1, 1 }
+
 
 FPM_INLINE FPMColor FPMMakeColor(FPMComponent r, FPMComponent g, FPMComponent b, FPMComponent a) FPM_CONST;
 FPM_INLINE FPMColor FPMMakeColor(FPMComponent r, FPMComponent g, FPMComponent b, FPMComponent a)
@@ -125,11 +130,12 @@ FPM_INLINE FPMColor FPMColorAdd(FPMColor a, FPMColor b)
 	return FPMMakeColor(a.r + b.r, a.g + b.g, a.b + b.b, a.a + b.a);
 }
 
-FPM_INLINE FPMColor FPMColorBlend(FPMColor a, FPMColor b, float alpha) FPM_CONST;
-FPM_INLINE FPMColor FPMColorBlend(FPMColor a, FPMColor b, float alpha)
+FPM_INLINE FPMColor FPMColorBlend(FPMColor a, FPMColor b, float fraction) FPM_CONST;
+FPM_INLINE FPMColor FPMColorBlend(FPMColor a, FPMColor b, float fraction)
 {
-	float invAlpha = 1.0f - alpha;
-	return FPMMakeColor(a.r * alpha + b.r * invAlpha, a.g * alpha + b.g * invAlpha, a.b * alpha + b.b * invAlpha, a.a * alpha + b.a * invAlpha);
+#define FPM_LERP(comp)  (b.comp + fraction * (a.comp - b.comp))
+	return FPMMakeColor(FPM_LERP(r), FPM_LERP(g), FPM_LERP(b), FPM_LERP(a));
+#undef FPM_LERP
 }
 
 FPM_INLINE FPMColor FPMColorMultiply(FPMColor col, float scale) FPM_CONST;
