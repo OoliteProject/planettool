@@ -217,7 +217,6 @@ static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontex
 			fminy = fy * scale - 1.0f;
 		}
 		
-		
 		FPMColor accum = kFPMColorClear;
 		float totalWeight = 0.0f;
 		float weight, yw;
@@ -232,14 +231,13 @@ static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontex
 			{
 				if (!jitter){} else
 				{
-					fx = fminx + RandF2() * SAMPLE_WIDTH * 0.5 * scale;
-					fy = fminy + RandF2() * SAMPLE_WIDTH * 0.5 * scale;
+					fx = fminx + RandF2() * SAMPLE_WIDTH * 0.5f * scale;
+					fy = fminy + RandF2() * SAMPLE_WIDTH * 0.5f * scale;
 				}
 				
 				Vector coordv = vector_multiply_scalar(rightVector, fx);
 				coordv = vector_add(coordv, vector_multiply_scalar(downVector, fy));
 				coordv = vector_add(coordv, outVector);
-				coordv = vector_normal(coordv);
 				
 				Coordinates coord = MakeCoordsVector(coordv);
 				
@@ -252,7 +250,7 @@ static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontex
 				}
 				else
 				{
-					weight = GaussTableLookup2D(fx, fminx, fy, fminy, SAMPLE_WIDTH * 0.5, sampleGridSize, weights);
+					weight = GaussTableLookup2D(fx, fminx, fy, fminy, SAMPLE_WIDTH * 0.5f, sampleGridSize, weights);
 				}
 				
 				

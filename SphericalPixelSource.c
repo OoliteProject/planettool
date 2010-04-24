@@ -49,7 +49,8 @@ void VectorToCoordsRad(Vector v, float *latitude, float *longitude)
 	if (las != 1.0f)
 	{
 		float lat = asinf(las);
-		float rlac = OOInvSqrtf(1.0f - las * las);	// Equivalent to abs(1/cos(lat))
+		float rlac = fabsf(1.0f / cosf(lat));
+	//	float rlac = OOInvSqrtf(1.0f - las * las);	// Equivalent to abs(1/cos(lat)), but turns out to be slower.
 		
 		if (latitude != NULL)  *latitude = lat;
 		if (longitude != NULL)

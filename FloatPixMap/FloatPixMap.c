@@ -53,8 +53,8 @@ static bool PointInRange(FloatPixMapRef pm, FPMPoint pt)
 {
 	FPM_INTERNAL_ASSERT(pm != NULL);
 	
-	return 0 <= pt.x && pt.x < pm->width &&
-	0 <= pt.y && pt.y < pm->height;
+	return 0 <= pt.x && (FPMDimension)pt.x < pm->width &&
+	0 <= pt.y && (FPMDimension)pt.y < pm->height;
 }
 
 

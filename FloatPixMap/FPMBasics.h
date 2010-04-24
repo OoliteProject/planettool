@@ -49,8 +49,8 @@ FPM_BEGIN_EXTERN_C
 
 
 typedef float		FPMComponent;
-typedef intmax_t	FPMCoordinate;
-typedef uintmax_t	FPMDimension;
+typedef int32_t		FPMCoordinate;
+typedef uint32_t	FPMDimension;
 
 
 // FPMColor: an RGBA colour value.

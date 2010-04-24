@@ -80,7 +80,7 @@ static FPMColor ReadLatLong(Coordinates where, RenderFlags flags, void *context)
 	lon = (rlon + kPiF) * cx->width;
 	lat = (kPiF / 2.0f - rlat) * cx->height;
 	
-	return FPMSampleLinear(cx->pm, lon, lat, kFPMWrapClamp, kFPMWrapRepeat);
+	return FPMSampleLinear(cx->pm, lon, lat, kFPMWrapRepeat, kFPMWrapClamp);
 }
 
 

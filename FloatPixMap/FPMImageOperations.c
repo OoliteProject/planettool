@@ -207,17 +207,21 @@ void FPMNormalize(FloatPixMapRef pm, bool retainZero, bool perChannel, bool norm
 
 FPM_INLINE FPMCoordinate Wrap(FPMCoordinate coord, FPMCoordinate max, FPMWrapMode mode)
 {
-	// NOTE: max is FPMCoordinate rather than FMPDimension because it needs to be signed in various places.
+	/*	NOTE: max is FPMCoordinate rather than FMPDimension because it needs
+		to be signed in various places.
+	*/
+	FPMDimension umax = max;
 	if (0 <= coord)
 	{
+		FPMDimension ucoord = coord;
 		switch (mode)
 		{
-			case kFPMWrapClamp:  return (coord < max) ? coord : max - 1;
-			case kFPMWrapRepeat:  return coord % max;
+			case kFPMWrapClamp:  return (ucoord < umax) ? coord : max - 1;
+			case kFPMWrapRepeat:  return ucoord % umax;
 			case kFPMWrapMirror:
-				max -= 1;
-				coord = coord % (max * 2);
-				if (coord >= max)  return (max * 2) - coord;
+				umax -= 1;
+				coord = coord % (umax << 1);
+				if (ucoord >= umax)  return (umax << 1) - ucoord;
 				return coord;
 		}
 	}
@@ -225,15 +229,16 @@ FPM_INLINE FPMCoordinate Wrap(FPMCoordinate coord, FPMCoordinate max, FPMWrapMod
 	switch (mode)
 	{
 		case kFPMWrapClamp:  return 0;
-		case kFPMWrapRepeat:  return (coord % max + max) % max;
+		case kFPMWrapRepeat:  return ((FPMDimension)(coord % max + max)) % umax;
 		case kFPMWrapMirror:
 			max -= 1;
-			coord = coord % (max * 2);
-			if (coord < -max)  return coord - max * -2;
+			coord = coord % (max << 1);
+			if (coord < -max)  return coord + (max << 1);
 			return -coord;
 	}
 	
 	assert(0);
+	return 0;
 }
 
 

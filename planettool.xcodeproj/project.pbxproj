@@ -606,6 +606,94 @@
 			};
 			name = Release;
 		};
+		1A2BEADF1182F083009E1BEB /* Debug-optimized */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = macosx10.6;
+			};
+			name = "Debug-optimized";
+		};
+		1A2BEAE01182F083009E1BEB /* Debug-optimized */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
+				DEBUG_INFORMATION_FORMAT = stabs;
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_CW_ASM_SYNTAX = YES;
+				GCC_ENABLE_ASM_KEYWORD = YES;
+				GCC_FAST_MATH = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"OOMATHS_STANDALONE=1",
+					"FMODF_JUST_WRAPS_FMODL=!defined(__ppc__)",
+				);
+				GCC_UNROLL_LOOPS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INSTALL_PATH = /usr/local/bin;
+				LLVM_LTO = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = planettool;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+					"-Wno-unused-parameter",
+				);
+			};
+			name = "Debug-optimized";
+		};
+		1A2BEAE11182F083009E1BEB /* Debug-optimized */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INSTALL_PATH = /usr/local/lib;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = png_for_planettool;
+				ZERO_LINK = NO;
+			};
+			name = "Debug-optimized";
+		};
+		1A2BEAE21182F083009E1BEB /* Debug-optimized */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_AUTO_VECTORIZATION = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = fpmtest;
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+					"-Wno-unused-parameter",
+				);
+			};
+			name = "Debug-optimized";
+		};
 		1DEB928608733DD80010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -640,14 +728,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = YES;
 				GCC_ENABLE_ASM_KEYWORD = YES;
 				GCC_FAST_MATH = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
 					"OOMATHS_STANDALONE=1",
 					"FMODF_JUST_WRAPS_FMODL=!defined(__ppc__)",
@@ -700,6 +789,7 @@
 			buildConfigurations = (
 				1A115B9010754BFD00A75165 /* Debug */,
 				1A115B9110754BFD00A75165 /* Release */,
+				1A2BEAE11182F083009E1BEB /* Debug-optimized */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -709,6 +799,7 @@
 			buildConfigurations = (
 				1A1161291077502900A75165 /* Debug */,
 				1A11612A1077502900A75165 /* Release */,
+				1A2BEAE21182F083009E1BEB /* Debug-optimized */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -718,6 +809,7 @@
 			buildConfigurations = (
 				1DEB928608733DD80010E9CD /* Debug */,
 				1DEB928708733DD80010E9CD /* Release */,
+				1A2BEAE01182F083009E1BEB /* Debug-optimized */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -727,6 +819,7 @@
 			buildConfigurations = (
 				1DEB928A08733DD80010E9CD /* Debug */,
 				1DEB928B08733DD80010E9CD /* Release */,
+				1A2BEADF1182F083009E1BEB /* Debug-optimized */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
