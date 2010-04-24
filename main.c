@@ -191,7 +191,7 @@ int main (int argc, const char * argv[])
 		return EXIT_FAILURE;
 	}
 	
-	printf("Done.\n");
+	if (!settings.quiet)  printf("Done.\n");
 	return 0;
 }
 

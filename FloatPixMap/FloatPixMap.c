@@ -63,7 +63,7 @@ static off_t PixelIndex(FloatPixMapRef pm, FPMPoint pt)
 	FPM_INTERNAL_ASSERT(pm != NULL);
 	FPM_INTERNAL_ASSERT(PointInRange(pm, pt));
 	
-	return pm->width * pt.y + pt.x;
+	return pm->rowCount * pt.y + pt.x;
 }
 
 
