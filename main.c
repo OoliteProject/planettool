@@ -92,6 +92,7 @@ typedef struct
 	bool							showHelp;
 	bool							showVersion;
 	bool							quiet;
+	bool							sixteenBit;
 	const char						*sourcePath;
 	const char						*sinkPath;
 } Settings;
@@ -183,7 +184,9 @@ int main (int argc, const char * argv[])
 	
 	// Write output.
 	if (!settings.quiet)  printf("Writing...\n");
-	if (!FPMWritePNG(resultPM, settings.sinkPath, kFPMWritePNGDither, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler))
+	FPMWritePNGFlags flags = kFPMWritePNGDither;
+	if (settings.sixteenBit)  flags = kFPMWritePNG16BPC;
+	if (!FPMWritePNG(resultPM, settings.sinkPath, flags, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler))
 	{
 		return EXIT_FAILURE;
 	}
@@ -211,6 +214,7 @@ static bool ParseOutput(int argc, const char *argv[], int *consumedArgs, Setting
 static bool ParseSize(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseFast(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseJitter(int argc, const char *argv[], int *consumedArgs, Settings *settings);
+static bool ParseSixteenBit(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseRotate(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseFlip(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseHelp(int argc, const char *argv[], int *consumedArgs, Settings *settings);
@@ -290,6 +294,10 @@ static const ArgumentHandler sHandlers[] =
 	{
 		"jitter",		'J', 0, ParseJitter,
 		NULL, false, "Use jittering for slower, slightly noisy rendering which may look better in some cases.", NULL, 0, 0
+	},
+	{
+		"sixteen-bit",	0, 0, ParseSixteenBit,
+		NULL, false, "Save in sixteen bit per channel format (instead of eight-bit-per-channel format).", NULL, 0, 0
 	},
 	{
 		"flip",			'L', 0, ParseFlip,
@@ -557,6 +565,13 @@ static bool ParseJitter(int argc, const char *argv[], int *consumedArgs, Setting
 }
 
 
+static bool ParseSixteenBit(int argc, const char *argv[], int *consumedArgs, Settings *settings)
+{
+	settings->sixteenBit = true;
+	return true;
+}
+
+
 static bool ParseOneFloat(const char *string, double *value)
 {
 	assert(string != NULL && value != NULL);
@@ -637,7 +652,14 @@ static void ShowHelp(void)
 		
 		printf(" ");
 		if (!handler->required)  printf("[");
-		printf("-%c", handler->shortcut);
+		if (handler->shortcut != '\0')
+		{
+			printf("-%c", handler->shortcut);
+		}
+		else
+		{
+			printf("--%s", handler->keyword);
+		}
 		if (handler->paramNames != NULL)
 		{
 			printf(" %s", handler->paramNames);
@@ -653,7 +675,14 @@ static void ShowHelp(void)
 		
 		#define LABEL_SIZE 16
 		char label[LABEL_SIZE];
-		snprintf(label, LABEL_SIZE, "--%s, -%c", handler->keyword, handler->shortcut);
+		if (handler->shortcut != '\0')
+		{
+			snprintf(label, LABEL_SIZE, "--%s, -%c", handler->keyword, handler->shortcut);
+		}
+		else
+		{
+			snprintf(label, LABEL_SIZE, "--%s", handler->keyword);
+		}
 		
 		printf("%*s:  %s", LABEL_SIZE, label, handler->description);
 		
