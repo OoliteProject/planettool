@@ -28,11 +28,13 @@
 #import "PlanetToolDocument.h"
 #import "FPMPNG.h"
 #import "OOMaths.h"
+#import "NSImage+FloatPixMap.h"
 
 
 @interface PlanetToolDocument () <PlanetToolRendererDelegate>
 
-@property (readwrite) BOOL isRenderingPreview;
+@property (readwrite) BOOL renderingPreview;
+@property (readwrite, assign) NSImage *previewImage;
 
 - (void) asyncLoadImage:(NSString *)path;
 
@@ -42,6 +44,10 @@
 - (void) showProgressSheetWithMessage:(NSString *)message cancelAction:(SEL)cancelAction;
 - (void) updateProgress:(float)value;
 - (void) removeProgressSheetWithSuccess:(BOOL)success;
+
+- (void) startPreviewRender;
+- (NSUInteger) smallPreviewSize;
+- (NSUInteger) largePreviewSize;
 
 @end
 
@@ -57,15 +63,16 @@ static void LoadProgressHandler(float proportion, void *context);
 @synthesize progressBar = _progressBar;
 @synthesize progressCancelButton = _progressCancelButton;
 
-@synthesize sourceDocumentName = _sourceDocumentName;
 @synthesize outputSize = _outputSize;
 @synthesize flip = _flip;
 @synthesize fast = _fast;
 @synthesize jitter = _jitter;
+@synthesize sixteenBitPerChannel = _sixteenBitPerChannel;
 @synthesize rotateX = _rotateX;
 @synthesize rotateY = _rotateY;
 @synthesize rotateZ = _rotateZ;
-@synthesize isRenderingPreview = _isRenderingPreview;
+@synthesize previewImage = _previewImage;
+@synthesize renderingPreview = _isRenderingPreview;
 
 
 + (void) initialize
@@ -181,9 +188,10 @@ static void LoadProgressHandler(float proportion, void *context);
 
 - (void) setInputFormat:(NSUInteger)value
 {
-	if (IsValidPlanetToolInputFormat(value))
+	if (IsValidPlanetToolInputFormat(value) && _inputFormat != value)
 	{
 		_inputFormat = value;
+		[self startPreviewRender];
 	}
 }
 
@@ -196,9 +204,10 @@ static void LoadProgressHandler(float proportion, void *context);
 
 - (void) setOutputFormat:(NSUInteger)value
 {
-	if (IsValidPlanetToolOutputFormat(value))
+	if (IsValidPlanetToolOutputFormat(value) && _outputFormat != value)
 	{
 		_outputFormat = value;
+		[self startPreviewRender];
 	}
 }
 
@@ -207,7 +216,13 @@ static void LoadProgressHandler(float proportion, void *context);
 {
 	if (size > 0)
 	{
+		NSUInteger previewSize = [self largePreviewSize];
 		_outputSize = size;
+		
+		if (previewSize != [self largePreviewSize])
+		{
+			[self startPreviewRender];
+		}
 	}
 }
 
@@ -238,15 +253,52 @@ static void LoadProgressHandler(float proportion, void *context);
 }
 
 
-- (NSImage *) previewImage
+- (void) setFlip:(BOOL)value
 {
-	return nil;
+	if (value != _flip)
+	{
+		_flip = value;
+		[self startPreviewRender];
+	}
 }
 
 
-- (NSSet *) keyPathsForValuesAffectingPreviewImage
+static inline float ClampDegrees(float value)
 {
-	return [NSSet setWithObjects:@"inputFormat", @"outputFormat", @"flip", @"rotateX", @"rotateY", @"rotateZ", nil];
+	return fmodl(value + 180.0f, 360.0) - 180.0f;
+}
+
+
+- (void) setRotateX:(float)value
+{
+	value = ClampDegrees(value);
+	if (value != _rotateX)
+	{
+		_rotateX = value;
+		[self startPreviewRender];
+	}
+}
+
+
+- (void) setRotateY:(float)value
+{
+	value = ClampDegrees(value);
+	if (value != _rotateY)
+	{
+		_rotateY = value;
+		[self startPreviewRender];
+	}
+}
+
+
+- (void) setRotateZ:(float)value
+{
+	value = ClampDegrees(value);
+	if (value != _rotateZ)
+	{
+		_rotateZ = value;
+		[self startPreviewRender];
+	}
 }
 
 
@@ -346,8 +398,27 @@ static void LoadProgressHandler(float proportion, void *context);
 
 - (void) planetToolRenderer:(PlanetToolRenderer *)renderer didCompleteImage:(FloatPixMapRef)image
 {
-	_outputImage = FPMRetain(image);
-	[NSThread detachNewThreadSelector:@selector(writeOutputFile) toTarget:self withObject:nil];
+	if (renderer == _finalRenderer)
+	{
+		_outputImage = FPMRetain(image);
+		[NSThread detachNewThreadSelector:@selector(writeOutputFile) toTarget:self withObject:nil];
+	}
+	else
+	{
+		if (renderer.outputSize < [self largePreviewSize])
+		{
+			self.previewImage = [NSImage fpm_imageWithFloatPixMap:image sourceGamma:kFPMGammaLinear];
+			renderer.outputSize = [self largePreviewSize];
+			[renderer asyncRenderFromImage:_sourcePixMap];
+		}
+		else if (renderer == _previewRenderer)
+		{
+			self.previewImage = [NSImage fpm_imageWithFloatPixMap:image sourceGamma:kFPMGammaLinear];
+			_previewRenderer = nil;
+			self.renderingPreview = NO;
+		}
+		// Else it's an old high-res preview, which we ignore.
+	}
 }
 
 
@@ -367,7 +438,9 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 
 - (void) writeOutputFile
 {
-	if (FPMWritePNG(_outputImage, [_outputPath fileSystemRepresentation], kFPMWritePNGDither, kFPMGammaLinear, kFPMGammaSRGB, WriteErrorHandler, NULL, self))
+	FPMWritePNGFlags flags = kFPMWritePNGDither;
+	if (self.sixteenBitPerChannel)  flags |= kFPMWritePNG16BPC;
+	if (FPMWritePNG(_outputImage, [_outputPath fileSystemRepresentation], flags, kFPMGammaLinear, kFPMGammaSRGB, WriteErrorHandler, NULL, self))
 	{
 		[self removeProgressSheetWithSuccess:YES];
 	}
@@ -382,7 +455,6 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 
 - (void) writingFailedWithMessage:(NSString *)message
 {
-	// FIXME: need an alert here.
 	[self removeProgressSheetWithSuccess:NO];
 	[NSAlert alertWithMessageText:NSLocalizedString(@"The document could not be saved.", NULL)
 					defaultButton:nil
@@ -394,26 +466,126 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 
 - (void) planetToolRenderer:(PlanetToolRenderer *)renderer failedWithMessage:(NSString *)message
 {
-	// FIXME: need an alert here.
-	[self removeProgressSheetWithSuccess:NO];
-	[NSAlert alertWithMessageText:NSLocalizedString(@"Rendering failed.", NULL)
-					defaultButton:nil
-				  alternateButton:nil
-					  otherButton:nil
-		informativeTextWithFormat:@"%@", message];
+	if (renderer == _finalRenderer)
+	{
+		[self removeProgressSheetWithSuccess:NO];
+		[NSAlert alertWithMessageText:NSLocalizedString(@"Rendering failed.", NULL)
+						defaultButton:nil
+					  alternateButton:nil
+						  otherButton:nil
+			informativeTextWithFormat:@"%@", message];
+	}
+	else	
+	{
+		self.renderingPreview = NO;
+	}
 }
 
 
 - (void) planetToolRendererCancelled:(PlanetToolRenderer *)renderer
 {
-	[self removeProgressSheetWithSuccess:NO];
+	if (renderer == _finalRenderer)
+	{
+		[self removeProgressSheetWithSuccess:NO];
+	}
 }
 
 
-- (void) planetToolRenderer:(PlanetToolRenderer *)renderer progressUpdate:(float)progress
+- (BOOL) planetToolRenderer:(PlanetToolRenderer *)renderer progressUpdate:(float)progress
 {
-	[self updateProgress:progress];
+	if (renderer == _finalRenderer)
+	{
+		[self updateProgress:progress];
+		return YES;
+	}
+	else
+	{
+		// Cancel dangling renderers caused by modifying parameters while preview still rendering.
+		return renderer == _previewRenderer;
+	}
+	
 }
+
+
+
+#pragma mark -
+#pragma mark Preview rendering
+
+- (void) startPreviewRender
+{
+	self.renderingPreview = YES;
+	[_previewRenderer cancelRendering];
+	
+	if (self.outputSize == 0)
+	{
+		self.renderingPreview = NO;
+		return;
+	}
+	
+	_previewRenderer = [PlanetToolRenderer new];
+	_previewRenderer.fast = YES;
+	_previewRenderer.delegate = self;
+	_previewRenderer.inputFormat = self.inputFormat;
+	_previewRenderer.outputFormat = self.outputFormat;
+	_previewRenderer.outputSize = [self smallPreviewSize];
+	_previewRenderer.flip = self.flip;
+	_previewRenderer.rotateX = self.rotateX;
+	_previewRenderer.rotateY = self.rotateY;
+	_previewRenderer.rotateZ = self.rotateZ;
+	
+	[_previewRenderer asyncRenderFromImage:_sourcePixMap];
+}
+
+
+- (NSUInteger) smallPreviewSize
+{
+	NSUInteger result = 128;
+	switch (self.outputFormat)
+	{
+		case kPlanetToolFormatLatLong:
+			result = 128;
+			break;
+			
+		case kPlanetToolFormatMercator:
+		case kPlanetToolFormatGallPeters:
+			result = 256;
+			break;
+			
+		case kPlanetToolFormatCube:
+		case kPlanetToolFormatCubeX:
+			result = 64;
+			break;
+	}
+	
+	if (result > self.outputSize)  result = self.outputSize;
+	return result;
+}
+
+
+- (NSUInteger) largePreviewSize
+{
+	NSUInteger result = 256;
+	switch (self.outputFormat)
+	{
+		case kPlanetToolFormatLatLong:
+			result = 512;
+			break;
+			
+		case kPlanetToolFormatMercator:
+		case kPlanetToolFormatGallPeters:
+			result = 512;
+			break;
+			
+		case kPlanetToolFormatCube:
+		case kPlanetToolFormatCubeX:
+			result = 128;
+			break;
+	}
+	
+	if (result > self.outputSize)  result = self.outputSize;
+	return result;
+}
+
 
 
 #pragma mark -
@@ -479,6 +651,8 @@ static void LoadProgressHandler(float proportion, void *context)
 		size = FPMGetWidth(_sourcePixMap) * 2;
 	}
 	self.outputSize = OORoundUpToPowerOf2(size);
+	
+	[self startPreviewRender];
 }
 
 

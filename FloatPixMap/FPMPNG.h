@@ -21,7 +21,7 @@ FPM_BEGIN_EXTERN_C
 
 enum
 {
-	kFPMWritePNGDither			= kFPMQuantizeDither,	// If set, error-diffusion dither is used when converting to output format.
+	kFPMWritePNGDither			= kFPMQuantizeDither,	// If set, error-diffusion dither is used when converting to output format. [UNIMPLEMENTED]
 	kFPMWritePNGJitter			= kFPMQuantizeJitter,	// If set, jitter is used in dithering.
 	kFPMWritePNG16BPC			= 0x00010000,			// If set, output will use sixteen bits per channel; if clear, eight bits per channel are used.
 };

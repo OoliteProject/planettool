@@ -49,14 +49,15 @@
 	NSProgressIndicator				*_progressBar;
 	NSButton						*_progressCancelButton;
 	
-	NSString						*_sourceDocumentName;
 	BOOL							_flip;
 	BOOL							_fast;
 	BOOL							_jitter;
 	BOOL							_isRenderingPreview;
+	BOOL							_sixteenBitPerChannel;
 	float							_rotateX;
 	float							_rotateY;
 	float							_rotateZ;
+	NSImage							*_previewImage;
 #endif
 }
 
@@ -65,7 +66,6 @@
 @property IBOutlet NSProgressIndicator *progressBar;
 @property IBOutlet NSButton *progressCancelButton;
 
-@property (readonly) NSString *sourceDocumentName;
 @property NSUInteger inputFormat;
 @property NSUInteger outputFormat;
 @property NSInteger outputSize;
@@ -73,11 +73,12 @@
 @property BOOL flip;
 @property BOOL fast;
 @property BOOL jitter;
+@property BOOL sixteenBitPerChannel;
 @property float rotateX;
 @property float rotateY;
 @property float rotateZ;
-@property (readonly) NSImage *previewImage;
-@property (readonly) BOOL isRenderingPreview;
+@property (readonly, assign) NSImage *previewImage;
+@property (readonly, getter = isRenderingPreview) BOOL renderingPreview;
 
 - (IBAction) performFinalRender:(id)sender;
 - (IBAction) cancelLoading:(id)sender;

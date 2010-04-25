@@ -104,6 +104,7 @@ static inline BOOL IsValidPlanetToolOutputFormat(PlanetToolFormat value)
 - (void) planetToolRendererCancelled:(PlanetToolRenderer *)renderer;
 
 // IMPORTANT: this method will be called on a secondary thread.
-- (void) planetToolRenderer:(PlanetToolRenderer *)renderer progressUpdate:(float)progress;
+// If it returns false, the renderer cancels.
+- (BOOL) planetToolRenderer:(PlanetToolRenderer *)renderer progressUpdate:(float)progress;
 
 @end

@@ -30,7 +30,6 @@
 		1A115BC110754CC000A75165 /* pngwtran.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115BAE10754CC000A75165 /* pngwtran.c */; };
 		1A115BC210754CC000A75165 /* pngwutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115BAF10754CC000A75165 /* pngwutil.c */; };
 		1A115E761076411700A75165 /* FPMQuantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115C011075519400A75165 /* FPMQuantize.c */; };
-		1A115E771076411800A75165 /* FPMRaw.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115D3B10760EE200A75165 /* FPMRaw.c */; };
 		1A115E781076412400A75165 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
 		1A115F1F107657E400A75165 /* FPMImageOperations.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115F1E107657E400A75165 /* FPMImageOperations.c */; };
 		1A1161191077502900A75165 /* FloatPixMap.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159891073AADD00A75165 /* FloatPixMap.c */; settings = {COMPILER_FLAGS = "-falign-loops=32 -falign-loops-max-skip=31 -fstrict-aliasing"; }; };
@@ -46,6 +45,8 @@
 		1A3D6DD710B020A9003F7810 /* ReadCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A3D6DD610B020A9003F7810 /* ReadCube.c */; };
 		1A50B55911848A1000F8B41E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A50B55711848A1000F8B41E /* Localizable.strings */; };
 		1A50B8491184C45600F8B41E /* PThreadScheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */; };
+		1A50B88F1184CB5E00F8B41E /* NSImage+FloatPixMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A50B88E1184CB5E00F8B41E /* NSImage+FloatPixMap.m */; };
+		1A50B94F1184DC2700F8B41E /* PlanetToolApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A50B94E1184DC2700F8B41E /* PlanetToolApplicationDelegate.m */; };
 		1A675D7B10AEF97700786F5F /* OOFastArithmetic.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B410AEF8EC0065D0F3 /* OOFastArithmetic.m */; };
 		1A675D7C10AEF97800786F5F /* OOMatrix.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B610AEF8F60065D0F3 /* OOMatrix.m */; };
 		1A675D7D10AEF97800786F5F /* OOQuaternion.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A6A96B810AEF8FE0065D0F3 /* OOQuaternion.m */; };
@@ -77,7 +78,6 @@
 		1AEEF05C11846B580041CC67 /* FPMImageOperations.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115F1E107657E400A75165 /* FPMImageOperations.c */; };
 		1AEEF05D11846B590041CC67 /* FPMPNG.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159D81073FAB200A75165 /* FPMPNG.c */; };
 		1AEEF05E11846B5A0041CC67 /* FPMQuantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115C011075519400A75165 /* FPMQuantize.c */; };
-		1AEEF05F11846B5A0041CC67 /* FPMRaw.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115D3B10760EE200A75165 /* FPMRaw.c */; };
 		1AEEF09311846C4E0041CC67 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115A5810740C6200A75165 /* libz.dylib */; };
 		1AEEF0B111846C780041CC67 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AEEF0B011846C780041CC67 /* main.m */; };
 		1AEEF0BB11846CAC0041CC67 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1AEEF0B611846CAC0041CC67 /* InfoPlist.strings */; };
@@ -178,6 +178,10 @@
 		1A3D6DD510B020A9003F7810 /* ReadCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadCube.h; sourceTree = "<group>"; };
 		1A3D6DD610B020A9003F7810 /* ReadCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ReadCube.c; sourceTree = "<group>"; };
 		1A50B55811848A1000F8B41E /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1A50B88D1184CB5E00F8B41E /* NSImage+FloatPixMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+FloatPixMap.h"; sourceTree = "<group>"; };
+		1A50B88E1184CB5E00F8B41E /* NSImage+FloatPixMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+FloatPixMap.m"; sourceTree = "<group>"; };
+		1A50B94D1184DC2700F8B41E /* PlanetToolApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanetToolApplicationDelegate.h; sourceTree = "<group>"; };
+		1A50B94E1184DC2700F8B41E /* PlanetToolApplicationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlanetToolApplicationDelegate.m; sourceTree = "<group>"; };
 		1A675E0210AF18D000786F5F /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		1A698FA4118233CA0078BFB6 /* RenderToMercator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RenderToMercator.c; sourceTree = "<group>"; };
 		1A698FA5118233CA0078BFB6 /* RenderToMercator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderToMercator.h; sourceTree = "<group>"; };
@@ -407,10 +411,14 @@
 			children = (
 				1AEEF06A11846B7F0041CC67 /* PlanetTool_prefix.h */,
 				1AEEF0B011846C780041CC67 /* main.m */,
+				1A50B94D1184DC2700F8B41E /* PlanetToolApplicationDelegate.h */,
+				1A50B94E1184DC2700F8B41E /* PlanetToolApplicationDelegate.m */,
 				1AEEF0CE1184718F0041CC67 /* PlanetToolDocument.h */,
 				1AEEF0CF1184718F0041CC67 /* PlanetToolDocument.m */,
 				1AEEF10E118478D10041CC67 /* PlanetToolRenderer.h */,
 				1AEEF10F118478D10041CC67 /* PlanetToolRenderer.m */,
+				1A50B88D1184CB5E00F8B41E /* NSImage+FloatPixMap.h */,
+				1A50B88E1184CB5E00F8B41E /* NSImage+FloatPixMap.m */,
 				1AEEF0B511846CAC0041CC67 /* Resources */,
 			);
 			name = GUI;
@@ -612,10 +620,11 @@
 				1AEEF05C11846B580041CC67 /* FPMImageOperations.c in Sources */,
 				1AEEF05D11846B590041CC67 /* FPMPNG.c in Sources */,
 				1AEEF05E11846B5A0041CC67 /* FPMQuantize.c in Sources */,
-				1AEEF05F11846B5A0041CC67 /* FPMRaw.c in Sources */,
 				1AEEF0B111846C780041CC67 /* main.m in Sources */,
 				1AEEF0D01184718F0041CC67 /* PlanetToolDocument.m in Sources */,
 				1AEEF110118478D10041CC67 /* PlanetToolRenderer.m in Sources */,
+				1A50B88F1184CB5E00F8B41E /* NSImage+FloatPixMap.m in Sources */,
+				1A50B94F1184DC2700F8B41E /* PlanetToolApplicationDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,7 +636,6 @@
 				1A1159D91073FAB200A75165 /* FPMPNG.c in Sources */,
 				1A115AD81074866300A75165 /* FPMGamma.c in Sources */,
 				1A115E761076411700A75165 /* FPMQuantize.c in Sources */,
-				1A115E771076411800A75165 /* FPMRaw.c in Sources */,
 				1A115E781076412400A75165 /* SphericalPixelSource.c in Sources */,
 				1A115F1F107657E400A75165 /* FPMImageOperations.c in Sources */,
 				1A8DA59110777E0A00114A36 /* LatLongGridGenerator.c in Sources */,

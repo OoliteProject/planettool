@@ -297,7 +297,7 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 	_hadProgress = YES;
 	if ([self.delegate respondsToSelector:@selector(planetToolRenderer:progressUpdate:)])
 	{
-		[self.delegate planetToolRenderer:self progressUpdate:progress];
+		if (![self.delegate planetToolRenderer:self progressUpdate:progress])  _cancel = YES;
 	}
 	return !_cancel;
 }
