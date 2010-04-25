@@ -41,13 +41,17 @@
 	
 	NSInteger						_outputSize;
 	NSString						*_outputPath;
+	NSString						*_outputDisplayName;
 	FloatPixMapRef					_outputImage;
+	
+	BOOL							_isGridGenerator;
 	
 #if !__OBJC2__	
 	NSWindow						*_progressSheet;
 	NSTextField						*_progressLabel;
 	NSProgressIndicator				*_progressBar;
 	NSButton						*_progressCancelButton;
+	NSPopUpButton					*_inputFormatPopUp;
 	
 	BOOL							_flip;
 	BOOL							_fast;
@@ -66,6 +70,8 @@
 @property IBOutlet NSProgressIndicator *progressBar;
 @property IBOutlet NSButton *progressCancelButton;
 
+@property IBOutlet NSPopUpButton *inputFormatPopUp;
+
 @property NSUInteger inputFormat;
 @property NSUInteger outputFormat;
 @property NSInteger outputSize;
@@ -82,5 +88,9 @@
 
 - (IBAction) performFinalRender:(id)sender;
 - (IBAction) cancelLoading:(id)sender;
+
+- (IBAction) resetRotation:(id)sender;
+
+- (id) initAsGridGenerator;
 
 @end

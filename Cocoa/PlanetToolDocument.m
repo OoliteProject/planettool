@@ -44,6 +44,7 @@
 - (void) showProgressSheetWithMessage:(NSString *)message cancelAction:(SEL)cancelAction;
 - (void) updateProgress:(float)value;
 - (void) removeProgressSheetWithSuccess:(BOOL)success;
+- (BOOL) startRenderer:(PlanetToolRenderer *)renderer;
 
 - (void) startPreviewRender;
 - (NSUInteger) smallPreviewSize;
@@ -63,6 +64,8 @@ static void LoadProgressHandler(float proportion, void *context);
 @synthesize progressBar = _progressBar;
 @synthesize progressCancelButton = _progressCancelButton;
 
+@synthesize inputFormatPopUp  = _inputFormatPopUp;
+
 @synthesize outputSize = _outputSize;
 @synthesize flip = _flip;
 @synthesize fast = _fast;
@@ -81,9 +84,14 @@ static void LoadProgressHandler(float proportion, void *context);
 }
 
 
-- (id)initWithType:(NSString *)typeName error:(NSError **)outError
+- (id) initAsGridGenerator
 {
-	return nil;
+	if ((self = [self init]))
+	{
+		_isGridGenerator = YES;
+		self.outputSize = 1024;
+	}
+	return self;
 }
 
 
@@ -116,12 +124,21 @@ static void LoadProgressHandler(float proportion, void *context);
 {
 	// Defer this because -windowForSheet will otherwise try to reload the nib.
 	[self performSelector:@selector(deferredAwakeFromNib) withObject:nil afterDelay:0.0f];
+	
+	if (_isGridGenerator)
+	{
+		NSPopUpButton *popUp = self.inputFormatPopUp;
+		[popUp setEnabled:NO];
+		[popUp removeAllItems];
+		[popUp addItemWithTitle:NSLocalizedString(@"Grid Generator", NULL)];
+		[self startPreviewRender];
+	}
 }
 
 
 - (void) deferredAwakeFromNib
 {
-	if (_sourcePixMap == nil)
+	if (!_isGridGenerator && _sourcePixMap == nil)
 	{
 		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Loading \"%@\"...", NULL), [[NSFileManager defaultManager] displayNameAtPath:self.displayName]];
 		[self showProgressSheetWithMessage:message cancelAction:@selector(cancelLoading:)];
@@ -173,6 +190,12 @@ static void LoadProgressHandler(float proportion, void *context);
 		[self performSelectorOnMainThread:@selector(updateProgressAsync:) withObject:[NSNumber numberWithDouble:value] waitUntilDone:NO];
 		_lastProgressUpdate = now;
 	}
+}
+
+
+- (BOOL) isDocumentEdited
+{
+	return NO;
 }
 
 
@@ -345,6 +368,9 @@ static inline float ClampDegrees(float value)
 {
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	savePanel.requiredFileType = @"png";
+	savePanel.canSelectHiddenExtension = YES;
+	[savePanel setExtensionHidden:NO];
+	
 	[savePanel beginSheetForDirectory:nil
 								 file:[self suggestedRenderName]
 					   modalForWindow:self.windowForSheet
@@ -362,10 +388,10 @@ static inline float ClampDegrees(float value)
 	
 	_outputPath = sheet.filename;
 	
-	NSString *displayName = [sheet.filename lastPathComponent];
-	if ([sheet isExtensionHidden])  displayName = [displayName stringByDeletingPathExtension];
+	_outputDisplayName = [sheet.filename lastPathComponent];
+	if ([sheet isExtensionHidden])  _outputDisplayName = [_outputDisplayName stringByDeletingPathExtension];
 	
-	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Rendering \"%@\"...", NULL), displayName];
+	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Rendering \"%@\"...", NULL), _outputDisplayName];
 	[self showProgressSheetWithMessage:message cancelAction:@selector(cancelRender:)];
 	
 	_lastProgressUpdate = 0.0;
@@ -383,9 +409,22 @@ static inline float ClampDegrees(float value)
 	
 	_finalRenderer.delegate = self;
 	
-	if (![_finalRenderer asyncRenderFromImage:_sourcePixMap])
+	if (![self startRenderer:_finalRenderer])
 	{
 		[self planetToolRenderer:_finalRenderer failedWithMessage:NSLocalizedString(@"Unknown error.", NULL)];
+	}
+}
+
+
+- (BOOL) startRenderer:(PlanetToolRenderer *)renderer
+{
+	if (_isGridGenerator)
+	{
+		return [renderer asyncRenderFromGridGenerator];
+	}
+	else
+	{
+		return [renderer asyncRenderFromImage:_sourcePixMap];
 	}
 }
 
@@ -402,14 +441,15 @@ static inline float ClampDegrees(float value)
 	{
 		_outputImage = FPMRetain(image);
 		[NSThread detachNewThreadSelector:@selector(writeOutputFile) toTarget:self withObject:nil];
+		self.progressLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Writing \"%@\"...", NULL), _outputDisplayName];
 	}
-	else
+	else if (renderer == _previewRenderer)
 	{
 		if (renderer.outputSize < [self largePreviewSize])
 		{
 			self.previewImage = [NSImage fpm_imageWithFloatPixMap:image sourceGamma:kFPMGammaLinear];
 			renderer.outputSize = [self largePreviewSize];
-			[renderer asyncRenderFromImage:_sourcePixMap];
+			[self startRenderer:renderer];
 		}
 		else if (renderer == _previewRenderer)
 		{
@@ -419,6 +459,7 @@ static inline float ClampDegrees(float value)
 		}
 		// Else it's an old high-res preview, which we ignore.
 	}
+
 }
 
 
@@ -456,7 +497,7 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 - (void) writingFailedWithMessage:(NSString *)message
 {
 	[self removeProgressSheetWithSuccess:NO];
-	[NSAlert alertWithMessageText:NSLocalizedString(@"The document could not be saved.", NULL)
+	[NSAlert alertWithMessageText:[NSString stringWithFormat:NSLocalizedString(@"The document \"%@\" could not be saved.", NULL), _outputDisplayName]
 					defaultButton:nil
 				  alternateButton:nil
 					  otherButton:nil
@@ -533,7 +574,7 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 	_previewRenderer.rotateY = self.rotateY;
 	_previewRenderer.rotateZ = self.rotateZ;
 	
-	[_previewRenderer asyncRenderFromImage:_sourcePixMap];
+	[self startRenderer:_previewRenderer];
 }
 
 
@@ -568,17 +609,17 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 	switch (self.outputFormat)
 	{
 		case kPlanetToolFormatLatLong:
-			result = 512;
-			break;
-			
 		case kPlanetToolFormatMercator:
 		case kPlanetToolFormatGallPeters:
 			result = 512;
 			break;
 			
 		case kPlanetToolFormatCube:
-		case kPlanetToolFormatCubeX:
 			result = 128;
+			break;
+			
+		case kPlanetToolFormatCubeX:
+			result = 256;
 			break;
 	}
 	
@@ -602,6 +643,14 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 {
 	[self removeProgressSheetWithSuccess:NO];
 	[self close];
+}
+
+
+- (IBAction) resetRotation:(id)sender
+{
+	self.rotateX = 0.0f;
+	self.rotateY = 0.0f;
+	self.rotateZ = 0.0f;
 }
 
 

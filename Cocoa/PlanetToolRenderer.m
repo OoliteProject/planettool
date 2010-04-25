@@ -44,9 +44,11 @@
 
 @interface PlanetToolRenderer ()
 
-- (void) asyncRender;
 - (void) failRenderWithMessage:(NSString *)message, ...;
 - (BOOL) updateProgress:(float)value;
+
+- (void) performRenderWithSourceConstructor:(SphericalPixelSourceConstructorFunction)sourceConstructor
+								 destructor:(SphericalPixelSourceDestructorFunction)sourceDestructor;
 
 - (OOMatrix) transform;
 
@@ -70,7 +72,7 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 
 - (BOOL) isRendering
 {
-	return _sourcePixMap != NULL;
+	return _isRendering;
 }
 
 
@@ -114,13 +116,25 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 
 - (BOOL) asyncRenderFromImage:(FloatPixMapRef)inImage
 {
-	if (_sourcePixMap != NULL)  return NO;
+	if (_isRendering)  return NO;
 	if (self.delegate == nil)  return NO;
 	
 	_sourcePixMap = FPMRetain(inImage);
-	_cancel = YES;
+	_isRendering = YES;
 	
-	[NSThread detachNewThreadSelector:@selector(asyncRender) toTarget:self withObject:nil];
+	[NSThread detachNewThreadSelector:@selector(asyncRenderImage) toTarget:self withObject:nil];
+	return YES;
+}
+
+
+- (BOOL) asyncRenderFromGridGenerator
+{
+	if (_isRendering)  return NO;
+	if (self.delegate == nil)  return NO;
+	
+	_isRendering = YES;
+	
+	[NSThread detachNewThreadSelector:@selector(asyncRenderGenerator) toTarget:self withObject:nil];
 	return YES;
 }
 
@@ -135,14 +149,10 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 }
 
 
-- (void) asyncRender
+- (void) asyncRenderImage
 {
 	SphericalPixelSourceConstructorFunction		sourceConstructor = NULL;
 	SphericalPixelSourceDestructorFunction		sourceDestructor = NULL;
-	SphericalPixelSinkFunction					sink = NULL;
-	SphericalPixelSourceFunction				source = NULL;
-	void										*sourceContext = NULL;
-	RenderFlags									flags = 0;
 	
 	switch (self.inputFormat)
 	{
@@ -171,6 +181,23 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 		[self failRenderWithMessage:NSLocalizedString(@"Internal error: unknown input format %u.", NULL), self.inputFormat];
 		return;
 	}
+	
+	[self performRenderWithSourceConstructor:sourceConstructor destructor:sourceDestructor];
+}
+
+
+- (void) asyncRenderGenerator
+{
+	[self performRenderWithSourceConstructor:LatLongGridGeneratorConstructor destructor:NULL];
+}
+
+
+- (void) performRenderWithSourceConstructor:(SphericalPixelSourceConstructorFunction)sourceConstructor destructor:(SphericalPixelSourceDestructorFunction)sourceDestructor
+{
+	SphericalPixelSinkFunction					sink = NULL;
+	SphericalPixelSourceFunction				source = NULL;
+	void										*sourceContext = NULL;
+	RenderFlags									flags = 0;
 	
 	switch (self.outputFormat)
 	{
@@ -235,6 +262,7 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 	if (sourceDestructor != NULL)  sourceDestructor(sourceContext);
 	
 	FPMRelease(&_sourcePixMap);
+	_isRendering = NO;
 	
 	if (result != NULL)
 	{

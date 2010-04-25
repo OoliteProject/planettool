@@ -60,6 +60,7 @@ static inline BOOL IsValidPlanetToolOutputFormat(PlanetToolFormat value)
 	PlanetToolFormat				_outputFormat;
 	
 	FloatPixMapRef					_sourcePixMap;
+	BOOL							_isRendering;
 	BOOL							_cancel;
 	BOOL							_hadProgress;
 	
@@ -88,6 +89,8 @@ static inline BOOL IsValidPlanetToolOutputFormat(PlanetToolFormat value)
 @property (readonly, getter=isRendering) BOOL rendering;
 
 - (BOOL) asyncRenderFromImage:(FloatPixMapRef)inImage;
+- (BOOL) asyncRenderFromGridGenerator;	// Ignores inputFormat.
+
 - (void) cancelRendering;
 
 @end

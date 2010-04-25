@@ -1,2 +1,5 @@
 "Loading \"%@\"..." = "Loading “%@”…";
 "Rendering \"%@\"..." = "Rendering “%@”…";
+"Writing \"%@\"..." = "Writing “%@”…";
+
+"The document \"%@\" could not be saved." = "The document “%@” could not be saved.";

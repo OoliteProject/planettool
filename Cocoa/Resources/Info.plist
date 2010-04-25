@@ -40,6 +40,32 @@
 			<key>NSDocumentClass</key>
 			<string>PlanetToolDocument</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Planet Tool grid generator</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.oolite.planettool.gridgenerator</string>
+			</array>
+			<key>NSDocumentClass</key>
+			<string>PlanetToolDocument</string>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<!-- Internal pseudo-type -->
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.planettool.gridgenerator</string>
+			<key>UTTypeDescription</key>
+			<string>Planet Tool grid generator</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.item</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
