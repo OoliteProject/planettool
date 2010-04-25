@@ -129,7 +129,7 @@ int main (int argc, const char * argv[])
 		
 		if (sourcePM == NULL)
 		{
-			fprintf(stderr, "Could not load %s\n", argv[1]);
+			fprintf(stderr, "Could not load %s\n", settings.sourcePath);
 			return EXIT_FAILURE;
 		}
 	}
