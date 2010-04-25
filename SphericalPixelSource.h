@@ -39,11 +39,6 @@ FPM_BEGIN_EXTERN_C
 #define kRadToDeg		(180.0f / kPiF)
 
 
-#ifdef __WIN32__
-#define random	rand
-#endif
-
-
 // In Mac OS X on Intel systems, fmodf() calls fmodl() (externally), but fmodl() is inlined and thus faster.
 #if FMODF_JUST_WRAPS_FMODL
 #undef fmodf
@@ -190,7 +185,7 @@ void DummyProgressCallback(size_t numerator, size_t denominator, void *context);
 // [0..1]
 FPM_INLINE float RandF(void)
 {
-	return (float)random() / (float)0x7FFFFFFF;
+	return (float)rand() / (float)RAND_MAX;
 }
 
 

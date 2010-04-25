@@ -50,11 +50,6 @@ const char * kVersionString =
 ;
 
 
-#ifdef __WIN32__
-#define srandom	srand
-#endif
-
-
 static void ErrorHandler(const char *message, bool isError);
 
 
@@ -107,7 +102,7 @@ static void PrintProgress(size_t numerator, size_t denominator, void *context);
 int main (int argc, const char * argv[])
 {
 	FPMInit();
-	srandom(time(NULL));
+	srand(time(NULL));
 	
 	// Work out what the user wants.
 	Settings settings;
