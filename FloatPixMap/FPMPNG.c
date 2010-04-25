@@ -36,7 +36,14 @@ static void TransformRow16(void *data, size_t width);
 static void TransformRow8(void *data, size_t width);
 
 
-FloatPixMapRef FPMCreateWithPNG(const char *path, FPMGammaFactor desiredGamma, FPMPNGErrorHandler errorHandler)
+typedef struct
+{
+	FPMPNGErrorHandler		*errorCB;
+	void					*errorCBContext;
+} ErrorInfo;
+
+
+FloatPixMapRef FPMCreateWithPNG(const char *path, FPMGammaFactor desiredGamma, FPMPNGErrorHandler errorHandler, FPMPNGProgressHandler progressHandler, void *callbackContext)
 {
 	if (path != NULL)
 	{
@@ -44,29 +51,29 @@ FloatPixMapRef FPMCreateWithPNG(const char *path, FPMGammaFactor desiredGamma, F
 		FILE *file = fopen(path, "rb");
 		if (file == NULL)
 		{
-			if (errorHandler != NULL)  errorHandler("file not found.", true);
+			if (errorHandler != NULL)  errorHandler("file not found.", true, callbackContext);
 			return NULL;
 		}
 		
 		png_byte bytes[8];
 		if (fread(bytes, 8, 1, file) < 1)
 		{
-			if (errorHandler != NULL)  errorHandler("could not read file.", true);
+			if (errorHandler != NULL)  errorHandler("could not read file.", true, callbackContext);
 			return NULL;
 		}
 		if (png_sig_cmp(bytes, 0, 8) != 0)
 		{
-			if (errorHandler != NULL)  errorHandler("not a PNG.", true);
+			if (errorHandler != NULL)  errorHandler("not a PNG.", true, callbackContext);
 			return NULL;
 		}
 		
 		if (fseek(file, 0, SEEK_SET) != 0)
 		{
-			if (errorHandler != NULL)  errorHandler("could not read file.", true);
+			if (errorHandler != NULL)  errorHandler("could not read file.", true, callbackContext);
 			return NULL;
 		}
 		
-		FloatPixMapRef result = FPMCreateWithPNGCustom(file, PNGReadFile, desiredGamma, errorHandler);
+		FloatPixMapRef result = FPMCreateWithPNGCustom(file, PNGReadFile, desiredGamma, errorHandler, progressHandler, callbackContext);
 		fclose(file);
 		return result;
 	}
@@ -77,7 +84,7 @@ FloatPixMapRef FPMCreateWithPNG(const char *path, FPMGammaFactor desiredGamma, F
 }
 
 
-FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FPMGammaFactor desiredGamma, FPMPNGErrorHandler errorHandler)
+FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FPMGammaFactor desiredGamma, FPMPNGErrorHandler errorHandler, FPMPNGProgressHandler progressHandler, void *callbackContext)
 {
 	png_structp			png = NULL;
 	png_infop			pngInfo = NULL;
@@ -85,10 +92,10 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 	FloatPixMapRef		result = NULL;
 	png_uint_32			i, width, height, rowBytes;
 	int					depth, colorType;
-	png_bytepp			rows = NULL;
 	void				*data = NULL;
+	ErrorInfo			errInfo = { errorHandler, callbackContext };
 	
-	png = png_create_read_struct(PNG_LIBPNG_VER_STRING, errorHandler, PNGError, PNGWarning);
+	png = png_create_read_struct(PNG_LIBPNG_VER_STRING, &errInfo, PNGError, PNGWarning);
 	if (png == NULL)  goto FAIL;
 	
 	pngInfo = png_create_info_struct(png);
@@ -125,20 +132,17 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 	png_read_update_info(png, pngInfo);
 	rowBytes = png_get_rowbytes(png, pngInfo);
 	
-	rows = malloc(sizeof *rows * height);
 	data = malloc(rowBytes * height);
-	if (rows == NULL || data == NULL)  goto FAIL;
+	if (data == NULL)  goto FAIL;
 	
 	// Set up row pointers.
 	for (i = 0; i < height; i++)
 	{
-		rows[i] = (png_bytep)data + i * rowBytes;
+		png_read_row(png, (png_bytep)data + i * rowBytes, NULL);
+		if (progressHandler)  progressHandler((float)(i + 1) / (float)height, callbackContext);
 	}
 	
-	png_read_image(png, rows);
 	png_read_end(png, pngEndInfo);
-	
-	free(rows);
 	
 	result = ConvertPNGData(data, width, height, rowBytes, png_get_bit_depth(png, pngInfo), png_get_color_type(png, pngInfo));
 	
@@ -157,14 +161,13 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 FAIL:
 	FPMRelease(&result);
 	if (png != NULL)  png_destroy_read_struct(&png, &pngInfo, &pngEndInfo);
-	free(rows);
 	free(data);
 	
 	return NULL;
 }
 
 
-bool FPMWritePNG(FloatPixMapRef pm, const char *path, FPMWritePNGFlags options, FPMGammaFactor sourceGamma, FPMGammaFactor fileGamma, FPMPNGErrorHandler errorHandler)
+bool FPMWritePNG(FloatPixMapRef pm, const char *path, FPMWritePNGFlags options, FPMGammaFactor sourceGamma, FPMGammaFactor fileGamma, FPMPNGErrorHandler errorHandler, FPMPNGProgressHandler progressHandler, void *callbackContext)
 {
 	if (pm != NULL && path != NULL)
 	{
@@ -172,11 +175,11 @@ bool FPMWritePNG(FloatPixMapRef pm, const char *path, FPMWritePNGFlags options, 
 		FILE *file = fopen(path, "wb");
 		if (file == NULL)
 		{
-			if (errorHandler != NULL)  errorHandler("file not found.", true);
+			if (errorHandler != NULL)  errorHandler("file not found.", true, callbackContext);
 			return NULL;
 		}
 		
-		bool result = FPMWritePNGCustom(pm, file, PNGWriteFile, NULL, options, sourceGamma, fileGamma, errorHandler);
+		bool result = FPMWritePNGCustom(pm, file, PNGWriteFile, NULL, options, sourceGamma, fileGamma, errorHandler, progressHandler, callbackContext);
 		fclose(file);
 		return result;
 	}
@@ -187,7 +190,7 @@ bool FPMWritePNG(FloatPixMapRef pm, const char *path, FPMWritePNGFlags options, 
 }
 
 
-bool FPMWritePNGCustom(FloatPixMapRef srcPM, png_voidp ioPtr, png_rw_ptr writeDataFn, png_flush_ptr flushDataFn, FPMWritePNGFlags options, FPMGammaFactor sourceGamma, FPMGammaFactor fileGamma, FPMPNGErrorHandler errorHandler)
+bool FPMWritePNGCustom(FloatPixMapRef srcPM, png_voidp ioPtr, png_rw_ptr writeDataFn, png_flush_ptr flushDataFn, FPMWritePNGFlags options, FPMGammaFactor sourceGamma, FPMGammaFactor fileGamma, FPMPNGErrorHandler errorHandler, FPMPNGProgressHandler progressHandler, void *callbackContext)
 {
 	if (srcPM != NULL)
 	{
@@ -195,13 +198,14 @@ bool FPMWritePNGCustom(FloatPixMapRef srcPM, png_voidp ioPtr, png_rw_ptr writeDa
 		png_structp			png = NULL;
 		png_infop			pngInfo = NULL;
 		FloatPixMapRef		pm = NULL;
+		ErrorInfo			errInfo = { errorHandler, callbackContext };
 		
 		// Prepare data.
 		FPMDimension width = FPMGetWidth(srcPM);
 		FPMDimension height = FPMGetHeight(srcPM);
 		if (width > UINT32_MAX || height > UINT32_MAX)
 		{
-			if (errorHandler != NULL)  errorHandler("image is too large for PNG format.", true);
+			if (errorHandler != NULL)  errorHandler("image is too large for PNG format.", true, callbackContext);
 			return false;
 		}
 		
@@ -212,7 +216,7 @@ bool FPMWritePNGCustom(FloatPixMapRef srcPM, png_voidp ioPtr, png_rw_ptr writeDa
 		FPMApplyGamma(pm, sourceGamma, fileGamma, steps);
 		FPMQuantize(pm, 0.0f, 1.0f, 0.0f, steps - 1, steps, (options & kFPMQuantizeDither & kFPMQuantizeJitter) | kFMPQuantizeClip | kFMPQuantizeAlpha);
 		
-		png = png_create_write_struct(PNG_LIBPNG_VER_STRING, errorHandler, PNGError, PNGWarning);
+		png = png_create_write_struct(PNG_LIBPNG_VER_STRING, &errInfo, PNGError, PNGWarning);
 		if (png == NULL)  goto FAIL;
 		
 		pngInfo = png_create_info_struct(png);
@@ -261,6 +265,7 @@ bool FPMWritePNGCustom(FloatPixMapRef srcPM, png_voidp ioPtr, png_rw_ptr writeDa
 			transformer(row, width);
 			png_write_row(png, row);
 			row += rowOffset;
+			if (progressHandler)  progressHandler((float)(i + 1) / (float)height, callbackContext);
 		}
 		png_write_end(png, pngInfo);
 		success = true;
@@ -300,15 +305,21 @@ static void PNGWriteFile(png_structp png, png_bytep bytes, png_size_t size)
 
 static void PNGError(png_structp png, png_const_charp message)
 {
-	FPMPNGErrorHandler *errCB = png_get_error_ptr(png);
-	if (errCB != NULL)  errCB(message, true);
+	ErrorInfo *errorInfo = png_get_error_ptr(png);
+	if (errorInfo != NULL && errorInfo->errorCB != NULL)
+	{
+		errorInfo->errorCB(message, true, errorInfo->errorCBContext);
+	}
 }
 
 
 static void PNGWarning(png_structp png, png_const_charp message)
 {
-	FPMPNGErrorHandler *errCB = png_get_error_ptr(png);
-	if (errCB != NULL)  errCB(message, false);
+	ErrorInfo *errorInfo = png_get_error_ptr(png);
+	if (errorInfo != NULL && errorInfo->errorCB != NULL)
+	{
+		errorInfo->errorCB(message, false, errorInfo->errorCBContext);
+	}
 }
 
 

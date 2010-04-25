@@ -33,7 +33,6 @@
 bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *progressContext)
 {
 	if (renderCB == NULL)  return false;
-	if (progressCB == NULL)  progressCB = DummyProgressCallback;
 	
 	size_t progressNumerator = subRenderIndex * lineCount;
 	size_t progressDenominator = subRenderCount * lineCount;
@@ -43,7 +42,10 @@ bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCou
 	{
 		if (EXPECT_NOT(!renderCB(i, lineCount, renderContext)))  return false;
 		
-		progressCB(++progressNumerator, progressDenominator, progressContext);
+		if (progressCB != NULL)
+		{
+			if (EXPECT_NOT(!progressCB(++progressNumerator, progressDenominator, progressContext)))  return false;
+		}
 	}
 	
 	return true;

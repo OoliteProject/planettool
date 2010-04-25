@@ -166,7 +166,10 @@ typedef FPMColor (*SphericalPixelSourceFunction)(Coordinates where, RenderFlags 
 typedef bool (*SphericalPixelSourceConstructorFunction)(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
 typedef void (*SphericalPixelSourceDestructorFunction)(void *context);
 
-typedef void (*ProgressCallbackFunction)(size_t numerator, size_t denominator, void *context);
+/*	Progress callback: called at unspecified intervals during rendering; if
+	it returns false, rendering is stopped.
+*/
+typedef bool (*ProgressCallbackFunction)(size_t numerator, size_t denominator, void *context);
 
 typedef FloatPixMapRef (*SphericalPixelSinkFunction)(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext);
 
@@ -179,7 +182,7 @@ float GaussTableLookup(float value, float mid, float halfWidth, unsigned tblSize
 float GaussTableLookup2D(float x, float xmid, float y, float ymid, float halfWidth, unsigned tblSize, float *table);
 
 
-void DummyProgressCallback(size_t numerator, size_t denominator, void *context);
+bool DummyProgressCallback(size_t numerator, size_t denominator, void *context);
 
 
 // [0..1]

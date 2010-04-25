@@ -50,7 +50,7 @@ const char * kVersionString =
 ;
 
 
-static void ErrorHandler(const char *message, bool isError);
+static void ErrorHandler(const char *message, bool isError, void *context);
 
 
 typedef struct
@@ -96,7 +96,7 @@ typedef struct
 static bool InterpretArguments(int argc, const char * argv[], Settings *settings);
 
 
-static void PrintProgress(size_t numerator, size_t denominator, void *context);
+static bool PrintProgress(size_t numerator, size_t denominator, void *context);
 
 
 int main (int argc, const char * argv[])
@@ -120,7 +120,7 @@ int main (int argc, const char * argv[])
 	if (settings.sourcePath != NULL)
 	{
 		if (!settings.quiet)  printf("Reading...\n");
-		sourcePM = FPMCreateWithPNG(settings.sourcePath, kFPMGammaLinear, NULL);
+		sourcePM = FPMCreateWithPNG(settings.sourcePath, kFPMGammaLinear, NULL, NULL, NULL);
 		
 		if (sourcePM == NULL)
 		{
@@ -181,7 +181,7 @@ int main (int argc, const char * argv[])
 	if (!settings.quiet)  printf("Writing...\n");
 	FPMWritePNGFlags flags = kFPMWritePNGDither;
 	if (settings.sixteenBit)  flags = kFPMWritePNG16BPC;
-	if (!FPMWritePNG(resultPM, settings.sinkPath, flags, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler))
+	if (!FPMWritePNG(resultPM, settings.sinkPath, flags, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler, NULL, NULL))
 	{
 		return EXIT_FAILURE;
 	}
@@ -191,7 +191,7 @@ int main (int argc, const char * argv[])
 }
 
 
-static void ErrorHandler(const char *message, bool isError)
+static void ErrorHandler(const char *message, bool isError, void *context)
 {
 	fprintf(stderr, "%s: %s\n", isError ? "ERROR" : "WARNING", message);
 }
@@ -751,7 +751,7 @@ static void ShowVersion(void)
 }
 
 
-static void PrintProgress(size_t numerator, size_t denominator, void *context)
+static bool PrintProgress(size_t numerator, size_t denominator, void *context)
 {
 	size_t percentage = (numerator * 100) / denominator;
 	unsigned *last = context;
@@ -762,4 +762,6 @@ static void PrintProgress(size_t numerator, size_t denominator, void *context)
 		fflush(stdout);
 		*last = percentage;
 	}
+	
+	return true;
 }

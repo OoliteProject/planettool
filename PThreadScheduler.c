@@ -150,7 +150,10 @@ static bool RunRenderTask(PlanetToolSchedulerContext *context)
 			
 			if (context->index <= context->lineCount)
 			{
-				context->progressCB(context->progressNumerator + context->index, context->progressDenominator, context->progressContext);
+				if (EXPECT_NOT(!context->progressCB(context->progressNumerator + context->index, context->progressDenominator, context->progressContext)))
+				{
+					context->stop = true;
+				}
 			}
 		}
 		

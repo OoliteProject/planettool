@@ -142,7 +142,7 @@ float GaussTableLookup2D(float x, float xmid, float y, float ymid, float halfWid
 }
 
 
-void DummyProgressCallback(size_t numerator, size_t denominator, void *context)
+bool DummyProgressCallback(size_t numerator, size_t denominator, void *context)
 {
-	// Do nothing.
+	return true;
 }
