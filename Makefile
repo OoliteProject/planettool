@@ -67,8 +67,8 @@ SphericalPixelSource.o: SphericalPixelSource.h
 ReadLatLong.o: ReadLatLong.h FPMImageOperations.h PlanetToolScheduler.h
 ReadCube.o: ReadCube.h FPMImageOperations.h PlanetToolScheduler.h
 RenderToLatLong.o: RenderToLatLong.h FPMImageOperations.h
-RenderToMercator.o: RenderToMercator.o FPMImageOperations.h
-RenderToGallPeters.o: RenderToGallPeters.o FPMImageOperations.h
+RenderToMercator.o: RenderToMercator.h FPMImageOperations.h
+RenderToGallPeters.o: RenderToGallPeters.h FPMImageOperations.h
 LatLongGridGenerator.o: LatLongGridGenerator.h
 RenderToCube.o: RenderToCube.h FPMImageOperations.h
 MatrixTransformer.o: MatrixTransformer.h

@@ -1,5 +1,5 @@
 /*	FPMBasics.h
-	© 2009 Jens Ayton
+	© 2009-2010 Jens Ayton
 	
 	Basic types and macros used by FloatPixMap library.
 */
@@ -46,6 +46,41 @@
 #define FPM_GCC_PREFETCH(...) do {} while (0)
 #define FPM_EXPECT(x)  (x)
 #define FPM_EXPECT_NOT(x)  (x)
+#endif
+
+
+#if __BIG_ENDIAN__
+#define FPM_BIG_ENDIAN		1
+#endif
+#if __LITTLE_ENDIAN__
+#define FPM_LITTLE_ENDIAN	1
+#endif
+
+
+#if !defined(FPM_BIG_ENDIAN) && !defined(FPM_LITTLE_ENDIAN)
+#if defined(__i386__) || defined(__amd64__) || defined(__x86_64__)
+#define FPM_LITTLE_ENDIAN	1
+#endif
+
+#if defined(__sgi__) || defined(__mips__) 
+#define FPM_BIG_ENDIAN		1 
+#endif
+#endif
+
+
+#ifndef FPM_BIG_ENDIAN
+#define FPM_BIG_ENDIAN		0
+#endif
+
+#ifndef FPM_LITTLE_ENDIAN
+#define FPM_LITTLE_ENDIAN	0
+#endif
+
+
+#if !FPM_BIG_ENDIAN && !FPM_LITTLE_ENDIAN
+#error Neither FPM_BIG_ENDIAN nor FPM_LITTLE_ENDIAN is defined as nonzero!
+#elif FPM_BIG_ENDIAN && FPM_LITTLE_ENDIAN
+#error Both FPM_BIG_ENDIAN and FPM_LITTLE_ENDIAN are defined as nonzero!
 #endif
 
 

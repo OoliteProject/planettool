@@ -108,7 +108,7 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 	png_read_info(png, pngInfo);
 	if (!png_get_IHDR(png, pngInfo, &width, &height, &depth, &colorType, NULL, NULL, NULL))  goto FAIL;
 	
-#if __LITTLE_ENDIAN__
+#if FPM_LITTLE_ENDIAN
 	if (depth == 16)  png_set_swap(png);
 #endif
 	if (depth <= 8 && !(colorType & PNG_COLOR_MASK_ALPHA))
@@ -408,9 +408,9 @@ static void TransformRow16(void *data, size_t width)
 	assert(data != NULL);
 	
 	float *src = (float *)data;
-#if __LITTLE_ENDIAN__
+#if FPM_LITTLE_ENDIAN
 	uint8_t *dst = (uint8_t *)data;
-#else
+#elif FPM_BIG_ENDIAN
 	uint16_t *dst = (uint16_t *)data;
 #endif
 	
@@ -420,10 +420,10 @@ static void TransformRow16(void *data, size_t width)
 		// value should already be scaled to appropriate range.
 		uint16_t value = *src++;
 		
-#if __LITTLE_ENDIAN__
+#if FPM_LITTLE_ENDIAN
 		*dst++ = value >> 8;
 		*dst++ = value & 0xFF;
-#else
+#elif FPM_BIG_ENDIAN
 		*dst++ = value;
 #endif
 	}
