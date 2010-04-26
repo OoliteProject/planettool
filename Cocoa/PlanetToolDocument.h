@@ -44,8 +44,6 @@
 	NSString						*_outputDisplayName;
 	FloatPixMapRef					_outputImage;
 	
-	BOOL							_isGridGenerator;
-	
 #if !__OBJC2__	
 	NSWindow						*_progressSheet;
 	NSTextField						*_progressLabel;
@@ -58,6 +56,7 @@
 	BOOL							_jitter;
 	BOOL							_isRenderingPreview;
 	BOOL							_sixteenBitPerChannel;
+	BOOL							_gridGenerator;
 	float							_rotateX;
 	float							_rotateY;
 	float							_rotateZ;
@@ -85,6 +84,11 @@
 @property float rotateZ;
 @property (readonly, assign) NSImage *previewImage;
 @property (readonly, getter = isRenderingPreview) BOOL renderingPreview;
+
+@property (readonly, getter = isGridGenerator) BOOL gridGenerator;
+@property (readonly) BOOL canUseCubeSource;
+@property (readonly) BOOL canUseCubeXSource;
+
 
 - (IBAction) performFinalRender:(id)sender;
 - (IBAction) cancelLoading:(id)sender;

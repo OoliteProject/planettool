@@ -34,6 +34,7 @@
 @interface PlanetToolDocument () <PlanetToolRendererDelegate>
 
 @property (readwrite) BOOL renderingPreview;
+@property (readwrite) BOOL gridGenerator;
 @property (readwrite, assign) NSImage *previewImage;
 
 - (void) asyncLoadImage:(NSString *)path;
@@ -77,6 +78,8 @@ static void LoadProgressHandler(float proportion, void *context);
 @synthesize previewImage = _previewImage;
 @synthesize renderingPreview = _isRenderingPreview;
 
+@synthesize gridGenerator = _gridGenerator;
+
 
 + (void) initialize
 {
@@ -88,7 +91,7 @@ static void LoadProgressHandler(float proportion, void *context);
 {
 	if ((self = [self init]))
 	{
-		_isGridGenerator = YES;
+		self.gridGenerator = YES;
 		self.outputSize = 1024;
 	}
 	return self;
@@ -125,7 +128,7 @@ static void LoadProgressHandler(float proportion, void *context);
 	// Defer this because -windowForSheet will otherwise try to reload the nib.
 	[self performSelector:@selector(deferredAwakeFromNib) withObject:nil afterDelay:0.0f];
 	
-	if (_isGridGenerator)
+	if (self.gridGenerator)
 	{
 		NSPopUpButton *popUp = self.inputFormatPopUp;
 		[popUp setEnabled:NO];
@@ -138,7 +141,7 @@ static void LoadProgressHandler(float proportion, void *context);
 
 - (void) deferredAwakeFromNib
 {
-	if (!_isGridGenerator && _sourcePixMap == nil)
+	if (!self.gridGenerator && _sourcePixMap == nil)
 	{
 		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Loading \"%@\"...", NULL), [[NSFileManager defaultManager] displayNameAtPath:self.displayName]];
 		[self showProgressSheetWithMessage:message cancelAction:@selector(cancelLoading:)];
@@ -325,6 +328,18 @@ static inline float ClampDegrees(float value)
 }
 
 
+- (BOOL) canUseCubeSource
+{
+	return FPMGetWidth(_sourcePixMap) % 6 == 0;
+}
+
+
+- (BOOL) canUseCubeXSource
+{
+	return FPMGetWidth(_sourcePixMap) % 4 == 0 && FPMGetHeight(_sourcePixMap) % 3 == 0;
+}
+
+
 
 #pragma mark -
 #pragma mark Rendering
@@ -418,7 +433,7 @@ static inline float ClampDegrees(float value)
 
 - (BOOL) startRenderer:(PlanetToolRenderer *)renderer
 {
-	if (_isGridGenerator)
+	if (self.gridGenerator)
 	{
 		return [renderer asyncRenderFromGridGenerator];
 	}
@@ -598,7 +613,7 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 			break;
 	}
 	
-	if (result > self.outputSize)  result = self.outputSize;
+	if (result > (NSUInteger)self.outputSize)  result = self.outputSize;
 	return result;
 }
 
@@ -623,7 +638,7 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 			break;
 	}
 	
-	if (result > self.outputSize)  result = self.outputSize;
+	if (result > (NSUInteger)self.outputSize)  result = self.outputSize;
 	return result;
 }
 
@@ -679,15 +694,16 @@ static void LoadProgressHandler(float proportion, void *context)
 	[self removeProgressSheetWithSuccess:YES];
 	
 	// Select input and output format based on aspect ratio.
-	float aspectRatio = (float)FPMGetWidth(_sourcePixMap) / (float)FPMGetHeight(_sourcePixMap);
+	float aspectRatio = FPMGetWidth(_sourcePixMap) / FPMGetHeight(_sourcePixMap);
 	NSUInteger size = 0;
-	if (aspectRatio >= 1.5)
+	
+	if (aspectRatio < 1.0f && self.canUseCubeSource)
 	{
-		self.inputFormat = kPlanetToolFormatLatLong;
-		self.outputFormat = kPlanetToolFormatCube;
-		size = FPMGetHeight(_sourcePixMap) / 2;
+		self.inputFormat = kPlanetToolFormatCube;
+		self.outputFormat = kPlanetToolFormatLatLong;
+		size = FPMGetWidth(_sourcePixMap) * 2;
 	}
-	else if (aspectRatio >= 1)
+	else if (aspectRatio < 1.5f && self.canUseCubeXSource)
 	{
 		self.inputFormat = kPlanetToolFormatCubeX;
 		self.outputFormat = kPlanetToolFormatLatLong;
@@ -695,10 +711,11 @@ static void LoadProgressHandler(float proportion, void *context)
 	}
 	else
 	{
-		self.inputFormat = kPlanetToolFormatCube;
-		self.outputFormat = kPlanetToolFormatLatLong;
-		size = FPMGetWidth(_sourcePixMap) * 2;
+		self.inputFormat = kPlanetToolFormatLatLong;
+		self.outputFormat = kPlanetToolFormatCube;
+		size = FPMGetHeight(_sourcePixMap) / 2;
 	}
+	
 	self.outputSize = OORoundUpToPowerOf2(size);
 	
 	[self startPreviewRender];
