@@ -43,30 +43,41 @@ static const FPMColor kLonGridSouthColor = { 0, 1, 0, 1 };
 
 static FPMColor LatLongGridGenerator(Coordinates where, RenderFlags flags, void *context)
 {
-	float latitude, longitude;
-	const float interval = 360.0f/36.0f;	// interval, degrees
-	const float width = 0.5f;				// line width, degrees
+	// Grid spacing in degrees.
+	const float kInterval	= 10.0f;
+	const float kWidth		= 0.5f;
 	
-	CoordsGetLatLongDeg(where, &latitude, &longitude);
+	/*	To avoid nasty fmods, or even moderately nasty integer mods, we use
+		an integer coordinate scheme where 0x01000000 corresponds to 10
+		degrees.
+	*/
+	float flat, flon;
+	CoordsGetLatLongDeg(where, &flat, &flon);
 	
-	float modLat = (latitude < 0.0f) ? latitude + 360.0f : latitude;
-	float modLong = (longitude < 0.0f) ? longitude + 360.0f : longitude;
-	modLat = fmodf(modLat, interval);
+	/*	Get rid of negative values and convert to ints. Vales will range from
+		approximately 180 degrees to 540 degrees, or 0x12000000 to 0x36000000.
+	*/
+	const float kConversionFactor = (float)0x01000000 / kInterval;
+	uint_fast32_t lat = (flat + 360.0f) * kConversionFactor;
 	
-	if (modLat < width / 2.0f || modLat > (interval - width / 2.0f))
+	//	Get latitude + half of width modulo ten degrees in integer coord system.
+	const uint_fast32_t kIntWidth = kWidth * kConversionFactor + 0.5f;
+	const uint_fast32_t kIntHalfWidth = kWidth / 2.0f * kConversionFactor + 0.5f;
+	
+	uint_fast32_t mlat = (lat + kIntHalfWidth) & 0x00FFFFFF;
+	
+	if (mlat < kIntWidth)
 	{
-		return (longitude < 0) ? kLatGridWestColor : kLatGridEastColor;
+		return (flon < 0.0f) ? kLatGridWestColor : kLatGridEastColor;
 	}
 	
-	modLong = fmodf(modLong, interval);
-	float scaledWidth;
-	scaledWidth = width;
-	// This is supposed to give us equal thickness around the globe, but it don't.
-//	scaledWidth = interval - (interval - width) * cosf(latitude * kDegToRad);
-	
-	if (modLong < scaledWidth / 2.0f || modLong > (interval - scaledWidth / 2.0f))
+	// Same for longitude.
+	uint_fast32_t lon = (flon + 360.0f) * kConversionFactor;
+	uint_fast32_t mlon = (lon + kIntHalfWidth) & 0x00FFFFFF;
+	if (mlon < kIntWidth)
 	{
-		return (latitude < 0) ? kLonGridSouthColor : kLonGridNorthColor;
+		const uint_fast32_t midLat = 360.0f * kConversionFactor;
+		return (lat < midLat) ? kLonGridSouthColor : kLonGridNorthColor;
 	}
 	
 	return kBackgroundColor;

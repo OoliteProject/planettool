@@ -39,13 +39,6 @@ FPM_BEGIN_EXTERN_C
 #define kRadToDeg		(180.0f / kPiF)
 
 
-// In Mac OS X on Intel systems, fmodf() calls fmodl() (externally), but fmodl() is inlined and thus faster.
-#if FMODF_JUST_WRAPS_FMODL
-#undef fmodf
-#define fmodf fmodl
-#endif
-
-
 /*	Coordinate convention: looking at a planet with the north pole upwards
 	and the geographical coordinate origin in the middle, the vector coordinate
 	space forms a right-handed basis with Y pointing north, X pointing east and
