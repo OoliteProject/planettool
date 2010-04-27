@@ -50,6 +50,7 @@
 	NSProgressIndicator				*_progressBar;
 	NSButton						*_progressCancelButton;
 	NSPopUpButton					*_inputFormatPopUp;
+	NSStepper						*_outputSizeStepper;
 	
 	BOOL							_flip;
 	BOOL							_fast;
@@ -70,6 +71,7 @@
 @property IBOutlet NSButton *progressCancelButton;
 
 @property IBOutlet NSPopUpButton *inputFormatPopUp;
+@property IBOutlet NSStepper *outputSizeStepper;
 
 @property NSUInteger inputFormat;
 @property NSUInteger outputFormat;
@@ -94,6 +96,8 @@
 - (IBAction) cancelLoading:(id)sender;
 
 - (IBAction) resetRotation:(id)sender;
+
+- (IBAction) outputSizeStepperAction:(id)sender;
 
 - (id) initAsGridGenerator;
 

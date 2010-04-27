@@ -229,8 +229,8 @@ FPM_INLINE bool FPMSizeEmpty(FPMSize sz)
 	return sz.width == 0 && sz.height == 0;
 }
 
-FPM_INLINE FPMDimension FPMSizeArea(FPMSize size) FPM_CONST;
-FPM_INLINE FPMDimension FPMSizeArea(FPMSize size)
+FPM_INLINE uintmax_t FPMSizeArea(FPMSize size) FPM_CONST;
+FPM_INLINE uintmax_t FPMSizeArea(FPMSize size)
 {
 	return size.width * size.height;
 }

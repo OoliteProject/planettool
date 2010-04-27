@@ -105,13 +105,10 @@ FloatPixMapRef FPMCreate(FPMSize size)
 {
 	assert(sInited);
 	
-	FPMColor *pixels = NULL;
+	if (FPMSizeArea(size) == 0)  return NULL;
 	
-	if (FPMSizeArea(size) != 0)
-	{
-		pixels = calloc(FPMSizeArea(size), sizeof *pixels);
-		if (pixels == NULL)  return NULL;
-	}
+	FPMColor *pixels = calloc(FPMSizeArea(size), sizeof *pixels);
+	if (pixels == NULL)  return NULL;
 	
 	return MakeFPM(size, size.width, pixels, NULL);
 }

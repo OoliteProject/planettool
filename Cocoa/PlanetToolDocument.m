@@ -66,6 +66,7 @@ static void LoadProgressHandler(float proportion, void *context);
 @synthesize progressCancelButton = _progressCancelButton;
 
 @synthesize inputFormatPopUp  = _inputFormatPopUp;
+@synthesize outputSizeStepper = _outputSizeStepper;
 
 @synthesize outputSize = _outputSize;
 @synthesize flip = _flip;
@@ -146,6 +147,7 @@ static void LoadProgressHandler(float proportion, void *context);
 		NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Loading \"%@\"...", NULL), [[NSFileManager defaultManager] displayNameAtPath:self.displayName]];
 		[self showProgressSheetWithMessage:message cancelAction:@selector(cancelLoading:)];
 	}
+	self.outputSizeStepper.doubleValue = log2(self.outputSize);
 }
 
 
@@ -202,6 +204,22 @@ static void LoadProgressHandler(float proportion, void *context);
 }
 
 
+- (IBAction) outputSizeStepperAction:(id)sender
+{
+	/*	Update stepper in integer powers of two. If value is fractional, snap
+		to integer in the direction of change (so 300 goes to 512 or 256, for
+		instance).
+	*/
+	NSStepper *stepper = sender;
+	double value = stepper.doubleValue;
+	
+	if (value >= log2(self.outputSize))  value = floor(value);
+	else value = ceil(value);
+	
+	self.outputSize = pow(2.0, value);
+}
+
+
 
 #pragma mark -
 #pragma mark Properties
@@ -249,6 +267,7 @@ static void LoadProgressHandler(float proportion, void *context);
 		{
 			[self startPreviewRender];
 		}
+		self.outputSizeStepper.doubleValue = log2(size);
 	}
 }
 
@@ -509,14 +528,26 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 }
 
 
+- (void) runAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText
+{
+	NSAlert *alert = [NSAlert alertWithMessageText:message
+									 defaultButton:nil
+								   alternateButton:nil
+									   otherButton:nil
+						 informativeTextWithFormat:@"%@", informativeText];
+	[alert beginSheetModalForWindow:self.windowForSheet
+					  modalDelegate:nil
+					 didEndSelector:NULL
+						contextInfo:NULL];
+}
+
+
 - (void) writingFailedWithMessage:(NSString *)message
 {
 	[self removeProgressSheetWithSuccess:NO];
-	[NSAlert alertWithMessageText:[NSString stringWithFormat:NSLocalizedString(@"The document \"%@\" could not be saved.", NULL), _outputDisplayName]
-					defaultButton:nil
-				  alternateButton:nil
-					  otherButton:nil
-		informativeTextWithFormat:@"%@", message];
+	[self runAlertWithMessage:[NSString stringWithFormat:NSLocalizedString(@"The document \"%@\" could not be saved.", NULL), _outputDisplayName]
+			  informativeText:message];
+	
 }
 
 
@@ -525,11 +556,8 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 	if (renderer == _finalRenderer)
 	{
 		[self removeProgressSheetWithSuccess:NO];
-		[NSAlert alertWithMessageText:NSLocalizedString(@"Rendering failed.", NULL)
-						defaultButton:nil
-					  alternateButton:nil
-						  otherButton:nil
-			informativeTextWithFormat:@"%@", message];
+		[self runAlertWithMessage:NSLocalizedString(@"Rendering failed.", NULL)
+				  informativeText:message];
 	}
 	else	
 	{

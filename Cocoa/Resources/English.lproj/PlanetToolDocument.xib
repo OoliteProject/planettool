@@ -319,13 +319,13 @@
 						<object class="NSTextField" id="777040413">
 							<reference key="NSNextResponder" ref="831154101"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{123, 620}, {52, 22}}</string>
+							<string key="NSFrame">{{123, 620}, {66, 22}}</string>
 							<reference key="NSSuperview" ref="831154101"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="691459903">
 								<int key="NSCellFlags">-1804468671</int>
 								<int key="NSCellFlags2">71304192</int>
-								<string key="NSContents">42</string>
+								<string key="NSContents">1048576</string>
 								<reference key="NSSupport" ref="76459990"/>
 								<reference key="NSControlView" ref="777040413"/>
 								<bool key="NSDrawsBackground">YES</bool>
@@ -349,7 +349,7 @@
 						<object class="NSTextField" id="686266908">
 							<reference key="NSNextResponder" ref="831154101"/>
 							<int key="NSvFlags">266</int>
-							<string key="NSFrame">{{180, 622}, {354, 17}}</string>
+							<string key="NSFrame">{{215, 622}, {319, 17}}</string>
 							<reference key="NSSuperview" ref="831154101"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="519451682">
@@ -687,6 +687,22 @@
 								<int key="NSPeriodicInterval">25</int>
 							</object>
 						</object>
+						<object class="NSStepper" id="437129407">
+							<reference key="NSNextResponder" ref="831154101"/>
+							<int key="NSvFlags">268</int>
+							<string key="NSFrame">{{194, 617}, {19, 27}}</string>
+							<reference key="NSSuperview" ref="831154101"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSStepperCell" key="NSCell" id="719314271">
+								<int key="NSCellFlags">917024</int>
+								<int key="NSCellFlags2">0</int>
+								<reference key="NSControlView" ref="437129407"/>
+								<double key="NSValue">1</double>
+								<double key="NSMaxValue">20</double>
+								<double key="NSIncrement">1</double>
+								<bool key="NSAutorepeat">YES</bool>
+							</object>
+						</object>
 					</object>
 					<string key="NSFrameSize">{551, 720}</string>
 					<reference key="NSSuperview"/>
@@ -771,6 +787,7 @@
 						<string>allowsFloats</string>
 						<string>formatterBehavior</string>
 						<string>locale</string>
+						<string>maximum</string>
 						<string>minimum</string>
 						<string>negativeInfinitySymbol</string>
 						<string>nilSymbol</string>
@@ -784,6 +801,7 @@
 						<object class="NSLocale" id="760917264">
 							<string key="NS.identifier"/>
 						</object>
+						<real value="1048576"/>
 						<real value="1"/>
 						<string>-∞</string>
 						<string/>
@@ -810,14 +828,7 @@
 					</object>
 				</object>
 				<real value="1" key="NS.min"/>
-				<object class="NSDecimalNumberPlaceholder" key="NS.max" id="158345865">
-					<int key="NS.exponent">0</int>
-					<int key="NS.length">0</int>
-					<bool key="NS.negative">YES</bool>
-					<bool key="NS.compact">NO</bool>
-					<int key="NS.mantissa.bo">1</int>
-					<bytes key="NS.mantissa">AAAAAAAAAAAAAAAAAAAAAA</bytes>
-				</object>
+				<real value="1048576" key="NS.max"/>
 				<object class="NSDecimalNumberHandler" key="NS.rounding">
 					<int key="NS.roundingmode">3</int>
 					<bool key="NS.raise.overflow">YES</bool>
@@ -874,8 +885,15 @@
 					<string key="NSString">NaN</string>
 					<reference key="NSAttributes" ref="99861815"/>
 				</object>
-				<reference key="NS.min" ref="158345865"/>
-				<reference key="NS.max" ref="158345865"/>
+				<object class="NSDecimalNumberPlaceholder" key="NS.min" id="344859996">
+					<int key="NS.exponent">0</int>
+					<int key="NS.length">0</int>
+					<bool key="NS.negative">YES</bool>
+					<bool key="NS.compact">NO</bool>
+					<int key="NS.mantissa.bo">1</int>
+					<bytes key="NS.mantissa">AAAAAAAAAAAAAAAAAAAAAA</bytes>
+				</object>
+				<reference key="NS.max" ref="344859996"/>
 				<object class="NSDecimalNumberHandler" key="NS.rounding">
 					<bool key="NS.raise.overflow">YES</bool>
 					<bool key="NS.raise.underflow">YES</bool>
@@ -1283,6 +1301,22 @@
 					</object>
 					<int key="connectionID">158</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">outputSizeStepperAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="437129407"/>
+					</object>
+					<int key="connectionID">162</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">outputSizeStepper</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="437129407"/>
+					</object>
+					<int key="connectionID">163</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1331,8 +1365,6 @@
 							<reference ref="947060341"/>
 							<reference ref="371655949"/>
 							<reference ref="208764355"/>
-							<reference ref="777040413"/>
-							<reference ref="686266908"/>
 							<reference ref="634603055"/>
 							<reference ref="513546016"/>
 							<reference ref="707872213"/>
@@ -1348,6 +1380,9 @@
 							<reference ref="694646865"/>
 							<reference ref="193787033"/>
 							<reference ref="352115795"/>
+							<reference ref="777040413"/>
+							<reference ref="437129407"/>
+							<reference ref="686266908"/>
 						</object>
 						<reference key="parent" ref="925434188"/>
 					</object>
@@ -1831,6 +1866,20 @@
 						<reference key="object" ref="7326872"/>
 						<reference key="parent" ref="352115795"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">159</int>
+						<reference key="object" ref="437129407"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="719314271"/>
+						</object>
+						<reference key="parent" ref="831154101"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">160</int>
+						<reference key="object" ref="719314271"/>
+						<reference key="parent" ref="437129407"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1876,7 +1925,9 @@
 					<string>150.IBPluginDependency</string>
 					<string>154.IBPluginDependency</string>
 					<string>155.IBPluginDependency</string>
+					<string>159.IBPluginDependency</string>
 					<string>16.IBPluginDependency</string>
+					<string>160.IBPluginDependency</string>
 					<string>17.IBPluginDependency</string>
 					<string>18.IBPluginDependency</string>
 					<string>19.IBPluginDependency</string>
@@ -1974,14 +2025,16 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{511, 1067}, {197, 63}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{402, 428}, {551, 720}}</string>
+					<string>{{507, 324}, {551, 720}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{402, 428}, {551, 720}}</string>
+					<string>{{507, 324}, {551, 720}}</string>
 					<integer value="1"/>
 					<string>{{33, 99}, {480, 360}}</string>
 					<boolean value="YES"/>
@@ -2036,7 +2089,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">158</int>
+			<int key="maxID">163</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2049,11 +2102,13 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>cancelLoading:</string>
+							<string>outputSizeStepperAction:</string>
 							<string>performFinalRender:</string>
 							<string>resetRotation:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -2064,6 +2119,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>inputFormatPopUp</string>
+							<string>outputSizeStepper</string>
 							<string>progressBar</string>
 							<string>progressCancelButton</string>
 							<string>progressLabel</string>
@@ -2072,6 +2128,7 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPopUpButton</string>
+							<string>NSStepper</string>
 							<string>NSProgressIndicator</string>
 							<string>NSButton</string>
 							<string>NSTextField</string>
