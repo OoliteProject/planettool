@@ -440,6 +440,7 @@ static inline float ClampDegrees(float value)
 	savePanel.canSelectHiddenExtension = YES;
 	[savePanel setExtensionHidden:NO];
 	_outputPath = nil;
+	_readyImage = nil;
 	
 	[savePanel beginSheetForDirectory:nil
 								 file:[self suggestedRenderName]
@@ -474,7 +475,6 @@ static inline float ClampDegrees(float value)
 			[self showProgressSheetWithMessage:message cancelAction:NULL];
 			[self updateProgressAsync:[NSNumber numberWithFloat:1.0f]];
 		}
-
 	}
 	else
 	{
@@ -567,6 +567,7 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 	}
 	
 	FPMRelease(&_outputImage);
+	_outputPath = nil;
 }
 
 
