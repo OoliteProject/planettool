@@ -69,9 +69,9 @@ typedef bool (*RenderCallback)(size_t lineIndex, size_t lineCount, void *context
 	
 	progressCB is called for each line to report progress.
 	
-	progressContext is an arbitrary parameter to the progress callback.
+	cbContext is an arbitrary parameter to the progress callback.
 */
-bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *progressContext);
+bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *cbContext);
 
 
 #endif	/* INCLUDED_PlanetToolScheduler_h */

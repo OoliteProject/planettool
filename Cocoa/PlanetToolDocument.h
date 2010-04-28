@@ -43,6 +43,7 @@
 	NSString						*_outputPath;
 	NSString						*_outputDisplayName;
 	FloatPixMapRef					_outputImage;
+	BOOL							_readyImage;	// Set if rendering completes while save panel open.
 	
 #if !__OBJC2__	
 	NSWindow						*_progressSheet;

@@ -52,7 +52,7 @@ typedef struct PlanetToolSchedulerContext
 	size_t						progressNumerator;
 	size_t						progressDenominator;
 	ProgressCallbackFunction	progressCB;
-	void						*progressContext;
+	void						*cbContext;
 	
 	volatile bool				stop;
 } PlanetToolSchedulerContext;
@@ -63,7 +63,7 @@ static void *RenderThreadTask(void *vcontext);
 static unsigned ThreadCount(void);
 
 
-bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *progressContext)
+bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *cbContext)
 {
 	PlanetToolSchedulerContext threadContext =
 	{
@@ -79,7 +79,7 @@ bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCou
 		.progressNumerator = subRenderIndex * lineCount,
 		.progressDenominator = subRenderCount * lineCount,
 		.progressCB = NULL,
-		.progressContext = progressContext,
+		.cbContext = cbContext,
 		.stop = false
 	};
 	
@@ -150,14 +150,14 @@ static bool RunRenderTask(PlanetToolSchedulerContext *context)
 			
 			if (context->index <= context->lineCount)
 			{
-				if (EXPECT_NOT(!context->progressCB(context->progressNumerator + context->index, context->progressDenominator, context->progressContext)))
+				if (EXPECT_NOT(!context->progressCB(context->progressNumerator + context->index, context->progressDenominator, context->cbContext)))
 				{
 					context->stop = true;
 				}
 			}
 		}
 		
-		if (!context->stop)  context->progressCB(context->progressNumerator + context->lineCount, context->progressDenominator, context->progressContext);
+		if (!context->stop)  context->progressCB(context->progressNumerator + context->lineCount, context->progressDenominator, context->cbContext);
 	}
 	
 	// Wait for completion.

@@ -63,11 +63,11 @@ typedef struct RenderGallPetersContext
 } RenderGallPetersContext;
 
 
-FloatPixMapRef RenderToGallPeters(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
+FloatPixMapRef RenderToGallPeters(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
 	if (size < 1)
 	{
-		fprintf(stderr, "Size must be non-zero.\n");
+		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
 		return NULL;
 	}
 	
@@ -75,7 +75,7 @@ FloatPixMapRef RenderToGallPeters(size_t size, RenderFlags flags, SphericalPixel
 	FloatPixMapRef pm = FPMCreateC(size, height);
 	if (pm == NULL)
 	{
-		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
+		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
 		return NULL;
 	}
 	
@@ -96,7 +96,7 @@ FloatPixMapRef RenderToGallPeters(size_t size, RenderFlags flags, SphericalPixel
 		.flags = flags
 	};
 	
-	if (!ScheduleRender(RenderGallPetersLine, &context, height, 0, 1, progress, progressContext))
+	if (!ScheduleRender(RenderGallPetersLine, &context, height, 0, 1, progress, cbContext))
 	{
 		FPMRelease(&pm);
 	}

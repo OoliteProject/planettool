@@ -50,7 +50,8 @@ const char * kVersionString =
 ;
 
 
-static void ErrorHandler(const char *message, bool isError, void *context);
+static void LoadErrorHandler(const char *message, bool isError, void *context);
+static void RenderErrorHandler(const char *message, void *context);
 
 
 typedef struct
@@ -164,7 +165,7 @@ int main (int argc, const char * argv[])
 		progressCB = PrintProgress;
 	}
 	
-	FloatPixMapRef resultPM = settings.sink->sink(settings.size, settings.flags, source, sourceContext, progressCB, &progressCtxt);
+	FloatPixMapRef resultPM = settings.sink->sink(settings.size, settings.flags, source, sourceContext, progressCB, RenderErrorHandler, &progressCtxt);
 	FPMRelease(&sourcePM);
 	if (!settings.quiet)  printf("\n");
 	
@@ -181,7 +182,7 @@ int main (int argc, const char * argv[])
 	if (!settings.quiet)  printf("Writing...\n");
 	FPMWritePNGFlags flags = kFPMWritePNGDither;
 	if (settings.sixteenBit)  flags = kFPMWritePNG16BPC;
-	if (!FPMWritePNG(resultPM, settings.sinkPath, flags, kFPMGammaLinear, kFPMGammaSRGB, ErrorHandler, NULL, NULL))
+	if (!FPMWritePNG(resultPM, settings.sinkPath, flags, kFPMGammaLinear, kFPMGammaSRGB, LoadErrorHandler, NULL, NULL))
 	{
 		return EXIT_FAILURE;
 	}
@@ -191,9 +192,15 @@ int main (int argc, const char * argv[])
 }
 
 
-static void ErrorHandler(const char *message, bool isError, void *context)
+static void LoadErrorHandler(const char *message, bool isError, void *context)
 {
 	fprintf(stderr, "%s: %s\n", isError ? "ERROR" : "WARNING", message);
+}
+
+
+static void RenderErrorHandler(const char *message, void *context)
+{
+	fprintf(stderr, "%s\n", message);
 }
 
 

@@ -62,18 +62,18 @@ typedef struct RenderMercatorContext
 } RenderMercatorContext;
 
 
-FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
+FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
 	if (size < 1)
 	{
-		fprintf(stderr, "Size must be non-zero.\n");
+		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
 		return NULL;
 	}
 	
 	FloatPixMapRef pm = FPMCreateC(size, size);
 	if (pm == NULL)
 	{
-		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
+		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
 		return NULL;
 	}
 	
@@ -92,7 +92,7 @@ FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSo
 		.flags = flags
 	};
 	
-	if (!ScheduleRender(RenderMercatorLine, &context, size, 0, 1, progress, progressContext))
+	if (!ScheduleRender(RenderMercatorLine, &context, size, 0, 1, progress, cbContext))
 	{
 		FPMRelease(&pm);
 	}

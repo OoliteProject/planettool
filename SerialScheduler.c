@@ -30,7 +30,7 @@
 #include "PlanetToolScheduler.h"
 
 
-bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *progressContext)
+bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *cbContext)
 {
 	if (renderCB == NULL)  return false;
 	
@@ -44,7 +44,7 @@ bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCou
 		
 		if (progressCB != NULL)
 		{
-			if (EXPECT_NOT(!progressCB(++progressNumerator, progressDenominator, progressContext)))  return false;
+			if (EXPECT_NOT(!progressCB(++progressNumerator, progressDenominator, cbContext)))  return false;
 		}
 	}
 	

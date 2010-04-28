@@ -26,6 +26,7 @@
 
 #include "SphericalPixelSource.h"
 #include <assert.h>
+#include <stdarg.h>
 
 
 Vector VectorFromCoordsRad(float latitude, float longitude)
@@ -145,4 +146,26 @@ float GaussTableLookup2D(float x, float xmid, float y, float ymid, float halfWid
 bool DummyProgressCallback(size_t numerator, size_t denominator, void *context)
 {
 	return true;
+}
+
+
+void CallErrorCallbackWithFormat(ErrorCallbackFunction callback, void *cbContext, const char *format, ...)
+{
+	if (callback == NULL)  return;
+	
+	va_list args;
+	char *message = NULL;
+	va_start(args, format);
+#ifndef NO_ASPRINTF
+	vasprintf(&message, format, args);
+#else
+	enum { kMaxMessageSize = 4096 };
+	message = malloc(kMaxMessageSize);
+	if (message != NULL)  vsnprintf(message, kMaxMessageSize, format, args);
+#endif
+	
+	if (message != NULL)  callback(message, cbContext);
+	else  callback(format, cbContext);
+	
+	free(message);
 }

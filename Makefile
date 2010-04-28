@@ -18,6 +18,12 @@ ifneq ($(debug),yes)
 	CFLAGS += -O3 -ftree-vectorize -funroll-loops
 endif
 
+
+ifeq ($(asprintf),no)
+	CFLAGS += -DNO_ASPRINTF
+endif
+
+
 ifndef srcdir
 	srcdir = .
 endif

@@ -27,4 +27,4 @@
 #include "SphericalPixelSource.h"
 
 
-FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext);
+FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext);

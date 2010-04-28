@@ -35,22 +35,22 @@
 #define SAMPLE_WIDTH				1.2f
 
 
-static bool RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progressCB, void *progressContext, uint8_t faceIndex);
+static bool RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progressCB, void *cbContext, uint8_t faceIndex);
 static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontext);
 
 
-FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
+FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
 	if (size < 1)
 	{
-		fprintf(stderr, "Size must be non-zero.\n");
+		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
 		return NULL;
 	}
 	
 	FloatPixMapRef pm = FPMCreateC(size, size * 6);
 	if (pm == NULL)
 	{
-		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size, (unsigned long long)size * 6);
+		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size, (unsigned long long)size * 6);
 		return NULL;
 	}
 	
@@ -63,17 +63,17 @@ FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSource
 	
 	// Render faces:
 	// +x
-	OK = OK && RenderCubeFace(pm, size, 0, 0, kBasisXVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 0, kBasisXVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// -x
-	OK = OK && RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// +y
-	OK = OK && RenderCubeFace(pm, size, 0, 2, kBasisYVector, kBasisZVector, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 2, kBasisYVector, kBasisZVector, flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// -y
-	OK = OK && RenderCubeFace(pm, size, 0, 3, vector_flip(kBasisYVector), vector_flip(kBasisZVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 3, vector_flip(kBasisYVector), vector_flip(kBasisZVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// +z
-	OK = OK && RenderCubeFace(pm, size, 0, 4, kBasisZVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 4, kBasisZVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// -z
-	OK = OK && RenderCubeFace(pm, size, 0, 5, vector_flip(kBasisZVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 5, vector_flip(kBasisZVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	
 	(void)faceIndex;
 	
@@ -83,18 +83,18 @@ FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSource
 }
 
 
-FloatPixMapRef RenderToCubeCross(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, void *progressContext)
+FloatPixMapRef RenderToCubeCross(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
 	if (size < 1)
 	{
-		fprintf(stderr, "Size must be non-zero.\n");
+		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
 		return NULL;
 	}
 	
 	FloatPixMapRef pm = FPMCreateC(size * 4, size * 3);
 	if (pm == NULL)
 	{
-		fprintf(stderr, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 4, (unsigned long long)size * 3);
+		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 4, (unsigned long long)size * 3);
 		return NULL;
 	}
 	
@@ -107,17 +107,17 @@ FloatPixMapRef RenderToCubeCross(size_t size, RenderFlags flags, SphericalPixelS
 	
 	// Render faces:
 	// +x
-	OK = OK && RenderCubeFace(pm, size, 2, 1, kBasisXVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 2, 1, kBasisXVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// -x
-	OK = OK && RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 0, 1, vector_flip(kBasisXVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// +y
-	OK = OK && RenderCubeFace(pm, size, 1, 0, kBasisYVector, kBasisZVector, flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 1, 0, kBasisYVector, kBasisZVector, flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// -y
-	OK = OK && RenderCubeFace(pm, size, 1, 2, vector_flip(kBasisYVector), vector_flip(kBasisZVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 1, 2, vector_flip(kBasisYVector), vector_flip(kBasisZVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// +z
-	OK = OK && RenderCubeFace(pm, size, 1, 1, kBasisZVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 1, 1, kBasisZVector, vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	// -z
-	OK = OK && RenderCubeFace(pm, size, 3, 1, vector_flip(kBasisZVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, progressContext, faceIndex++);
+	OK = OK && RenderCubeFace(pm, size, 3, 1, vector_flip(kBasisZVector), vector_flip(kBasisYVector), flags, sampleGridSize, weights, source, sourceContext, progress, cbContext, faceIndex++);
 	
 	(void)faceIndex;
 	
@@ -148,7 +148,7 @@ typedef struct RenderCubeFaceContext
 } RenderCubeFaceContext;
 
 
-static bool RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progressCB, void *progressContext, uint8_t faceIndex)
+static bool RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsigned yoff, Vector outVector, Vector downVector, RenderFlags flags, unsigned sampleGridSize, float *weights, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progressCB, void *cbContext, uint8_t faceIndex)
 {
 	FloatPixMapRef subPM = FPMCreateSubC(pm, size * xoff, size * yoff, size, size);
 	Vector rightVector = cross_product(outVector, downVector);
@@ -171,7 +171,7 @@ static bool RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsign
 		.flags = flags
 	};
 	
-	return ScheduleRender(RenderCubeFaceLine, &context, size, faceIndex, 6, progressCB, progressContext);
+	return ScheduleRender(RenderCubeFaceLine, &context, size, faceIndex, 6, progressCB, cbContext);
 }
 
 

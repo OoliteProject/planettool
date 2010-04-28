@@ -204,6 +204,13 @@ static void LoadProgressHandler(float proportion, void *context);
 }
 
 
+- (NSString *) displayName
+{
+	if (self.gridGenerator)  return NSLocalizedString(@"Grid", NULL);
+	else  return super.displayName;
+}
+
+
 - (IBAction) outputSizeStepperAction:(id)sender
 {
 	/*	Update stepper in integer powers of two. If value is fractional, snap
@@ -398,36 +405,8 @@ static inline float ClampDegrees(float value)
 }
 
 
-- (IBAction) performFinalRender:(id)sender
+- (BOOL) startFinalRenderer
 {
-	NSSavePanel *savePanel = [NSSavePanel savePanel];
-	savePanel.requiredFileType = @"png";
-	savePanel.canSelectHiddenExtension = YES;
-	[savePanel setExtensionHidden:NO];
-	
-	[savePanel beginSheetForDirectory:nil
-								 file:[self suggestedRenderName]
-					   modalForWindow:self.windowForSheet
-						modalDelegate:self
-					   didEndSelector:@selector(renderSaveSheetDidEnd:returnCode:contextInfo:)
-						  contextInfo:nil];
-}
-
-
-- (void) renderSaveSheetDidEnd:(NSSavePanel *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
-	[sheet orderOut:nil];
-	
-	if (returnCode != NSFileHandlingPanelOKButton)  return;
-	
-	_outputPath = sheet.filename;
-	
-	_outputDisplayName = [sheet.filename lastPathComponent];
-	if ([sheet isExtensionHidden])  _outputDisplayName = [_outputDisplayName stringByDeletingPathExtension];
-	
-	NSString *message = [NSString stringWithFormat:NSLocalizedString(@"Rendering \"%@\"...", NULL), _outputDisplayName];
-	[self showProgressSheetWithMessage:message cancelAction:@selector(cancelRender:)];
-	
 	_lastProgressUpdate = 0.0;
 	
 	_finalRenderer = [PlanetToolRenderer new];
@@ -446,6 +425,61 @@ static inline float ClampDegrees(float value)
 	if (![self startRenderer:_finalRenderer])
 	{
 		[self planetToolRenderer:_finalRenderer failedWithMessage:NSLocalizedString(@"Unknown error.", NULL)];
+		return NO;
+	}
+	return YES;
+}
+
+
+- (IBAction) performFinalRender:(id)sender
+{
+	if (![self startFinalRenderer])  return;
+	
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	savePanel.requiredFileType = @"png";
+	savePanel.canSelectHiddenExtension = YES;
+	[savePanel setExtensionHidden:NO];
+	_outputPath = nil;
+	
+	[savePanel beginSheetForDirectory:nil
+								 file:[self suggestedRenderName]
+					   modalForWindow:self.windowForSheet
+						modalDelegate:self
+					   didEndSelector:@selector(renderSaveSheetDidEnd:returnCode:contextInfo:)
+						  contextInfo:nil];
+}
+
+
+- (void) renderSaveSheetDidEnd:(NSSavePanel *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{
+	[sheet orderOut:nil];
+	
+	if (returnCode == NSFileHandlingPanelOKButton)
+	{
+		_outputPath = sheet.filename;
+		
+		_outputDisplayName = [sheet.filename lastPathComponent];
+		if ([sheet isExtensionHidden])  _outputDisplayName = [_outputDisplayName stringByDeletingPathExtension];
+		
+		NSString *message = nil;
+		if (!_readyImage)
+		{
+			message = [NSString stringWithFormat:NSLocalizedString(@"Rendering \"%@\"...", NULL), _outputDisplayName];
+			[self showProgressSheetWithMessage:message cancelAction:@selector(cancelRender:)];
+		}
+		else
+		{
+			[NSThread detachNewThreadSelector:@selector(writeOutputFile) toTarget:self withObject:nil];
+			message = [NSString stringWithFormat:NSLocalizedString(@"Writing \"%@\"...", NULL), _outputDisplayName];
+			[self showProgressSheetWithMessage:message cancelAction:NULL];
+			[self updateProgressAsync:[NSNumber numberWithFloat:1.0f]];
+		}
+
+	}
+	else
+	{
+		[_finalRenderer cancelRendering];
+		_finalRenderer = NULL;
 	}
 }
 
@@ -474,8 +508,16 @@ static inline float ClampDegrees(float value)
 	if (renderer == _finalRenderer)
 	{
 		_outputImage = FPMRetain(image);
-		[NSThread detachNewThreadSelector:@selector(writeOutputFile) toTarget:self withObject:nil];
-		self.progressLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Writing \"%@\"...", NULL), _outputDisplayName];
+		if (_outputPath != nil)
+		{
+			[NSThread detachNewThreadSelector:@selector(writeOutputFile) toTarget:self withObject:nil];
+			self.progressLabel.stringValue = [NSString stringWithFormat:NSLocalizedString(@"Writing \"%@\"...", NULL), _outputDisplayName];
+		}
+		else
+		{
+			_readyImage = YES;
+		}
+
 	}
 	else if (renderer == _previewRenderer)
 	{

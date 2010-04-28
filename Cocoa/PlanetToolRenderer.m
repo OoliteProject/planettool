@@ -44,7 +44,8 @@
 
 @interface PlanetToolRenderer ()
 
-- (void) failRenderWithMessage:(NSString *)message, ...;
+- (void) failRenderWithMessage:(NSString *)message;
+- (void) failRenderWithMessageAndFormat:(NSString *)message, ...;
 - (BOOL) updateProgress:(float)value;
 
 - (void) performRenderWithSourceConstructor:(SphericalPixelSourceConstructorFunction)sourceConstructor
@@ -56,6 +57,7 @@
 
 
 static bool ProgressCB(size_t numerator, size_t denominator, void *context);
+static void ErrorCB(const char *message, void *context);
 
 
 @implementation PlanetToolRenderer
@@ -178,7 +180,7 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 	
 	if (sourceConstructor == NULL)
 	{
-		[self failRenderWithMessage:NSLocalizedString(@"Internal error: unknown input format %u.", NULL), self.inputFormat];
+		[self failRenderWithMessageAndFormat:NSLocalizedString(@"Internal error: unknown input format %u.", NULL), self.inputFormat];
 		return;
 	}
 	
@@ -224,7 +226,7 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 	
 	if (sink == NULL)
 	{
-		[self failRenderWithMessage:NSLocalizedString(@"Internal error: unknown output format %u.", NULL), self.inputFormat];
+		[self failRenderWithMessageAndFormat:NSLocalizedString(@"Internal error: unknown output format %u.", NULL), self.inputFormat];
 		FPMRelease(&_sourcePixMap);
 		return;
 	}
@@ -256,9 +258,10 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 	}
 	
 	_hadProgress = NO;
+	_hadError = NO;
 	_cancel = NO;
 	
-	FloatPixMapRef result = sink(self.outputSize, flags, source, sourceContext, ProgressCB, self);
+	FloatPixMapRef result = sink(self.outputSize, flags, source, sourceContext, ProgressCB, ErrorCB, self);
 	if (sourceDestructor != NULL)  sourceDestructor(sourceContext);
 	
 	FPMRelease(&_sourcePixMap);
@@ -271,7 +274,7 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 							   withObject:[NSValue valueWithPointer:result]
 							waitUntilDone:YES];
 	}
-	else if (!_hadProgress)
+	else if (!_hadProgress && !_hadError)
 	{
 		[self failRenderWithMessage:NSLocalizedString(@"Internal error: renderer failed.", NULL)];
 	}
@@ -295,16 +298,23 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 }
 
 
-- (void) failRenderWithMessage:(NSString *)message, ...
+- (void) failRenderWithMessage:(NSString *)message
+{
+	_hadError = YES;
+	FPMRelease(&_sourcePixMap);
+	
+	[self performSelectorOnMainThread:@selector(sendFailNotification:) withObject:message waitUntilDone:NO];
+}
+
+
+- (void) failRenderWithMessageAndFormat:(NSString *)message, ...;
 {
 	va_list args;
 	va_start(args, message);
 	message = [[NSString alloc] initWithFormat:message arguments:args];
 	va_end(args);
 	
-	FPMRelease(&_sourcePixMap);
-	
-	[self performSelectorOnMainThread:@selector(sendFailNotification:) withObject:message waitUntilDone:NO];
+	[self failRenderWithMessage:message];
 }
 
 
@@ -336,4 +346,13 @@ static bool ProgressCB(size_t numerator, size_t denominator, void *context);
 static bool ProgressCB(size_t numerator, size_t denominator, void *context)
 {
 	return [(PlanetToolRenderer *)context updateProgress:(float)numerator / (float)denominator];
+}
+
+
+static void ErrorCB(const char *message, void *context)
+{
+	NSString *messageNS = [NSString stringWithUTF8String:message];
+	if (messageNS != NULL)  messageNS = [[NSString alloc] initWithCString:message encoding:NSISOLatin1StringEncoding];
+	
+	[(PlanetToolRenderer *)context failRenderWithMessage:messageNS];
 }

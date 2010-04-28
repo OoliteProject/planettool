@@ -63,6 +63,7 @@ static inline BOOL IsValidPlanetToolOutputFormat(PlanetToolFormat value)
 	BOOL							_isRendering;
 	BOOL							_cancel;
 	BOOL							_hadProgress;
+	BOOL							_hadError;
 	
 #if !__OBJC2__
 	size_t							_outputSize;
