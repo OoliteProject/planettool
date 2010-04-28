@@ -440,7 +440,7 @@ static inline float ClampDegrees(float value)
 	savePanel.canSelectHiddenExtension = YES;
 	[savePanel setExtensionHidden:NO];
 	_outputPath = nil;
-	_readyImage = nil;
+	_readyImage = NO;
 	
 	[savePanel beginSheetForDirectory:nil
 								 file:[self suggestedRenderName]
