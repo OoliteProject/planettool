@@ -356,7 +356,7 @@ static inline float ClampDegrees(float value)
 
 - (BOOL) canUseCubeSource
 {
-	return FPMGetWidth(_sourcePixMap) % 6 == 0;
+	return FPMGetHeight(_sourcePixMap) % 6 == 0;
 }
 
 
