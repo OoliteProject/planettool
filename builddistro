@@ -11,6 +11,7 @@ cd planettool-$VERSION
 # Remove unneeded stuff.
 rm builddistro
 rm -rf *.xcodeproj
+rm *.xcconfig
 rm benchmark.c
 rm interpolate.c
 

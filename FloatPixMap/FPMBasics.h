@@ -90,6 +90,7 @@ FPM_BEGIN_EXTERN_C
 typedef float		FPMComponent;
 typedef int32_t		FPMCoordinate;
 typedef uint32_t	FPMDimension;
+#define FPM_DIMENSION_MAX UINT32_MAX
 
 
 // FPMColor: an RGBA colour value.
@@ -232,7 +233,7 @@ FPM_INLINE bool FPMSizeEmpty(FPMSize sz)
 FPM_INLINE uintmax_t FPMSizeArea(FPMSize size) FPM_CONST;
 FPM_INLINE uintmax_t FPMSizeArea(FPMSize size)
 {
-	return size.width * size.height;
+	return (uintmax_t)size.width * (uintmax_t)size.height;
 }
 
 

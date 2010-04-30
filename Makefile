@@ -1,9 +1,13 @@
+EXECUTABLE = planettool
+include planettool-version.inc
+
+
 CC = gcc
 LD = $(CC)
-CFLAGS = -I$(FPM_PATH) -I$(OOMATHS_PATH) -DOOMATHS_STANDALONE=1 -g -ffast-math
+
+CFLAGS = -I$(FPM_PATH) -I$(OOMATHS_PATH) -DOOMATHS_STANDALONE=1 -DPLANETTOOL_VERSION="\"$(PLANETTOOL_VERSION)\"" -g -ffast-math
 LDFLAGS = -lpng -lz
 
-EXECUTABLE = planettool
 
 ifndef scheduler
 	scheduler = PThreadScheduler

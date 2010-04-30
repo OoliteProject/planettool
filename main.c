@@ -44,11 +44,6 @@
 #include "RenderToMercator.h"
 #include "RenderToGallPeters.h"
 
-// Version number
-const char * kVersionString =
-#include "planettool-version.h"
-;
-
 
 static void LoadErrorHandler(const char *message, bool isError, void *context);
 static void RenderErrorHandler(const char *message, void *context);
@@ -643,7 +638,7 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 static void ShowHelp(void)
 {
 //	printf("Pretend this is helpful.\n");
-	printf("Planettool version %s\nplanettool", kVersionString);
+	printf("Planettool version %s\nplanettool", PLANETTOOL_VERSION);
 	
 	// ACT I: the Synopsis. Dramatis personae: a gaggle of Shortcuts.
 	unsigned i;
@@ -754,7 +749,7 @@ static void ShowHelp(void)
 
 static void ShowVersion(void)
 {
-	printf("%s\n", kVersionString);
+	printf("%s\n", PLANETTOOL_VERSION);
 }
 
 

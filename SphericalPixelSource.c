@@ -169,3 +169,32 @@ void CallErrorCallbackWithFormat(ErrorCallbackFunction callback, void *cbContext
 	
 	free(message);
 }
+
+
+FloatPixMapRef ValidateAndCreatePixMap(uintmax_t nominalSize, uintmax_t width, uintmax_t height, ErrorCallbackFunction errorCB, void *cbContext)
+{
+	if (nominalSize < 1)
+	{
+		CallErrorCallbackWithFormat(errorCB, cbContext, "Size must be non-zero.\n");
+		return NULL;
+	}
+	
+	if (width > FPM_DIMENSION_MAX || height > FPM_DIMENSION_MAX)
+	{
+		size_t maxSize;
+		if (width > height)  maxSize = FPM_DIMENSION_MAX / (width / nominalSize);
+		else  maxSize = FPM_DIMENSION_MAX / (height / nominalSize);
+		
+		CallErrorCallbackWithFormat(errorCB, cbContext, "Size must be no greater than %zu.\n", maxSize);
+		return NULL;
+	}
+	
+	FloatPixMapRef pm = FPMCreateC(width, height);
+	if (pm == NULL)
+	{
+		CallErrorCallbackWithFormat(errorCB, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)width, (unsigned long long)height);
+		return NULL;
+	}
+	
+	return pm;
+}

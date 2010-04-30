@@ -39,20 +39,10 @@ static bool RenderCubeFace(FloatPixMapRef pm, size_t size, unsigned xoff, unsign
 static bool RenderCubeFaceLine(size_t lineIndex, size_t lineCount, void *vcontext);
 
 
-FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
+FloatPixMapRef RenderToCube(uintmax_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
-	if (size < 1)
-	{
-		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
-		return NULL;
-	}
-	
-	FloatPixMapRef pm = FPMCreateC(size, size * 6);
-	if (pm == NULL)
-	{
-		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size, (unsigned long long)size * 6);
-		return NULL;
-	}
+	FloatPixMapRef pm = ValidateAndCreatePixMap(size, size, size * 6, error, cbContext);
+	if (pm == NULL)  return NULL;
 	
 	unsigned sampleGridSize = (flags & kRenderFast) ? SAMPLE_GRID_SIZE_FAST : SAMPLE_GRID_SIZE_HIGHQ;
 	float weights[sampleGridSize];
@@ -83,20 +73,10 @@ FloatPixMapRef RenderToCube(size_t size, RenderFlags flags, SphericalPixelSource
 }
 
 
-FloatPixMapRef RenderToCubeCross(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
+FloatPixMapRef RenderToCubeCross(uintmax_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
-	if (size < 1)
-	{
-		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
-		return NULL;
-	}
-	
-	FloatPixMapRef pm = FPMCreateC(size * 4, size * 3);
-	if (pm == NULL)
-	{
-		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 4, (unsigned long long)size * 3);
-		return NULL;
-	}
+	FloatPixMapRef pm = ValidateAndCreatePixMap(size, size * 4, size * 3, error, cbContext);
+	if (pm == NULL)  return NULL;
 	
 	unsigned sampleGridSize = (flags & kRenderFast) ? SAMPLE_GRID_SIZE_FAST : SAMPLE_GRID_SIZE_HIGHQ;
 	float weights[sampleGridSize];

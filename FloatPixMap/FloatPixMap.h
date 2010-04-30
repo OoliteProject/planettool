@@ -37,7 +37,7 @@ bool FPMInit(void);
 /*** Creation and memory management ***/
 
 FloatPixMapRef FPMCreate(FPMSize size);
-FPM_INLINE FloatPixMapRef FPMCreateC(size_t width, size_t height)
+FPM_INLINE FloatPixMapRef FPMCreateC(FPMDimension width, FPMDimension height)
 {
 	return FPMCreate(FPMMakeSize(width, height));
 }

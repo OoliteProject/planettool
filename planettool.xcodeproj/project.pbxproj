@@ -47,6 +47,7 @@
 		1A8DA59410777E6700114A36 /* RenderToLatLong.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DA59310777E6600114A36 /* RenderToLatLong.c */; };
 		1A98F9541078ABA300E0F928 /* MatrixTransformer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A98F9531078ABA300E0F928 /* MatrixTransformer.c */; };
 		1A98FB8E10793F1400E0F928 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.c */; };
+		1AA1A8C5118AFF4300D3B653 /* planettool-mac.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */; };
 		1ADC097D10777F500057E287 /* RenderToCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ADC097C10777F500057E287 /* RenderToCube.c */; };
 		1AEEF03D11846AFC0041CC67 /* libpng_for_planettool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */; };
 		1AEEF04911846B380041CC67 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
@@ -178,6 +179,7 @@
 		1A98F9521078ABA300E0F928 /* MatrixTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixTransformer.h; sourceTree = "<group>"; };
 		1A98F9531078ABA300E0F928 /* MatrixTransformer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatrixTransformer.c; sourceTree = "<group>"; };
 		1A98FB3310793A5500E0F928 /* interpolate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpolate.c; sourceTree = "<group>"; };
+		1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "planettool-mac.xcconfig"; sourceTree = "<group>"; };
 		1ADC097B10777F500057E287 /* RenderToCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderToCube.h; sourceTree = "<group>"; };
 		1ADC097C10777F500057E287 /* RenderToCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RenderToCube.c; sourceTree = "<group>"; };
 		1AEEF03411846ADA0041CC67 /* Planet Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Planet Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				1A675E0210AF18D000786F5F /* Makefile */,
+				1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1A115B9C10754CB300A75165 /* libpng */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -497,6 +500,7 @@
 				1AEEF0BC11846CAC0041CC67 /* MainMenu.xib in Resources */,
 				1AEEF0C41184705F0041CC67 /* PlanetToolDocument.xib in Resources */,
 				1A50B55911848A1000F8B41E /* Localizable.strings in Resources */,
+				1AA1A8C5118AFF4300D3B653 /* planettool-mac.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -685,6 +689,7 @@
 		};
 		1A2BEADF1182F083009E1BEB /* Debug-optimized */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -710,7 +715,10 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"OOMATHS_STANDALONE=1",
+					"PLANETTOOL_VERSION=\"\\\"$PLANETTOOL_VERSION\\\"\"",
+				);
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
@@ -884,6 +892,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"PLANETTOOL_VERSION=\"\\\"$PLANETTOOL_VERSION\\\"\"",
 					"FPM_EXTRA_VALIDATION=1",
 					"OOMATHS_STANDALONE=1",
 					"OO_DEBUG=1",
@@ -916,7 +925,10 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"OOMATHS_STANDALONE=1",
+					"PLANETTOOL_VERSION=\"\\\"$PLANETTOOL_VERSION\\\"\"",
+				);
 				GCC_UNROLL_LOOPS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
@@ -934,6 +946,7 @@
 		};
 		1DEB928A08733DD80010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -948,6 +961,7 @@
 		};
 		1DEB928B08733DD80010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;

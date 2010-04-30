@@ -106,8 +106,16 @@ FloatPixMapRef FPMCreate(FPMSize size)
 	assert(sInited);
 	
 	if (FPMSizeArea(size) == 0)  return NULL;
+	FPMColor *pixels = NULL;
 	
-	FPMColor *pixels = calloc(FPMSizeArea(size), sizeof *pixels);
+	// Calculate area and check for overflow.
+	uintmax_t area = FPMSizeArea(size);
+	if ((size_t)area * sizeof *pixels < area)
+	{
+		return NULL;
+	}
+	
+	pixels = calloc(area, sizeof *pixels);
 	if (pixels == NULL)  return NULL;
 	
 	return MakeFPM(size, size.width, pixels, NULL);

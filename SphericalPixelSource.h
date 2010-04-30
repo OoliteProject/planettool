@@ -170,7 +170,7 @@ typedef FPMColor (*SphericalPixelSourceFunction)(Coordinates where, RenderFlags 
 typedef bool (*SphericalPixelSourceConstructorFunction)(FloatPixMapRef sourceImage, RenderFlags flags, SphericalPixelSourceFunction *source, void **context);
 typedef void (*SphericalPixelSourceDestructorFunction)(void *context);
 
-typedef FloatPixMapRef (*SphericalPixelSinkFunction)(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext);
+typedef FloatPixMapRef (*SphericalPixelSinkFunction)(uintmax_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext);
 
 
 //	Build a lookup table of Gauss distribution numbers.
@@ -183,6 +183,10 @@ float GaussTableLookup2D(float x, float xmid, float y, float ymid, float halfWid
 
 bool DummyProgressCallback(size_t numerator, size_t denominator, void *context);
 void PrintToStdErrErrorCallback(char *message, void *cbContext);	// Prints message to stderr.
+
+
+// Shared set-up and error checking function for all sinks.
+FloatPixMapRef ValidateAndCreatePixMap(uintmax_t nominalSize, uintmax_t width, uintmax_t height, ErrorCallbackFunction errorCB, void *cbContext);
 
 
 // Printf()-style call for ErrroCallbackFunctions.

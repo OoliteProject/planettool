@@ -61,20 +61,10 @@ typedef struct RenderLatLongContext
 } RenderLatLongContext;
 
 
-FloatPixMapRef RenderToLatLong(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
+FloatPixMapRef RenderToLatLong(uintmax_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
-	if (size < 1)
-	{
-		CallErrorCallbackWithFormat(error, cbContext, "Size must be non-zero.\n");
-		return NULL;
-	}
-	
-	FloatPixMapRef pm = FPMCreateC(size * 2, size);
-	if (pm == NULL)
-	{
-		CallErrorCallbackWithFormat(error, cbContext, "Could not create a %llu by %llu pixel pixmap.\n", (unsigned long long)size * 2, (unsigned long long)size);
-		return NULL;
-	}
+	FloatPixMapRef pm = ValidateAndCreatePixMap(size, size * 2, size, error, cbContext);
+	if (pm == NULL)  return NULL;
 	
 	unsigned sampleGridSize = (flags & kRenderFast) ? SAMPLE_GRID_SIZE_FAST : SAMPLE_GRID_SIZE_HIGHQ;
 	float weights[sampleGridSize];
