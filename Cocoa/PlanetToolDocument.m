@@ -166,8 +166,23 @@ static void LoadProgressHandler(float proportion, void *context);
 
 - (void) removeProgressSheetWithSuccess:(BOOL)success
 {
-	[NSApp endSheet:self.progressSheet returnCode:success ? NSOKButton : NSCancelButton];
-	[self.progressSheet orderOut:nil];
+	if (![NSThread isMainThread])
+	{
+		[self performSelectorOnMainThread:@selector(removeProgressSheetWithSuccessObj:)
+							   withObject:[NSNumber numberWithBool:success]
+							waitUntilDone:NO];
+		return;
+	}
+	
+	NSWindow *sheet = self.progressSheet;
+	[NSApp endSheet:sheet returnCode:success ? NSOKButton : NSCancelButton];
+	[sheet orderOut:nil];
+}
+
+
+- (void) removeProgressSheetWithSuccessObj:(NSNumber *)flagObj
+{
+	[self removeProgressSheetWithSuccess:flagObj.boolValue];
 }
 
 
@@ -573,6 +588,8 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 
 - (void) runAlertWithMessage:(NSString *)message informativeText:(NSString *)informativeText
 {
+	NSAssert1([NSThread isMainThread], @"%s must be called on main thread.", __FUNCTION__);
+	
 	NSAlert *alert = [NSAlert alertWithMessageText:message
 									 defaultButton:nil
 								   alternateButton:nil
@@ -587,6 +604,8 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 
 - (void) writingFailedWithMessage:(NSString *)message
 {
+	NSAssert1([NSThread isMainThread], @"%s must be called on main thread.", __FUNCTION__);
+	
 	[self removeProgressSheetWithSuccess:NO];
 	[self runAlertWithMessage:[NSString stringWithFormat:NSLocalizedString(@"The document \"%@\" could not be saved.", NULL), _outputDisplayName]
 			  informativeText:message];

@@ -32,16 +32,6 @@
 		1A115E761076411700A75165 /* FPMQuantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115C011075519400A75165 /* FPMQuantize.c */; };
 		1A115E781076412400A75165 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
 		1A115F1F107657E400A75165 /* FPMImageOperations.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115F1E107657E400A75165 /* FPMImageOperations.c */; };
-		1A1161191077502900A75165 /* FloatPixMap.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159891073AADD00A75165 /* FloatPixMap.c */; settings = {COMPILER_FLAGS = "-falign-loops=32 -falign-loops-max-skip=31 -fstrict-aliasing"; }; };
-		1A11611A1077502900A75165 /* FPMPNG.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1159D81073FAB200A75165 /* FPMPNG.c */; };
-		1A11611B1077502900A75165 /* FPMGamma.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115AD71074866300A75165 /* FPMGamma.c */; };
-		1A1161201077502900A75165 /* FPMQuantize.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115C011075519400A75165 /* FPMQuantize.c */; };
-		1A1161211077502900A75165 /* FPMRaw.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115D3B10760EE200A75165 /* FPMRaw.c */; };
-		1A1161221077502900A75165 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
-		1A1161231077502900A75165 /* FPMImageOperations.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115F1E107657E400A75165 /* FPMImageOperations.c */; };
-		1A1161251077502900A75165 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115A5810740C6200A75165 /* libz.dylib */; };
-		1A1161261077502900A75165 /* libpng_for_planettool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */; };
-		1A11612D1077503800A75165 /* FPMTest.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A1161111077501C00A75165 /* FPMTest.c */; };
 		1A3D6DD710B020A9003F7810 /* ReadCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A3D6DD610B020A9003F7810 /* ReadCube.c */; };
 		1A50B55911848A1000F8B41E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1A50B55711848A1000F8B41E /* Localizable.strings */; };
 		1A50B8491184C45600F8B41E /* PThreadScheduler.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */; };
@@ -96,13 +86,6 @@
 			remoteGlobalIDString = 1A115B8E10754BFC00A75165;
 			remoteInfo = libpng;
 		};
-		1A1161161077502900A75165 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1A115B8E10754BFC00A75165;
-			remoteInfo = libpng;
-		};
 		1AEEF03B11846AEB0041CC67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
@@ -113,15 +96,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		1A1161271077502900A75165 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 8;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		8DD76FAF0486AB0100D96B5E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 8;
@@ -171,7 +145,6 @@
 		1A115F1D107657E400A75165 /* FPMImageOperations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FPMImageOperations.h; sourceTree = "<group>"; };
 		1A115F1E107657E400A75165 /* FPMImageOperations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMImageOperations.c; sourceTree = "<group>"; };
 		1A1161111077501C00A75165 /* FPMTest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FPMTest.c; sourceTree = "<group>"; };
-		1A11612B1077502900A75165 /* fpmtest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fpmtest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A126E151180E87800D2A744 /* PlanetToolScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlanetToolScheduler.h; sourceTree = "<group>"; };
 		1A126E231180EB7300D2A744 /* SerialScheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SerialScheduler.c; sourceTree = "<group>"; };
 		1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PThreadScheduler.c; sourceTree = "<group>"; };
@@ -228,15 +201,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1A1161241077502900A75165 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1A1161251077502900A75165 /* libz.dylib in Frameworks */,
-				1A1161261077502900A75165 /* libpng_for_planettool.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,7 +364,6 @@
 			children = (
 				8DD76FB20486AB0100D96B5E /* planettool */,
 				1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */,
-				1A11612B1077502900A75165 /* fpmtest */,
 				1AEEF03411846ADA0041CC67 /* Planet Tool.app */,
 			);
 			name = Products;
@@ -469,25 +432,6 @@
 			productReference = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		1A1161141077502900A75165 /* FPMTest */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1A1161281077502900A75165 /* Build configuration list for PBXNativeTarget "FPMTest" */;
-			buildPhases = (
-				1A1161171077502900A75165 /* Sources */,
-				1A1161241077502900A75165 /* Frameworks */,
-				1A1161271077502900A75165 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1A1161151077502900A75165 /* PBXTargetDependency */,
-			);
-			name = FPMTest;
-			productInstallPath = "$(HOME)/bin";
-			productName = planettool;
-			productReference = 1A11612B1077502900A75165 /* fpmtest */;
-			productType = "com.apple.product-type.tool";
-		};
 		1AEEF03311846ADA0041CC67 /* Planet Tool */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1AEEF03A11846ADB0041CC67 /* Build configuration list for PBXNativeTarget "Planet Tool" */;
@@ -539,7 +483,6 @@
 			targets = (
 				8DD76FA90486AB0100D96B5E /* planettool */,
 				1A115B8E10754BFC00A75165 /* libpng */,
-				1A1161141077502900A75165 /* FPMTest */,
 				1AEEF03311846ADA0041CC67 /* Planet Tool */,
 			);
 		};
@@ -579,21 +522,6 @@
 				1A115BC010754CC000A75165 /* pngwrite.c in Sources */,
 				1A115BC110754CC000A75165 /* pngwtran.c in Sources */,
 				1A115BC210754CC000A75165 /* pngwutil.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1A1161171077502900A75165 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1A1161191077502900A75165 /* FloatPixMap.c in Sources */,
-				1A11611A1077502900A75165 /* FPMPNG.c in Sources */,
-				1A11611B1077502900A75165 /* FPMGamma.c in Sources */,
-				1A1161201077502900A75165 /* FPMQuantize.c in Sources */,
-				1A1161211077502900A75165 /* FPMRaw.c in Sources */,
-				1A1161221077502900A75165 /* SphericalPixelSource.c in Sources */,
-				1A1161231077502900A75165 /* FPMImageOperations.c in Sources */,
-				1A11612D1077503800A75165 /* FPMTest.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -663,11 +591,6 @@
 			target = 1A115B8E10754BFC00A75165 /* libpng */;
 			targetProxy = 1A115B9910754C9400A75165 /* PBXContainerItemProxy */;
 		};
-		1A1161151077502900A75165 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1A115B8E10754BFC00A75165 /* libpng */;
-			targetProxy = 1A1161161077502900A75165 /* PBXContainerItemProxy */;
-		};
 		1AEEF03C11846AEB0041CC67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1A115B8E10754BFC00A75165 /* libpng */;
@@ -722,7 +645,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_LDFLAGS = (
@@ -744,8 +667,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_MODEL_TUNING = "";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_MODEL_TUNING = G5;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_LDFLAGS = (
@@ -760,54 +683,6 @@
 			};
 			name = Release;
 		};
-		1A1161291077502900A75165 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
-					"FPM_EXTRA_VALIDATION=1",
-					"OOMATHS_STANDALONE=1",
-				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "-fverbose-asm";
-				PRODUCT_NAME = fpmtest;
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-					"-Wno-unused-parameter",
-				);
-			};
-			name = Debug;
-		};
-		1A11612A1077502900A75165 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "-fverbose-asm";
-				PRODUCT_NAME = fpmtest;
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-					"-Wno-unused-parameter",
-				);
-			};
-			name = Release;
-		};
 		1A2BEADF1182F083009E1BEB /* Debug-optimized */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -817,7 +692,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 			};
 			name = "Debug-optimized";
 		};
@@ -825,7 +700,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = stabs;
@@ -838,7 +712,7 @@
 				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = YES;
@@ -862,7 +736,7 @@
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GENERATE_MASTER_OBJECT_FILE = YES;
 				INSTALL_PATH = /usr/local/lib;
 				OTHER_LDFLAGS = (
@@ -874,27 +748,6 @@
 				PREBINDING = NO;
 				PRODUCT_NAME = png_for_planettool;
 				ZERO_LINK = NO;
-			};
-			name = "Debug-optimized";
-		};
-		1A2BEAE21182F083009E1BEB /* Debug-optimized */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_AUTO_VECTORIZATION = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
-				INSTALL_PATH = /usr/local/bin;
-				OTHER_CFLAGS = "-fverbose-asm";
-				PRODUCT_NAME = fpmtest;
-				RUN_CLANG_STATIC_ANALYZER = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wextra",
-					"-Wno-unused-parameter",
-				);
 			};
 			name = "Debug-optimized";
 		};
@@ -958,7 +811,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Cocoa/Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				LLVM_LTO = NO;
@@ -997,7 +850,7 @@
 					"OO_DEBUG=1",
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Cocoa/Resources/Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
 				ONLY_ACTIVE_ARCH = YES;
@@ -1023,7 +876,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				COPY_PHASE_STRIP = NO;
 				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = YES;
@@ -1036,14 +888,13 @@
 					"OOMATHS_STANDALONE=1",
 					"OO_DEBUG=1",
 				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-fverbose-asm";
 				PRODUCT_NAME = planettool;
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = macosx10.5;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -1056,7 +907,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_AUTO_VECTORIZATION = YES;
@@ -1068,13 +918,12 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "OOMATHS_STANDALONE=1";
 				GCC_UNROLL_LOOPS = YES;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INSTALL_PATH = /usr/local/bin;
 				LLVM_LTO = NO;
 				OTHER_CFLAGS = "-fverbose-asm";
 				PRODUCT_NAME = planettool;
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SDKROOT = macosx10.5;
 				WARNING_CFLAGS = (
 					"-Wall",
 					"-Wextra",
@@ -1093,21 +942,20 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 			};
 			name = Debug;
 		};
 		1DEB928B08733DD80010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 3;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				PREBINDING = NO;
-				SDKROOT = macosx10.5;
+				SDKROOT = macosx10.6;
 			};
 			name = Release;
 		};
@@ -1120,16 +968,6 @@
 				1A115B9010754BFD00A75165 /* Debug */,
 				1A115B9110754BFD00A75165 /* Release */,
 				1A2BEAE11182F083009E1BEB /* Debug-optimized */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1A1161281077502900A75165 /* Build configuration list for PBXNativeTarget "FPMTest" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1A1161291077502900A75165 /* Debug */,
-				1A11612A1077502900A75165 /* Release */,
-				1A2BEAE21182F083009E1BEB /* Debug-optimized */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
