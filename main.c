@@ -37,6 +37,7 @@
 #include "ReadLatLong.h"
 #include "ReadCube.h"
 #include "MatrixTransformer.h"
+#include "CosineBlurFilter.h"
 
 // Sinks
 #include "RenderToLatLong.h"
@@ -80,10 +81,13 @@ typedef struct
 	size_t							size;
 	size_t							defaultSize;
 	OOMatrix						transform;
+	double							cosBlurBackFactor;
+	double							cosBlurFrontFactor;
 	bool							showHelp;
 	bool							showVersion;
 	bool							quiet;
 	bool							sixteenBit;
+	bool							cosBlur;
 	const char						*sourcePath;
 	const char						*sinkPath;
 } Settings;
@@ -151,6 +155,20 @@ int main (int argc, const char * argv[])
 		sourceContext = transformContext;
 	}
 	
+	// Set up cos blur filter if requested.
+	if (settings.cosBlur)
+	{
+		void *cosBlurContext = NULL;
+		if (!CosineBlurFilterSetUp(source, destructor, sourceContext, settings.size, settings.cosBlurBackFactor, settings.cosBlurFrontFactor, &cosBlurContext))
+		{
+			return EXIT_FAILURE;
+		}
+		
+		source = CosineBlurFilter;
+		destructor = CosineBlurFilterDestructor;
+		sourceContext = cosBlurContext;
+	}
+	
 	// Render.
 	ProgressCallbackFunction progressCB = NULL;
 	unsigned progressCtxt = 0;
@@ -213,6 +231,7 @@ static bool ParseFast(int argc, const char *argv[], int *consumedArgs, Settings 
 static bool ParseJitter(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseSixteenBit(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseRotate(int argc, const char *argv[], int *consumedArgs, Settings *settings);
+static bool ParseCosBlur(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseFlip(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseHelp(int argc, const char *argv[], int *consumedArgs, Settings *settings);
 static bool ParseVersion(int argc, const char *argv[], int *consumedArgs, Settings *settings);
@@ -259,6 +278,7 @@ typedef struct
 	// Stuff used to generate documentation, such as it is.
 	char					*paramNames;
 	bool					required;
+	bool					hidden;
 	char					*description;
 	FilterEntryBase			*descTypes;
 	off_t					descStride;
@@ -270,58 +290,62 @@ static const ArgumentHandler sHandlers[] =
 {
 	{
 		"output",		'o', 2, ParseOutput,
-		"<outType> <outFile>", true, "Type and name of output file. Type must be one of: ", (FilterEntryBase *)sSinks, sizeof(*sSinks), sSinkCount
+		"<outType> <outFile>", true, false, "Type and name of output file. Type must be one of: ", (FilterEntryBase *)sSinks, sizeof(*sSinks), sSinkCount
 	},
 	{
 		"input",		'i', 2, ParseInput,
-		"<inType> <inFile>",  false, "Type and name of input file. Type must be one of: ", (FilterEntryBase *)sReaders, sizeof(*sReaders), sReaderCount
+		"<inType> <inFile>",  false, false, "Type and name of input file. Type must be one of: ", (FilterEntryBase *)sReaders, sizeof(*sReaders), sReaderCount
 	},
 	{
 		"generate",		'g', 1, ParseGenerate,
-		"<generator>", false, "Type and name of generator. Type must be one of: ", (FilterEntryBase *)sGenerators, sizeof(*sGenerators), sGeneratorCount
+		"<generator>", false, false, "Type and name of generator. Type must be one of: ", (FilterEntryBase *)sGenerators, sizeof(*sGenerators), sGeneratorCount
 	},
 	{
 		"size",			'S', 1, ParseSize,
-		"<size>", false, "Size of output, in pixels. Interpretation depends on output type.", NULL, 0, 0
+		"<size>", false, false, "Size of output, in pixels. Interpretation depends on output type.", NULL, 0, 0
 	},
 	{
 		"fast",			'F', 0, ParseFast,
-		NULL, false, "Use faster, low-quality rendering.", NULL, 0, 0
+		NULL, false, false, "Use faster, low-quality rendering.", NULL, 0, 0
 	},
 	{
 		"jitter",		'J', 0, ParseJitter,
-		NULL, false, "Use jittering for slower, slightly noisy rendering which may look better in some cases.", NULL, 0, 0
+		NULL, false, false, "Use jittering for slower, slightly noisy rendering which may look better in some cases.", NULL, 0, 0
 	},
 	{
 		"sixteen-bit",	0, 0, ParseSixteenBit,
-		NULL, false, "Save in sixteen bit per channel format (instead of eight-bit-per-channel format).", NULL, 0, 0
+		NULL, false, false, "Save in sixteen bit per channel format (instead of eight-bit-per-channel format).", NULL, 0, 0
 	},
 	{
 		"flip",			'L', 0, ParseFlip,
-		NULL, false, "Mirror the texture in 3D space (through the YZ plane) while rendering. This produces an \"inside-out\" texture.", NULL, 0, 0
+		NULL, false, false, "Mirror the texture in 3D space (through the YZ plane) while rendering. This produces an \"inside-out\" texture.", NULL, 0, 0
 	},
 	{
 		"rotate",		'R', 3, ParseRotate,
-		"<ry> <rx> <rz>", false, "Rotate the texture around the planet while rendering. The ry axis corresponds to the planet's axis of rotation.", NULL, 0, 0
+		"<ry> <rx> <rz>", false, false, "Rotate the texture around the planet while rendering. The ry axis corresponds to the planet's axis of rotation.", NULL, 0, 0
+	},
+	{
+		"cosblur",		0, 2, ParseCosBlur,
+		"<unmaskedscale> <maskedscale>", false, false, "Apply cosine blur (converts environment map into diffuse light map).", NULL, 0, 0
 	},
 	{
 		"help",			'H', 0, ParseHelp,
-		NULL, false, "Show this helpful help.", NULL, 0, 0
+		NULL, false, false, "Show this helpful help.", NULL, 0, 0
 	},
 	{
 		"version",		'V', 0, ParseVersion,
-		NULL, false, "Show version number.", NULL, 0, 0
+		NULL, false, false, "Show version number.", NULL, 0, 0
 	},
 	{
 		"quiet",		'Q', 0, ParseQuiet,
-		NULL, false, "Don't print progress information.", NULL, 0, 0
+		NULL, false, false, "Don't print progress information.", NULL, 0, 0
 	},
 };
 
 static const unsigned sHandlerCount = sizeof sHandlers / sizeof sHandlers[0];
 
 
-static void ShowHelp(void);
+static void ShowHelp(bool showHidden);
 static void ShowVersion(void);
 
 
@@ -390,7 +414,7 @@ static bool InterpretArguments(int argc, const char * argv[], Settings *settings
 	
 	if (settings->showHelp)
 	{
-		ShowHelp();
+		ShowHelp(false);
 	}
 	else if (settings->showVersion)
 	{
@@ -607,6 +631,16 @@ static bool ParseRotate(int argc, const char *argv[], int *consumedArgs, Setting
 }
 
 
+static bool ParseCosBlur(int argc, const char *argv[], int *consumedArgs, Settings *settings)
+{
+	*consumedArgs += 2;
+	if (!ParseOneFloat(argv[0], &settings->cosBlurBackFactor))  return false;
+	if (!ParseOneFloat(argv[1], &settings->cosBlurFrontFactor))  return false;
+	settings->cosBlur = true;
+	return true;
+}
+
+
 static bool ParseFlip(int argc, const char *argv[], int *consumedArgs, Settings *settings)
 {
 	settings->transform = OOMatrixScale(settings->transform, -1, 1, 1);
@@ -635,7 +669,7 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 }
 
 
-static void ShowHelp(void)
+static void ShowHelp(bool showHidden)
 {
 //	printf("Pretend this is helpful.\n");
 	printf("Planettool version %s\nplanettool", PLANETTOOL_VERSION);
@@ -646,6 +680,7 @@ static void ShowHelp(void)
 	for (i = 0; i < sHandlerCount; i++)
 	{
 		handler = &sHandlers[i];
+		if (handler->hidden && !showHidden)  continue;
 		
 		printf(" ");
 		if (!handler->required)  printf("[");
@@ -669,6 +704,7 @@ static void ShowHelp(void)
 	for (i = 0; i < sHandlerCount; i++)
 	{
 		handler = &sHandlers[i];
+		if (handler->hidden && !showHidden)  continue;
 		
 		#define LABEL_SIZE 16
 		char label[LABEL_SIZE];

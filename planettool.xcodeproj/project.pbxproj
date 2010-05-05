@@ -48,6 +48,8 @@
 		1A98F9541078ABA300E0F928 /* MatrixTransformer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A98F9531078ABA300E0F928 /* MatrixTransformer.c */; };
 		1A98FB8E10793F1400E0F928 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.c */; };
 		1AA1A8C5118AFF4300D3B653 /* planettool-mac.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */; };
+		1AA82EBB1190C9AD00C4C7B3 /* CosineBlurFilter.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */; };
+		1AA82EC71190CADA00C4C7B3 /* CosineBlurFilter.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */; };
 		1ADC097D10777F500057E287 /* RenderToCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ADC097C10777F500057E287 /* RenderToCube.c */; };
 		1AEEF03D11846AFC0041CC67 /* libpng_for_planettool.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A115B8F10754BFC00A75165 /* libpng_for_planettool.a */; };
 		1AEEF04911846B380041CC67 /* SphericalPixelSource.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A115E611076400B00A75165 /* SphericalPixelSource.c */; };
@@ -151,6 +153,7 @@
 		1A126EF61180FA1F00D2A744 /* PThreadScheduler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PThreadScheduler.c; sourceTree = "<group>"; };
 		1A3D6DD510B020A9003F7810 /* ReadCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadCube.h; sourceTree = "<group>"; };
 		1A3D6DD610B020A9003F7810 /* ReadCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ReadCube.c; sourceTree = "<group>"; };
+		1A3EEB811190A52A00082DFC /* planettool-version.inc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.pascal; path = "planettool-version.inc"; sourceTree = "<group>"; };
 		1A50B55811848A1000F8B41E /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1A50B88D1184CB5E00F8B41E /* NSImage+FloatPixMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+FloatPixMap.h"; sourceTree = "<group>"; };
 		1A50B88E1184CB5E00F8B41E /* NSImage+FloatPixMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+FloatPixMap.m"; sourceTree = "<group>"; };
@@ -180,6 +183,8 @@
 		1A98F9531078ABA300E0F928 /* MatrixTransformer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatrixTransformer.c; sourceTree = "<group>"; };
 		1A98FB3310793A5500E0F928 /* interpolate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpolate.c; sourceTree = "<group>"; };
 		1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "planettool-mac.xcconfig"; sourceTree = "<group>"; };
+		1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CosineBlurFilter.c; sourceTree = "<group>"; };
+		1AA82EB91190C9AD00C4C7B3 /* CosineBlurFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CosineBlurFilter.h; sourceTree = "<group>"; };
 		1ADC097B10777F500057E287 /* RenderToCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderToCube.h; sourceTree = "<group>"; };
 		1ADC097C10777F500057E287 /* RenderToCube.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RenderToCube.c; sourceTree = "<group>"; };
 		1AEEF03411846ADA0041CC67 /* Planet Tool.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Planet Tool.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -232,6 +237,7 @@
 			children = (
 				1A675E0210AF18D000786F5F /* Makefile */,
 				1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */,
+				1A3EEB811190A52A00082DFC /* planettool-version.inc */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1A115B9C10754CB300A75165 /* libpng */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -325,6 +331,8 @@
 				1A8DA59010777E0A00114A36 /* LatLongGridGenerator.c */,
 				1A98F9521078ABA300E0F928 /* MatrixTransformer.h */,
 				1A98F9531078ABA300E0F928 /* MatrixTransformer.c */,
+				1AA82EB91190C9AD00C4C7B3 /* CosineBlurFilter.h */,
+				1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */,
 			);
 			name = Sources;
 			sourceTree = "<group>";
@@ -557,6 +565,7 @@
 				1AEEF110118478D10041CC67 /* PlanetToolRenderer.m in Sources */,
 				1A50B88F1184CB5E00F8B41E /* NSImage+FloatPixMap.m in Sources */,
 				1A50B94F1184DC2700F8B41E /* PlanetToolApplicationDelegate.m in Sources */,
+				1AA82EC71190CADA00C4C7B3 /* CosineBlurFilter.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,6 +593,7 @@
 				1A698FA6118233CA0078BFB6 /* RenderToMercator.c in Sources */,
 				1A699028118248A40078BFB6 /* RenderToGallPeters.c in Sources */,
 				1A50B8491184C45600F8B41E /* PThreadScheduler.c in Sources */,
+				1AA82EBB1190C9AD00C4C7B3 /* CosineBlurFilter.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -885,23 +895,21 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
-				GCC_AUTO_VECTORIZATION = YES;
 				GCC_CW_ASM_SYNTAX = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = (
+					"FORCE_SINGLE_THREAD=1",
 					"PLANETTOOL_VERSION=\"\\\"$PLANETTOOL_VERSION\\\"\"",
 					"FPM_EXTRA_VALIDATION=1",
 					"OOMATHS_STANDALONE=1",
 					"OO_DEBUG=1",
 				);
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_VERSION = 4.2;
 				INSTALL_PATH = /usr/local/bin;
 				LLVM_LTO = NO;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-fverbose-asm";
 				PRODUCT_NAME = planettool;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				WARNING_CFLAGS = (

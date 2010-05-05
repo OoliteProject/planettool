@@ -200,11 +200,6 @@ static FPMColor ReadCube(Coordinates where, RenderFlags flags, void *context)
 	if (1)//(1 <= x && x <= cx->maxX && 1 <= y && y <= cx->maxY)
 	{
 		FPMColor result = FPMSampleLinearClamp(cx->pm, x + faceOffset.x, y + faceOffset.y);
-		if (result.a < 0.95)
-		{
-			result = (FPMColor){ 10, 0, 0, 1 };
-			printf("%g, %g\n", x, y);
-		}
 		return result;
 	}
 	else

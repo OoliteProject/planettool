@@ -209,7 +209,15 @@ static void *RenderThreadTask(void *vcontext)
 
 #include <unistd.h>
 
-#if __APPLE__
+#if FORCE_SINGLE_THREAD
+
+static unsigned ThreadCount(void)
+{
+	// For debugging.
+	return 1;
+}
+
+#elif __APPLE__
 #include <sys/sysctl.h>
 
 static unsigned ThreadCount(void)

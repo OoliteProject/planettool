@@ -45,53 +45,55 @@ Vector VectorFromCoordsRad(float latitude, float longitude)
 
 void VectorToCoordsRad(Vector v, float *latitude, float *longitude)
 {
+	assert(latitude != NULL && longitude != NULL);
+	
 	v = vector_normal(v);
 	float las = v.y;
-	if (las != 1.0f)
+	if (EXPECT(las != 1.0f))
 	{
 		float lat = asinf(las);
-		float rlac = fabsf(1.0f / cosf(lat));
-	//	float rlac = OOInvSqrtf(1.0f - las * las);	// Equivalent to abs(1/cos(lat)), but turns out to be slower.
+		*latitude = lat;
 		
-		if (latitude != NULL)  *latitude = lat;
-		if (longitude != NULL)
+		float rlac = fabsf(1.0f / cosf(lat));
+		//	float rlac = OOInvSqrtf(1.0f - las * las);	// Equivalent to abs(1/cos(lat)), but turns out to be slower.
+		
+		float los = v.x * rlac;
+		float lon = asinf(fminf(1.0f, fmaxf(-1.0f, los)));
+		
+		// Quadrant rectification.
+		if (v.z < 0.0f)
 		{
-			float los = v.x * rlac;
-			float lon = asinf(fminf(1.0f, fmaxf(-1.0f, los)));
-			
-			// Quadrant rectification.
-			if (v.z < 0.0f)
+			// We're beyond 90 degrees of longitude in some direction.
+			if (v.x < 0.0f)
 			{
-				// We're beyond 90 degrees of longitude in some direction.
-				if (v.x < 0.0f)
-				{
-					// ...specifically, west.
-					lon = -kPiF - lon;
-				}
-				else
-				{
-					// ...specifically, east.
-					lon = kPiF - lon;
-				}
+				// ...specifically, west.
+				lon = -kPiF - lon;
 			}
-			
-			*longitude = lon;
+			else
+			{
+				// ...specifically, east.
+				lon = kPiF - lon;
+			}
 		}
+		
+		*longitude = lon;
 	}
 	else
 	{
 		// Straight up, avoid divide-by-zero
-		if (latitude != NULL)  *latitude = kPiF / 2.0f;
-		if (longitude != NULL)  *longitude = 0.0f;	// arbitrary
+		*latitude = kPiF / 2.0f;
+		*longitude = 0.0f;	// arbitrary
 	}
 }
 
 
 void VectorToCoordsDeg(Vector v, float *latitude, float *longitude)
 {
+	assert(latitude != NULL && longitude != NULL);
+	
 	VectorToCoordsRad(v, latitude, longitude);
-	if (latitude != NULL)  *latitude *= 180.0f / kPiF;
-	if (longitude != NULL)  *longitude *= 180.0f / kPiF;
+	*latitude *= 180.0f / kPiF;
+	*longitude *= 180.0f / kPiF;
 }
 
 
