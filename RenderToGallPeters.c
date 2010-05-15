@@ -24,7 +24,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#include "RenderToLatLong.h"
+#include "RenderToGallPeters.h"
 #include "FPMImageOperations.h"
 #include "PlanetToolScheduler.h"
 
@@ -63,7 +63,7 @@ typedef struct RenderGallPetersContext
 } RenderGallPetersContext;
 
 
-FloatPixMapRef RenderToGallPeters(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
+FloatPixMapRef RenderToGallPeters(uintmax_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
 	size_t height = 1.0f / kPiF * 2 * size;
 	FloatPixMapRef pm = ValidateAndCreatePixMap(size, size, height, error, cbContext);

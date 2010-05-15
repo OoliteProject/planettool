@@ -24,7 +24,7 @@
 	DEALINGS IN THE SOFTWARE.
 */
 
-#include "RenderToLatLong.h"
+#include "RenderToMercator.h"
 #include "FPMImageOperations.h"
 #include "PlanetToolScheduler.h"
 
@@ -62,7 +62,7 @@ typedef struct RenderMercatorContext
 } RenderMercatorContext;
 
 
-FloatPixMapRef RenderToMercator(size_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
+FloatPixMapRef RenderToMercator(uintmax_t size, RenderFlags flags, SphericalPixelSourceFunction source, void *sourceContext, ProgressCallbackFunction progress, ErrorCallbackFunction error, void *cbContext)
 {
 	FloatPixMapRef pm = ValidateAndCreatePixMap(size, size, size, error, cbContext);
 	if (pm == NULL)  return NULL;
