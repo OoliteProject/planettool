@@ -129,6 +129,11 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 		png_set_expand(png);
 	}
 	
+	if (colorType & PNG_COLOR_MASK_PALETTE)
+	{
+		png_set_palette_to_rgb(png);
+	}
+	
 	png_read_update_info(png, pngInfo);
 	rowBytes = png_get_rowbytes(png, pngInfo);
 	
@@ -152,6 +157,11 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 		png_get_gAMA(png, pngInfo, &invGamma);
 		FPMApplyGamma(result, 1.0/invGamma, desiredGamma, png_get_bit_depth(png, pngInfo) == 16 ? 65536 : 256);
 	}
+	else
+	{
+		if (errorHandler != NULL)  errorHandler("Could not convert PNG data to native representation.", true, callbackContext);
+	}
+
 	
 	png_destroy_read_struct(&png, &pngInfo, &pngEndInfo);
 	free(data);

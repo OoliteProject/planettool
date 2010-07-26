@@ -740,7 +740,10 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 - (void) asyncLoadImage:(NSString *)path
 {
 	_sourcePixMap = FPMCreateWithPNG([path fileSystemRepresentation], kFPMGammaLinear, LoadErrorHandler, LoadProgressHandler, self);
-	[self performSelectorOnMainThread:@selector(loadingComplete) withObject:nil waitUntilDone:NO];
+	if (_sourcePixMap != nil)
+	{
+		[self performSelectorOnMainThread:@selector(loadingComplete) withObject:nil waitUntilDone:NO];
+	}
 }
 
 
