@@ -809,7 +809,7 @@ static void LoadProgressHandler(float proportion, void *context)
 		size = FPMGetHeight(_sourcePixMap) / 2;
 	}
 	
-	self.outputSize = OORoundUpToPowerOf2(size);
+	self.outputSize = OORoundUpToPowerOf2_NS(size);
 	
 	[self startPreviewRender];
 }

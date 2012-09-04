@@ -119,6 +119,8 @@ static bool RunRenderTask(PlanetToolSchedulerContext *context)
 {
 	unsigned i, threadCount = ThreadCount();
 	if (threadCount > context->lineCount)  threadCount = context->lineCount;	// Prepare for the mega-manycore monsters of the mfuture!
+	assert(threadCount > 0);
+	
 	pthread_t threads[threadCount];
 	int err = 0;
 	

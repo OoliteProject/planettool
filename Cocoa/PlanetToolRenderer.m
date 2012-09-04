@@ -307,7 +307,7 @@ static void ErrorCB(const char *message, void *context);
 }
 
 
-- (void) failRenderWithMessageAndFormat:(NSString *)message, ...;
+- (void) failRenderWithMessageAndFormat:(NSString *)message, ...
 {
 	va_list args;
 	va_start(args, message);

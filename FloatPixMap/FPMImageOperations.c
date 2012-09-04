@@ -5,9 +5,12 @@
 
 void FPMForEachPixelF(FloatPixMapRef pm, FPMForEachPixelFunc callback, void *info)
 {
-	FPM_FOR_EACH_PIXEL(pm, true)
-		callback(pm, pixel, FPMMakePoint(x, y), info);
-	FPM_END_FOR_EACH_PIXEL
+	if (pm != NULL)
+	{
+		FPM_FOR_EACH_PIXEL(pm, true)
+			callback(pm, pixel, FPMMakePoint(x, y), info);
+		FPM_END_FOR_EACH_PIXEL
+	}
 }
 
 
@@ -15,9 +18,12 @@ void FPMForEachPixelF(FloatPixMapRef pm, FPMForEachPixelFunc callback, void *inf
 
 void FPMForEachPixel(FloatPixMapRef pm, void(^block)(FPMColor *pixel, FPMPoint coords))
 {
-	FPM_FOR_EACH_PIXEL(pm, true)
-		block(pixel, FPMMakePoint(x, y));
-	FPM_END_FOR_EACH_PIXEL
+	if (pm != NULL)
+	{
+		FPM_FOR_EACH_PIXEL(pm, true)
+			block(pixel, FPMMakePoint(x, y));
+		FPM_END_FOR_EACH_PIXEL
+	}
 }
 
 #endif
@@ -25,17 +31,20 @@ void FPMForEachPixel(FloatPixMapRef pm, void(^block)(FPMColor *pixel, FPMPoint c
 
 void FPMSaturate(FloatPixMapRef pm, bool saturateAlpha)
 {
-	if (saturateAlpha)
+	if (pm != NULL)
 	{
-		FPM_FOR_EACH_PIXEL(pm, true)
-			*pixel = FPMClampColor(*pixel);
-		FPM_END_FOR_EACH_PIXEL
-	}
-	else
-	{
-		FPM_FOR_EACH_PIXEL(pm, true)
-			*pixel = FPMClampColorNotAlpha(*pixel);
-		FPM_END_FOR_EACH_PIXEL
+		if (saturateAlpha)
+		{
+			FPM_FOR_EACH_PIXEL(pm, true)
+				*pixel = FPMClampColor(*pixel);
+			FPM_END_FOR_EACH_PIXEL
+		}
+		else
+		{
+			FPM_FOR_EACH_PIXEL(pm, true)
+				*pixel = FPMClampColorNotAlpha(*pixel);
+			FPM_END_FOR_EACH_PIXEL
+		}
 	}
 }
 
@@ -118,12 +127,15 @@ void FPMScaleValues(FloatPixMapRef pm, FPMColor scale, FPMColor bias)
 
 void FPMScaleValues(FloatPixMapRef pm, FPMColor scale, FPMColor bias)
 {
-	FPM_FOR_EACH_PIXEL(pm, true)
-		pixel->r = pixel->r * scale.r + bias.r;
-		pixel->g = pixel->g * scale.g + bias.g;
-		pixel->b = pixel->b * scale.b + bias.b;
-		pixel->a = pixel->a * scale.a + bias.a;
-	FPM_END_FOR_EACH_PIXEL
+	if (pm != NULL)
+	{
+		FPM_FOR_EACH_PIXEL(pm, true)
+			pixel->r = pixel->r * scale.r + bias.r;
+			pixel->g = pixel->g * scale.g + bias.g;
+			pixel->b = pixel->b * scale.b + bias.b;
+			pixel->a = pixel->a * scale.a + bias.a;
+		FPM_END_FOR_EACH_PIXEL
+	}
 }
 
 #endif
@@ -264,37 +276,41 @@ FPM_INLINE FPMColor Sample(FPMColor *buffer, size_t rowCount, size_t x, size_t y
 
 FPMColor FPMSampleLinear(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy)
 {
-	x -= 0.5f;
-	y -= 0.5f;
-	FPMColor *buffer;
-	FPMDimension width, height;
-	size_t rowCount;
-	FPMGetIterationInformation(pm, &buffer, &width, &height, &rowCount);
-	rowCount += width;	// Undo optimization not useful in this particular case.
-	
-	float flrx = floorf(x);
-	float flry = floorf(y);
-	
-	FPMCoordinate lowx = flrx;
-	FPMCoordinate lowy = flry;
-	FPMCoordinate highx = lowx + 1;
-	FPMCoordinate highy = lowy + 1;
-	
-	lowx = Wrap(lowx, width, wrapx);
-	highx = Wrap(highx, width, wrapx);
-	lowy = Wrap(lowy, height, wrapy);
-	highy = Wrap(highy, height, wrapy);
-	
-	FPMColor ll = Sample(buffer, rowCount, lowx, lowy);
-	FPMColor lh = Sample(buffer, rowCount, lowx, highy);
-	FPMColor hl = Sample(buffer, rowCount, highx, lowy);
-	FPMColor hh = Sample(buffer, rowCount, highx, highy);
-	
-	float alphax = x - flrx;
-	float alphay = y - flry;
-	ll = FPMColorBlend(hl, ll, alphax);
-	hl = FPMColorBlend(hh, lh, alphax);
-	return FPMColorBlend(hl, ll, alphay);
+	if (pm != NULL)
+	{
+		x -= 0.5f;
+		y -= 0.5f;
+		FPMColor *buffer;
+		FPMDimension width, height;
+		size_t rowCount;
+		FPMGetIterationInformation(pm, &buffer, &width, &height, &rowCount);
+		rowCount += width;	// Undo optimization not useful in this particular case.
+		
+		float flrx = floorf(x);
+		float flry = floorf(y);
+		
+		FPMCoordinate lowx = flrx;
+		FPMCoordinate lowy = flry;
+		FPMCoordinate highx = lowx + 1;
+		FPMCoordinate highy = lowy + 1;
+		
+		lowx = Wrap(lowx, width, wrapx);
+		highx = Wrap(highx, width, wrapx);
+		lowy = Wrap(lowy, height, wrapy);
+		highy = Wrap(highy, height, wrapy);
+		
+		FPMColor ll = Sample(buffer, rowCount, lowx, lowy);
+		FPMColor lh = Sample(buffer, rowCount, lowx, highy);
+		FPMColor hl = Sample(buffer, rowCount, highx, lowy);
+		FPMColor hh = Sample(buffer, rowCount, highx, highy);
+		
+		float alphax = x - flrx;
+		float alphay = y - flry;
+		ll = FPMColorBlend(hl, ll, alphax);
+		hl = FPMColorBlend(hh, lh, alphax);
+		return FPMColorBlend(hl, ll, alphay);
+	}
+	return kFPMColorInvalid;
 }
 
 
@@ -306,35 +322,39 @@ FPM_INLINE float Cubic(float f)
 
 FPMColor FPMSampleCubicHermite(FloatPixMapRef pm, float x, float y, FPMWrapMode wrapx, FPMWrapMode wrapy)
 {
-	x -= 0.5;
-	y -= 0.5;
-	FPMColor *buffer;
-	FPMDimension width, height;
-	size_t rowCount;
-	FPMGetIterationInformation(pm, &buffer, &width, &height, &rowCount);
-	rowCount += width;	// Undo optimization not useful in this particular case.
-	
-	float flrx = floorf(x);
-	float flry = floorf(y);
-	
-	FPMCoordinate lowx = flrx;
-	FPMCoordinate lowy = flry;
-	FPMCoordinate highx = lowx + 1;
-	FPMCoordinate highy = lowy + 1;
-	
-	lowx = Wrap(lowx, width, wrapx);
-	highx = Wrap(highx, width, wrapy);
-	lowy = Wrap(lowy, height, wrapy);
-	highy = Wrap(highy, height, wrapy);
-	
-	FPMColor ll = Sample(buffer, rowCount, lowx, lowy);
-	FPMColor lh = Sample(buffer, rowCount, lowx, highy);
-	FPMColor hl = Sample(buffer, rowCount, highx, lowy);
-	FPMColor hh = Sample(buffer, rowCount, highx, highy);
-	
-	float alphax = Cubic(x - flrx);
-	float alphay = Cubic(y - flry);
-	ll = FPMColorBlend(hl, ll, alphax);
-	hl = FPMColorBlend(hh, lh, alphax);
-	return FPMColorBlend(hl, ll, alphay);
+	if (pm != NULL)
+	{
+		x -= 0.5;
+		y -= 0.5;
+		FPMColor *buffer;
+		FPMDimension width, height;
+		size_t rowCount;
+		FPMGetIterationInformation(pm, &buffer, &width, &height, &rowCount);
+		rowCount += width;	// Undo optimization not useful in this particular case.
+		
+		float flrx = floorf(x);
+		float flry = floorf(y);
+		
+		FPMCoordinate lowx = flrx;
+		FPMCoordinate lowy = flry;
+		FPMCoordinate highx = lowx + 1;
+		FPMCoordinate highy = lowy + 1;
+		
+		lowx = Wrap(lowx, width, wrapx);
+		highx = Wrap(highx, width, wrapy);
+		lowy = Wrap(lowy, height, wrapy);
+		highy = Wrap(highy, height, wrapy);
+		
+		FPMColor ll = Sample(buffer, rowCount, lowx, lowy);
+		FPMColor lh = Sample(buffer, rowCount, lowx, highy);
+		FPMColor hl = Sample(buffer, rowCount, highx, lowy);
+		FPMColor hh = Sample(buffer, rowCount, highx, highy);
+		
+		float alphax = Cubic(x - flrx);
+		float alphay = Cubic(y - flry);
+		ll = FPMColorBlend(hl, ll, alphax);
+		hl = FPMColorBlend(hh, lh, alphax);
+		return FPMColorBlend(hl, ll, alphay);
+	}
+	return kFPMColorInvalid;
 }

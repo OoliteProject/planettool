@@ -6,9 +6,9 @@ In the Oolite repository
 Planettool is developed in Oolite's Subversion repository. See
 <http://developer.berlios.de/projects/oolite-linux/>.
 
-* For Mac OS X, the Xcode project is the preferred way to build. In Release
-  configuration, it produces a universal binary. The Xcode project is also
-  the only supported way to build the GUI version of Planet Tool.
+* For Mac OS X, the Xcode project is the preferred way to build. The Xcode
+  project is also the only supported way to build the GUI version of
+  Planet Tool.
 * For other platforms, use "make inrepo=yes".
 
 

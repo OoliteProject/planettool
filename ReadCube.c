@@ -63,6 +63,8 @@ bool ReadCubeConstructor(FloatPixMapRef sourceImage, RenderFlags flags, Spherica
 	if (totalSize.height % 6 != 0)
 	{
 		fprintf(stderr, "Cube map height must be a multiple of six pixels.\n");
+		free(cx);
+		FPMRelease(&sourceImage);
 		return false;
 	}
 	
@@ -99,6 +101,8 @@ bool ReadCubeCrossConstructor(FloatPixMapRef sourceImage, RenderFlags flags, Sph
 	if (totalSize.width % 4 != 0 || totalSize.height % 3 != 0)
 	{
 		fprintf(stderr, "Cross cube map width must be a multiple of four pixels and height must be a multiple of three pixels.\n");
+		free(cx);
+		FPMRelease(&sourceImage);
 		return false;
 	}
 	
