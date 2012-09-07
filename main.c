@@ -326,7 +326,7 @@ static const ArgumentHandler sHandlers[] =
 	},
 	{
 		"cosblur",		0, 2, ParseCosBlur,
-		"<unmaskedscale> <maskedscale>", false, false, "Apply cosine blur (converts environment map into diffuse light map).", NULL, 0, 0
+		"<unmaskedscale> <maskedscale>", false, true, "Apply cosine blur (converts environment map into diffuse light map).", NULL, 0, 0
 	},
 	{
 		"help",			'H', 0, ParseHelp,
@@ -612,7 +612,6 @@ static bool ParseRotate(int argc, const char *argv[], int *consumedArgs, Setting
 {
 	*consumedArgs += 3;
 	
-	// FIXME: set up matrix.
 	double rx, ry, rz;
 	if (!ParseOneFloat(argv[0], &rx))  return false;
 	if (!ParseOneFloat(argv[1], &ry))  return false;
@@ -671,7 +670,6 @@ static bool ParseQuiet(int argc, const char *argv[], int *consumedArgs, Settings
 
 static void ShowHelp(bool showHidden)
 {
-//	printf("Pretend this is helpful.\n");
 	printf("Planettool version %s\nplanettool", PLANETTOOL_VERSION);
 	
 	// ACT I: the Synopsis. Dramatis personae: a gaggle of Shortcuts.
