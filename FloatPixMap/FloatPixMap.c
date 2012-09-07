@@ -2,7 +2,7 @@
 	FloatPixMap.c
 	
 	
- 	Copyright © 2009 Jens Ayton
+ 	Copyright © 2009–2012 Jens Ayton
  
 	Permission is hereby granted, free of charge, to any person obtaining a
 	copy of this software and associated documentation files (the “Software”),
@@ -100,6 +100,11 @@ static size_t GetPixelCount(FloatPixMapRef pm)
 }
 
 
+/*	NOTE: the Clang Static Analyzer claims callers of this function are leaking
+	the “pixels” parameter. This is untrue, but there doesn’t seem to be a way
+	to annotate functions as consuming a parameter outside of ObjC or
+	CoreFoundation code.
+*/
 static FloatPixMapRef MakeFPM(FPMSize size, FPMDimension rowCount, FPMColor *pixels, FloatPixMapRef master)
 {
 	FloatPixMapRef result = malloc(sizeof (FloatPixMap));
@@ -254,9 +259,6 @@ FloatPixMapRef FPMCreateSub(FloatPixMapRef pm, FPMRect rect)
 {
 	if (pm != NULL)
 	{
-		FloatPixMapRef result = malloc(sizeof (FloatPixMap));
-		result->retainCount = 1;
-		
 		rect = FPMClipRectToFPM(pm, rect);
 		if (FPMRectArea(rect) != 0)
 		{
