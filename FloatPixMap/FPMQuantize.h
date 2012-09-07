@@ -1,11 +1,30 @@
 /*
- *  FPMQuantize.h
- *  planettool
- *
- *  Created by Jens Ayton on 2009-10-01.
- *  Copyright 2009 Jens Ayton. All rights reserved.
- *
- */
+	FPMQuantize.h
+	FloatPixMap
+	
+	Quantization function for FloatPixMap.
+	
+	
+	Copyright © 2009 Jens Ayton
+ 
+	Permission is hereby granted, free of charge, to any person obtaining a
+	copy of this software and associated documentation files (the “Software”),
+	to deal in the Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish, distribute, sublicense,
+	and/or sell copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+	THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+	DEALINGS IN THE SOFTWARE.
+*/
 
 
 #ifndef INCLUDED_FPMQuantize_h
@@ -18,8 +37,8 @@ FPM_BEGIN_EXTERN_C
 
 enum
 {
-	kFPMQuantizeDither			= 0x00000001,	// If set, error-diffusion dither is used.
-	kFPMQuantizeJitter			= 0x00000002,	// If set, jitter is used in dithering. Ignored if not dithering.
+	kFPMQuantizeDither			= 0x00000001,	// If set, error-diffusion dither is used. [UNIMPLEMENTED]
+	kFPMQuantizeJitter			= 0x00000002,	// If set, jitter is used in dithering. Ignored if not dithering. [UNIMPLEMENTED]
 	kFMPQuantizeClip			= 0x00000004,	// If set, out-of-range values are clipped, otherwise they're scaled by the same amount as in-range values.
 	kFMPQuantizeAlpha			= 0x00000008,	// If set, alpha channel is quantized too.
 };

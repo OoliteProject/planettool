@@ -1,20 +1,41 @@
-/*	FloatPixMap.h
-	© 2009 Jens Ayton
+/*
+	FloatPixMap.h
 	
 	Basic manipulation of floating-point pixmaps.
 	
 	A FloatPixMap consists of a 2D array of FPMColors, each FPMColor being
 	four floats in r, g, b, a order. FloatPixMaps are reference counted,
 	following the conventions of Apple's CoreFoundation and related libraries:
-	* A function whose name contains Create, Retain, or Copy creates an owning
+	• A function whose name contains Create, Retain, or Copy creates an owning
 	  reference.
-	* Each owning reference must be released by calling FPMRelease.
+	• Each owning reference must be released by calling FPMRelease.
 	
 	FloatPixMap components are assumed to use a linear colour space, with 0..1
 	being the standard range for low dynamic range operations. FloatPixMaps
 	are suitable for high dynamic range operations, but no HDR-oriented
 	functionality is provided (in particular, no tone mapping other than
 	FPMNormalize()).
+	
+	
+	Copyright © 2009 Jens Ayton
+ 
+	Permission is hereby granted, free of charge, to any person obtaining a
+	copy of this software and associated documentation files (the “Software”),
+	to deal in the Software without restriction, including without limitation
+	the rights to use, copy, modify, merge, publish, distribute, sublicense,
+	and/or sell copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+	THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+	DEALINGS IN THE SOFTWARE.
 */
 
 
