@@ -134,17 +134,28 @@ FloatPixMapRef FPMCreateWithPNGCustom(png_voidp ioPtr, png_rw_ptr readDataFn, FP
 		png_set_palette_to_rgb(png);
 	}
 	
+	int j, passCount = png_set_interlace_handling(png);
+	
 	png_read_update_info(png, pngInfo);
 	rowBytes = png_get_rowbytes(png, pngInfo);
 	
 	data = malloc(rowBytes * height);
 	if (data == NULL)  goto FAIL;
 	
-	// Set up row pointers.
-	for (i = 0; i < height; i++)
+	// Read image data.
+	float progressNumerator = 0.0f, progressDenominator = passCount * height;
+	for (j = 0; j < passCount; j++)
 	{
-		png_read_row(png, (png_bytep)data + i * rowBytes, NULL);
-		if (progressHandler)  progressHandler((float)(i + 1) / (float)height, callbackContext);
+		for (i = 0; i < height; i++)
+		{
+			png_read_row(png, (png_bytep)data + i * rowBytes, NULL);
+			
+			if (progressHandler)
+			{
+				progressNumerator++;
+				progressHandler(progressNumerator / progressDenominator, callbackContext);
+			}
+		}
 	}
 	
 	png_read_end(png, pngEndInfo);
