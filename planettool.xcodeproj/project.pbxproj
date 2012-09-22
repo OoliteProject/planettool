@@ -198,12 +198,12 @@
 		08FB7794FE84155DC02AAC07 /* planettool */ = {
 			isa = PBXGroup;
 			children = (
-				1A222A8015F68B3400E1C5FD /* libz.dylib */,
 				1A675E0210AF18D000786F5F /* Makefile */,
 				1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */,
 				1A3EEB811190A52A00082DFC /* planettool-version.inc */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
+				1A222A8015F68B3400E1C5FD /* libz.dylib */,
 				1A222A7015F686F100E1C5FD /* libpng.xcodeproj */,
 			);
 			name = planettool;
