@@ -28,9 +28,10 @@
 
 
 #include "PlanetToolScheduler.h"
+#include "PTPowerManagement.h"
 
 
-bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *cbContext)
+static bool DoScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *cbContext)
 {
 	if (renderCB == NULL)  return false;
 	
@@ -49,5 +50,13 @@ bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCou
 	}
 	
 	return true;
+}
+
+
+bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCount, size_t subRenderIndex, size_t subRenderCount, ProgressCallbackFunction progressCB, void *cbContext)
+{
+	PTStartPreventingSleep();
+	DoScheduleRender();
+	PTStopPreventingSleep();
 }
 

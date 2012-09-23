@@ -31,7 +31,12 @@
 		1A8DA59410777E6700114A36 /* RenderToLatLong.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A8DA59310777E6600114A36 /* RenderToLatLong.c */; };
 		1A98F9541078ABA300E0F928 /* MatrixTransformer.c in Sources */ = {isa = PBXBuildFile; fileRef = 1A98F9531078ABA300E0F928 /* MatrixTransformer.c */; };
 		1A98FB8E10793F1400E0F928 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.c */; };
-		1AA1A8C5118AFF4300D3B653 /* planettool-mac.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */; };
+		1AA0BAF2160F457B00C3F11A /* PTPowerManagement.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0BAF1160F457B00C3F11A /* PTPowerManagement.c */; };
+		1AA0BAF3160F457B00C3F11A /* PTPowerManagement.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AA0BAF1160F457B00C3F11A /* PTPowerManagement.c */; };
+		1AA0BAF6160F4ADE00C3F11A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA0BAF5160F4ADE00C3F11A /* IOKit.framework */; };
+		1AA0BAF7160F4AEC00C3F11A /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA0BAF5160F4ADE00C3F11A /* IOKit.framework */; };
+		1AA0BAF9160F4B0700C3F11A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA0BAF8160F4B0700C3F11A /* CoreFoundation.framework */; };
+		1AA0BAFA160F4B0D00C3F11A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AA0BAF8160F4B0700C3F11A /* CoreFoundation.framework */; };
 		1AA82EBB1190C9AD00C4C7B3 /* CosineBlurFilter.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */; };
 		1AA82EC71190CADA00C4C7B3 /* CosineBlurFilter.c in Sources */ = {isa = PBXBuildFile; fileRef = 1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */; };
 		1ADC097D10777F500057E287 /* RenderToCube.c in Sources */ = {isa = PBXBuildFile; fileRef = 1ADC097C10777F500057E287 /* RenderToCube.c */; };
@@ -152,6 +157,10 @@
 		1A98F9521078ABA300E0F928 /* MatrixTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MatrixTransformer.h; sourceTree = "<group>"; };
 		1A98F9531078ABA300E0F928 /* MatrixTransformer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = MatrixTransformer.c; sourceTree = "<group>"; };
 		1A98FB3310793A5500E0F928 /* interpolate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpolate.c; sourceTree = "<group>"; };
+		1AA0BAF0160F457B00C3F11A /* PTPowerManagement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PTPowerManagement.h; sourceTree = "<group>"; };
+		1AA0BAF1160F457B00C3F11A /* PTPowerManagement.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PTPowerManagement.c; sourceTree = "<group>"; };
+		1AA0BAF5160F4ADE00C3F11A /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		1AA0BAF8160F4B0700C3F11A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		1AA1A8C4118AFF4300D3B653 /* planettool-mac.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "planettool-mac.xcconfig"; sourceTree = "<group>"; };
 		1AA82EB81190C9AD00C4C7B3 /* CosineBlurFilter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CosineBlurFilter.c; sourceTree = "<group>"; };
 		1AA82EB91190C9AD00C4C7B3 /* CosineBlurFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CosineBlurFilter.h; sourceTree = "<group>"; };
@@ -178,6 +187,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AA0BAFA160F4B0D00C3F11A /* CoreFoundation.framework in Frameworks */,
+				1AA0BAF6160F4ADE00C3F11A /* IOKit.framework in Frameworks */,
 				1A222A8215F68DBB00E1C5FD /* libz.dylib in Frameworks */,
 				1A222A7615F6870600E1C5FD /* libpng_for_oolite.a in Frameworks */,
 			);
@@ -187,6 +198,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1AA0BAF9160F4B0700C3F11A /* CoreFoundation.framework in Frameworks */,
+				1AA0BAF7160F4AEC00C3F11A /* IOKit.framework in Frameworks */,
 				1A222A8115F68B3400E1C5FD /* libz.dylib in Frameworks */,
 				1A222A7715F6870E00E1C5FD /* libpng_for_oolite.a in Frameworks */,
 			);
@@ -203,7 +216,7 @@
 				1A3EEB811190A52A00082DFC /* planettool-version.inc */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
-				1A222A8015F68B3400E1C5FD /* libz.dylib */,
+				1AA0BAF4160F4ABF00C3F11A /* Frameworks */,
 				1A222A7015F686F100E1C5FD /* libpng.xcodeproj */,
 			);
 			name = planettool;
@@ -217,6 +230,8 @@
 				1A98F91B1078A87E00E0F928 /* benchmark.c */,
 				1A115E601076400B00A75165 /* SphericalPixelSource.h */,
 				1A115E611076400B00A75165 /* SphericalPixelSource.c */,
+				1AA0BAF0160F457B00C3F11A /* PTPowerManagement.h */,
+				1AA0BAF1160F457B00C3F11A /* PTPowerManagement.c */,
 				1A3D6DD110B02060003F7810 /* Sources */,
 				1A3D6DD210B02076003F7810 /* Sinks */,
 				1A126E141180E85600D2A744 /* Schedulers */,
@@ -314,6 +329,16 @@
 			);
 			name = OOMaths;
 			path = ../../src/Core;
+			sourceTree = "<group>";
+		};
+		1AA0BAF4160F4ABF00C3F11A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1AA0BAF8160F4B0700C3F11A /* CoreFoundation.framework */,
+				1AA0BAF5160F4ADE00C3F11A /* IOKit.framework */,
+				1A222A8015F68B3400E1C5FD /* libz.dylib */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		1AB674ADFE9D54B511CA2CBB /* Products */ = {
@@ -446,7 +471,6 @@
 				1AEEF0BC11846CAC0041CC67 /* MainMenu.xib in Resources */,
 				1AEEF0C41184705F0041CC67 /* PlanetToolDocument.xib in Resources */,
 				1A50B55911848A1000F8B41E /* Localizable.strings in Resources */,
-				1AA1A8C5118AFF4300D3B653 /* planettool-mac.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +505,7 @@
 				1A50B88F1184CB5E00F8B41E /* NSImage+FloatPixMap.m in Sources */,
 				1A50B94F1184DC2700F8B41E /* PlanetToolApplicationDelegate.m in Sources */,
 				1AA82EC71190CADA00C4C7B3 /* CosineBlurFilter.c in Sources */,
+				1AA0BAF3160F457B00C3F11A /* PTPowerManagement.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +533,7 @@
 				1A699028118248A40078BFB6 /* RenderToGallPeters.c in Sources */,
 				1A50B8491184C45600F8B41E /* PThreadScheduler.c in Sources */,
 				1AA82EBB1190C9AD00C4C7B3 /* CosineBlurFilter.c in Sources */,
+				1AA0BAF2160F457B00C3F11A /* PTPowerManagement.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

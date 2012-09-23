@@ -51,7 +51,7 @@ vpath %.m $(OOMATHS_PATH)
 .SUFFIXES: .m
 
 
-CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o RenderToMercator.o RenderToGallPeters.o MatrixTransformer.o CosineBlurFilter.o $(scheduler).o
+CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o RenderToMercator.o RenderToGallPeters.o MatrixTransformer.o CosineBlurFilter.o $(scheduler).o PTPowerManagement.o
 FPM_OBJECTS = FloatPixMap.o FPMGamma.o FPMImageOperations.o FPMPNG.o FPMQuantize.o FPMRaw.o
 OOMATHS_OBJECTS = OOFastArithmetic.o OOMatrix.o OOQuaternion.o OOVector.o
 
@@ -83,7 +83,8 @@ LatLongGridGenerator.o: LatLongGridGenerator.h
 RenderToCube.o: RenderToCube.h FPMImageOperations.h
 MatrixTransformer.o: MatrixTransformer.h
 CosineBlurFilter.o: CosineBlurFilter.h
-SerialScheduler.o PListScheduler.o: PlanetToolScheduler.h
+SerialScheduler.o PListScheduler.o: PlanetToolScheduler.h PTPowerManagement.h
+PTPowerManagement.o: PTPowerManagement.h
 
 
 # FloatPixMap dependencies.
