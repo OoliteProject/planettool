@@ -28,7 +28,6 @@
 
 
 #include "PlanetToolScheduler.h"
-#include "PTPowerManagement.h"
 #include <pthread.h>
 
 #ifdef __WIN32__
@@ -86,8 +85,6 @@ bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCou
 	
 	bool result = false;
 	
-	PTStartPreventingSleep();
-	
 	if (pthread_mutex_init(&threadContext.indexLock, NULL) == 0)
 	{
 		if (pthread_mutex_init(&threadContext.notificationMutex, NULL) == 0)
@@ -112,8 +109,6 @@ bool ScheduleRender(RenderCallback renderCB, void *renderContext, size_t lineCou
 	{
 		fprintf(stderr, "Failed to create work item indexing mutex.\n");
 	}
-	
-	PTStopPreventingSleep();
 	
 	return result;
 }

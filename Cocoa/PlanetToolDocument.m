@@ -29,6 +29,7 @@
 #import "FPMPNG.h"
 #import "OOMaths.h"
 #import "NSImage+FloatPixMap.h"
+#include "PTPowerManagement.h"
 
 
 @interface PlanetToolDocument () <PlanetToolRendererDelegate>
@@ -442,6 +443,8 @@ static inline float ClampDegrees(float value)
 		[self planetToolRenderer:_finalRenderer failedWithMessage:NSLocalizedString(@"Unknown error.", NULL)];
 		return NO;
 	}
+	
+	PTStartPreventingSleep();
 	return YES;
 }
 
@@ -583,6 +586,8 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 	
 	FPMRelease(&_outputImage);
 	_outputPath = nil;
+	
+	PTStopPreventingSleep();
 }
 
 
@@ -633,6 +638,7 @@ static void WriteErrorHandler(const char *message, bool isError, void *context)
 	if (renderer == _finalRenderer)
 	{
 		[self removeProgressSheetWithSuccess:NO];
+		PTStopPreventingSleep();
 	}
 }
 

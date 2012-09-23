@@ -71,7 +71,7 @@ planettool: $(OBJECTS)
 SphericalPixelSource.h: FloatPixMap.h
 LatLongGridGenerator.h ReadLatLong.h ReadCube.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h PlanetToolScheduler.h: SphericalPixelSource.h
 
-main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h
+main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h PTPowerManagement.h
 
 SphericalPixelSource.o: SphericalPixelSource.h
 ReadLatLong.o: ReadLatLong.h FPMImageOperations.h PlanetToolScheduler.h
@@ -83,7 +83,7 @@ LatLongGridGenerator.o: LatLongGridGenerator.h
 RenderToCube.o: RenderToCube.h FPMImageOperations.h
 MatrixTransformer.o: MatrixTransformer.h
 CosineBlurFilter.o: CosineBlurFilter.h
-SerialScheduler.o PListScheduler.o: PlanetToolScheduler.h PTPowerManagement.h
+SerialScheduler.o PListScheduler.o: PlanetToolScheduler.h
 PTPowerManagement.o: PTPowerManagement.h
 
 

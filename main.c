@@ -31,6 +31,7 @@
 
 #include "FPMPNG.h"
 #include "SphericalPixelSource.h"
+#include "PTPowerManagement.h"
 
 // Sources
 #include "LatLongGridGenerator.h"
@@ -103,6 +104,7 @@ int main (int argc, const char * argv[])
 {
 	FPMInit();
 	srand(time(NULL));
+	PTStartPreventingSleep();
 	
 	// Work out what the user wants.
 	Settings settings;
