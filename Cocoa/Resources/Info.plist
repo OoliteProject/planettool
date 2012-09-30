@@ -4,26 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>org.oolite.planettool.gui</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>${PLANETTOOL_VERSION}</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
-	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -51,18 +31,37 @@
 			<string>PlanetToolDocument</string>
 		</dict>
 	</array>
+	<key>CFBundleExecutable</key>
+	<string>${EXECUTABLE_NAME}</string>
+	<key>CFBundleIconFile</key>
+	<string>planettool.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.oolite.planettool.gui</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>${PRODUCT_NAME}</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>${PLANETTOOL_VERSION}</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
-			<!-- Internal pseudo-type -->
-			<key>UTTypeIdentifier</key>
-			<string>org.oolite.planettool.gridgenerator</string>
-			<key>UTTypeDescription</key>
-			<string>Planet Tool grid generator</string>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.item</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>Planet Tool grid generator</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.oolite.planettool.gridgenerator</string>
 		</dict>
 	</array>
 </dict>
