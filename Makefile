@@ -1,12 +1,19 @@
 EXECUTABLE = planettool
+UNAME := $(shell uname -o)
 include planettool-version.inc
 
 
 CC = gcc
 LD = $(CC)
 
-CFLAGS = -I$(FPM_PATH) -I$(OOMATHS_PATH) -DOOMATHS_STANDALONE=1 -DPLANETTOOL_VERSION="\"$(PLANETTOOL_VERSION)\"" -g -ffast-math
+CFLAGS = -I$(FPM_PATH) -I$(OOMATHS_PATH) -DOOMATHS_STANDALONE=1 -DPLANETTOOL_VERSION="\"$(PLANETTOOL_VERSION)\"" -g -ffast-math -I../../src/Core
 LDFLAGS = -lpng -lz
+
+
+ifeq ($(UNAME),Msys)
+	CFLAGS += -I/mingw/../devlibs/include
+	LDFLAGS += -L/mingw/../devlibs/lib
+endif
 
 
 ifndef scheduler
@@ -25,6 +32,11 @@ endif
 
 ifeq ($(asprintf),no)
 	CFLAGS += -DNO_ASPRINTF
+endif
+
+
+ifeq ($(sse2),yes)
+	CFLAGS += -DUSING_SSE2=1 -mtune=generic -mfpmath=sse -msse2
 endif
 
 
@@ -51,7 +63,7 @@ vpath %.m $(OOMATHS_PATH)
 .SUFFIXES: .m
 
 
-CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o RenderToMercator.o RenderToGallPeters.o MatrixTransformer.o CosineBlurFilter.o $(scheduler).o PTPowerManagement.o
+CORE_OBJECTS = main.o SphericalPixelSource.o ReadLatLong.o ReadCube.o LatLongGridGenerator.o RenderToLatLong.o RenderToCube.o RenderToMercator.o RenderToGallPeters.o MatrixTransformer.o CosineBlurFilter.o $(scheduler).o
 FPM_OBJECTS = FloatPixMap.o FPMGamma.o FPMImageOperations.o FPMPNG.o FPMQuantize.o FPMRaw.o
 OOMATHS_OBJECTS = OOFastArithmetic.o OOMatrix.o OOQuaternion.o OOVector.o
 
@@ -59,7 +71,7 @@ OBJECTS = $(CORE_OBJECTS) $(FPM_OBJECTS) $(OOMATHS_OBJECTS)
 
 
 planettool: $(OBJECTS)
-	$(LD) -o $(EXECUTABLE) $(LDFLAGS) $(OBJECTS)
+	$(LD) -o $(EXECUTABLE) $(OBJECTS) $(LDFLAGS) 
 
 
 # Rule to compile Objective-C maths files as C.
@@ -71,7 +83,7 @@ planettool: $(OBJECTS)
 SphericalPixelSource.h: FloatPixMap.h
 LatLongGridGenerator.h ReadLatLong.h ReadCube.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h PlanetToolScheduler.h: SphericalPixelSource.h
 
-main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h PTPowerManagement.h
+main.o: FPMPNG.h LatLongGridGenerator.h ReadLatLong.h MatrixTransformer.h RenderToLatLong.h RenderToCube.h
 
 SphericalPixelSource.o: SphericalPixelSource.h
 ReadLatLong.o: ReadLatLong.h FPMImageOperations.h PlanetToolScheduler.h
@@ -84,7 +96,6 @@ RenderToCube.o: RenderToCube.h FPMImageOperations.h
 MatrixTransformer.o: MatrixTransformer.h
 CosineBlurFilter.o: CosineBlurFilter.h
 SerialScheduler.o PListScheduler.o: PlanetToolScheduler.h
-PTPowerManagement.o: PTPowerManagement.h
 
 
 # FloatPixMap dependencies.
